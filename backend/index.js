@@ -26,110 +26,129 @@ app.get("/employees", (req, res) => {
     });
 });
 
-// Add a new guest and create booking
-app.post("/add-guest", (req, res) => {
-    const {
+
+
+
+const addGuest = (guestData) => {
+    const sqlInsertGuest = `
+      INSERT INTO Guest (FirstName, LastName, EmailAddress, PhoneNumber, NID, DateOfBirth, HotelID)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `;
+    return new Promise((resolve, reject) => {
+      db.query(
+        sqlInsertGuest,
+        [
+          guestData.firstName,
+          guestData.lastName,
+          guestData.email,
+          guestData.phoneNumber,
+          guestData.nid,
+          guestData.dob,
+          guestData.hotelID,
+        ],
+        (err, result) => {
+          if (err) return reject(err);
+          resolve(result.insertId); // Return the newly created GuestID
+        }
+      );
+    });
+  };
+  
+  // Helper function to create a booking
+  const createBooking = (bookingData) => {
+    const sqlInsertBooking = `
+      INSERT INTO Booking (GuestID, HotelID, EmpID, CheckInDate, CheckOutDate, NumAdults, NumChildren, TotalBooking, PaymentStatus)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+    return new Promise((resolve, reject) => {
+      db.query(
+        sqlInsertBooking,
+        [
+          bookingData.guestID,
+          bookingData.hotelID,
+          bookingData.empID,
+          bookingData.checkInDate,
+          bookingData.checkOutDate,
+          bookingData.numAdults,
+          bookingData.numChildren,
+          bookingData.totalBooking,
+          bookingData.paymentStatus,
+        ],
+        (err, result) => {
+          if (err) return reject(err);
+          resolve(result.insertId); // Return the newly created BookingID
+        }
+      );
+    });
+  };
+  
+  // Helper function to update room status
+  const updateRoomStatus = (bookingID, roomID) => {
+    const sqlUpdateRoom = `
+      UPDATE Room SET Status = 'Occupied', BookingID = ? WHERE RoomID = ?
+    `;
+    return new Promise((resolve, reject) => {
+      db.query(sqlUpdateRoom, [bookingID, roomID], (err, result) => {
+        if (err) return reject(err);
+        resolve();
+      });
+    });
+  };
+  
+  // Endpoint to add a guest and book rooms
+  app.post("/add-guest", async (req, res) => {
+    try {
+      const {
         firstName,
         lastName,
-        phoneNumber,
         email,
+        phoneNumber,
         dob,
         nid,
-        HotelID,
-        selectedRoom,
-    } = req.body;
+        hotelID,
+        selectedRooms,
+        checkInDate,
+        checkOutDate,
+        numAdults,
+        numChildren,
+      } = req.body;
 
-    console.log("Request Body:", req.body);
 
-    // Insert guest into the Guest table
-    const sqlInsertIntoGuest = `
-        INSERT INTO Guest (FirstName, LastName, EmailAddress, PhoneNumber, NID, DateOfBirth, HotelID)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-    `;
+  
+      // Add guest
+      const guestID = await addGuest({
+        firstName,
+        lastName,
+        email,
+        phoneNumber,
+        nid,
+        dob,
+        hotelID,
+      });
 
-    db.query(
-        sqlInsertIntoGuest,
-        [firstName, lastName, email, phoneNumber, nid, dob, HotelID],
-        (err, result) => {
-            if (err) {
-                console.error("Error inserting guest:", err);
-                return res.status(500).send({ message: "Error adding guest", error: err });
-            }
-
-            const GuestID = result.insertId; // Get the last inserted GuestID
-            console.log("Inserted GuestID:", GuestID);
-
-            // Insert booking into the Booking table
-            const sqlInsertIntoBooking = `
-                INSERT INTO Booking (
-                    GuestID,
-                    HotelID,
-                    EmpID,
-                    CheckInDate,
-                    CheckOutDate,
-                    NumAdults,
-                    NumChildren,
-                    TotalBooking,
-                    PaymentStatus,
-                    BookingDate
-                )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            `;
-
-            const EmpID = 1; // Example EmpID, replace as necessary
-            const CheckInDate = "2024-11-16"; // Use actual check-in date from input
-            const CheckOutDate = "2024-11-18"; // Use actual check-out date from input
-            const NumAdults = 2; // Example value
-            const NumChildren = 1; // Example value
-            const TotalBooking = 200.0; // Example value, replace with actual calculation
-            const PaymentStatus = "Pending"; // Example value
-            const BookingDate = new Date().toISOString().split("T")[0]; // Current date
-
-            db.query(
-                sqlInsertIntoBooking,
-                [
-                    GuestID,
-                    HotelID,
-                    EmpID,
-                    CheckInDate,
-                    CheckOutDate,
-                    NumAdults,
-                    NumChildren,
-                    TotalBooking,
-                    PaymentStatus,
-                    BookingDate,
-                ],
-                (err, result) => {
-                    if (err) {
-                        console.error("Error inserting booking:", err);
-                        return res
-                            .status(500)
-                            .send({ message: "Error adding booking", error: err });
-                    }
-
-                    // Update room status
-                    const updateRoomStatus = `
-                        UPDATE Room
-                        SET Status = 'Booked'
-                        WHERE RoomNumber = ?
-                    `;
-
-                    db.query(updateRoomStatus, [selectedRoom], (err, result) => {
-                        if (err) {
-                            console.error("Error updating room status:", err);
-                            return res.status(500).send({
-                                message: "Error updating room status",
-                                error: err,
-                            });
-                        }
-
-                        res.send({ message: "Guest and booking added successfully!" });
-                    });
-                }
-            );
-        }
-    );
-});
+      const bookingID = await createBooking({
+        guestID,
+        hotelID: 1,
+        empID: 1, // Static Employee ID (replace as needed)
+        checkInDate,
+        checkOutDate,
+        numAdults,
+        numChildren,
+        totalBooking: 200.0, // Placeholder for total booking cost
+        paymentStatus: "Pending",
+      });
+      // Process bookings for selected rooms
+      for (const roomID of selectedRooms) {
+        await updateRoomStatus(bookingID, roomID);
+      }
+  
+      res.send("Guest and bookings added successfully.");
+    } catch (error) {
+      console.error("Error processing booking:", error);
+      res.status(500).send("Error processing booking.");
+    }
+  });
+  
 
 // Fetch available rooms
 app.get("/available-rooms", (req, res) => {
