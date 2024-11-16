@@ -6,8 +6,7 @@ const cors = require("cors");
 app.use(cors());
 app.use(express.json());
 
-
-
+// Database connection
 const db = mysql.createConnection({
     user: "root",
     host: "localhost",
@@ -15,62 +14,138 @@ const db = mysql.createConnection({
     database: "hotelmanagementsystem",
 });
 
-
-
-
-
+// Endpoint to fetch all employees
 app.get("/employees", (req, res) => {
-  db.query("SELECT * FROM hotelmanagementsystem.employee;", (err, result) => {
-      if (err) {
-          console.error(err);
-          res.status(500).send("Error fetching employees.");
-      } else {
-          res.send(result);
-      }
-  });
+    db.query("SELECT * FROM hotelmanagementsystem.employee;", (err, result) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send("Error fetching employees.");
+        } else {
+            res.send(result);
+        }
+    });
 });
 
+// Add a new guest and create booking
 app.post("/add-guest", (req, res) => {
-  const FirstName = req.body.firstName;
-  const LastName = req.body.lastName;
-  const PhoneNumber = req.body.phoneNumber;
-  const EmailAddress = req.body.email;
-  const DateOfBirth = req.body.dob;
-  const NID = req.body.nid;
-  const HotelID = req.body.HotelID;
+    const {
+        firstName,
+        lastName,
+        phoneNumber,
+        email,
+        dob,
+        nid,
+        HotelID,
+        selectedRoom,
+    } = req.body;
 
+    console.log("Request Body:", req.body);
 
+    // Insert guest into the Guest table
+    const sqlInsertIntoGuest = `
+        INSERT INTO Guest (FirstName, LastName, EmailAddress, PhoneNumber, NID, DateOfBirth, HotelID)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    `;
 
+    db.query(
+        sqlInsertIntoGuest,
+        [firstName, lastName, email, phoneNumber, nid, dob, HotelID],
+        (err, result) => {
+            if (err) {
+                console.error("Error inserting guest:", err);
+                return res.status(500).send({ message: "Error adding guest", error: err });
+            }
 
-  console.log("Request Body:", req.body);
-  console.log(FirstName,LastName,EmailAddress);
+            const GuestID = result.insertId; // Get the last inserted GuestID
+            console.log("Inserted GuestID:", GuestID);
 
-  const sqlInsert = `INSERT INTO Guest (FirstName, LastName, EmailAddress, PhoneNumber, NID, DateOfBirth, HotelID) VALUES (?,?,?,?,?,?,?)`;
+            // Insert booking into the Booking table
+            const sqlInsertIntoBooking = `
+                INSERT INTO Booking (
+                    GuestID,
+                    HotelID,
+                    EmpID,
+                    CheckInDate,
+                    CheckOutDate,
+                    NumAdults,
+                    NumChildren,
+                    TotalBooking,
+                    PaymentStatus,
+                    BookingDate
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            `;
 
-  db.query(sqlInsert, [FirstName, LastName, EmailAddress, PhoneNumber, NID, DateOfBirth, HotelID], (err, result) => {
-      if (err) {
-          console.error("Error inserting guest:", err);
-          res.status(500).send({ message: "Error adding guest", error: err });
-      } else {
-          res.send({ message: "Guest added successfully!", data: result });
-      }
-  });
+            const EmpID = 1; // Example EmpID, replace as necessary
+            const CheckInDate = "2024-11-16"; // Use actual check-in date from input
+            const CheckOutDate = "2024-11-18"; // Use actual check-out date from input
+            const NumAdults = 2; // Example value
+            const NumChildren = 1; // Example value
+            const TotalBooking = 200.0; // Example value, replace with actual calculation
+            const PaymentStatus = "Pending"; // Example value
+            const BookingDate = new Date().toISOString().split("T")[0]; // Current date
+
+            db.query(
+                sqlInsertIntoBooking,
+                [
+                    GuestID,
+                    HotelID,
+                    EmpID,
+                    CheckInDate,
+                    CheckOutDate,
+                    NumAdults,
+                    NumChildren,
+                    TotalBooking,
+                    PaymentStatus,
+                    BookingDate,
+                ],
+                (err, result) => {
+                    if (err) {
+                        console.error("Error inserting booking:", err);
+                        return res
+                            .status(500)
+                            .send({ message: "Error adding booking", error: err });
+                    }
+
+                    // Update room status
+                    const updateRoomStatus = `
+                        UPDATE Room
+                        SET Status = 'Booked'
+                        WHERE RoomNumber = ?
+                    `;
+
+                    db.query(updateRoomStatus, [selectedRoom], (err, result) => {
+                        if (err) {
+                            console.error("Error updating room status:", err);
+                            return res.status(500).send({
+                                message: "Error updating room status",
+                                error: err,
+                            });
+                        }
+
+                        res.send({ message: "Guest and booking added successfully!" });
+                    });
+                }
+            );
+        }
+    );
 });
 
+// Fetch available rooms
 app.get("/available-rooms", (req, res) => {
-  db.query("SELECT * FROM hotelmanagementsystem.room where status = 'Available';", (err, result) => {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log(result);
-      res.send(result);
-  
-    }
-  });
+    db.query(
+        "SELECT * FROM hotelmanagementsystem.room WHERE status = 'Available';",
+        (err, result) => {
+            if (err) {
+                console.error("Error fetching rooms:", err);
+                return res.status(500).send("Error fetching available rooms.");
+            }
+            res.send(result);
+        }
+    );
 });
-  
 
-
+// Start the server
 app.listen(3001, () => {
-    console.log("Yey, your server is running on port 3001");
+    console.log("Server is running on port 3001");
 });
