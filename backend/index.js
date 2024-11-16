@@ -145,6 +145,77 @@ app.get("/available-rooms", (req, res) => {
     );
 });
 
+app.post("/filter-rooms", (req, res) => {
+    // const { minPrice, maxPrice, bedType, classType, maxOccupancy } = req.body;
+    const minPrice = req.body.minPrice;
+    const maxPrice = req.body.maxPrice;
+    const bedType= req.body.bedType;
+    const classType = req.body.classType;
+    const maxOccupancy  = req.body.maxOccupancy;
+    const hotelID = req.body.hotelID;
+
+    let query = `
+        SELECT r.RoomID, r.RoomNumber, r.Status, r.MaxOccupancy, r.BasePrice, rc.ClassType, bt.BedType
+        FROM Room r
+        INNER JOIN Room_Class rc ON r.RoomClassID = rc.RoomClassID
+        LEFT JOIN Bed_Type bt ON r.RoomID = bt.RoomID
+        WHERE r.Status = 'Available'
+    `;
+
+    let conditions = [];
+    let params = [];
+
+    // Add conditions dynamically based on filters
+    if (minPrice && minPrice > 0) {
+        conditions.push("r.BasePrice >= ?");
+        params.push(minPrice);
+    }
+    if (maxPrice && maxPrice > 0) {
+        conditions.push("r.BasePrice <= ?");
+        params.push(maxPrice);
+    }
+    if (bedType && bedType !== "Any") {
+        conditions.push("bt.BedType = ?");
+        params.push(bedType);
+    }
+    if (classType && classType !== "Any") {
+        conditions.push("rc.ClassType = ?");
+        params.push(classType);
+    }
+    if (maxOccupancy && maxOccupancy > 0) {
+        conditions.push("r.MaxOccupancy <= ?");
+        params.push(maxOccupancy);
+    }
+
+    if (hotelID && hotelID > 0) {
+        conditions.push("r.HotelID = ?");
+        params.push(hotelID);
+    }
+
+    // Append conditions to the query
+    if (conditions.length > 0) {
+        query += " AND " + conditions.join(" AND ");
+    }
+
+
+    console.log("Generated Query:", query);
+    console.log("Query Parameters:", params);
+
+
+
+
+
+    // Execute the query
+    db.query(query, params, (err, result) => {
+        if (err) {
+            console.error("Error filtering rooms:", err);
+            res.status(500).send({ message: "Error filtering rooms.", error: err });
+        } else {
+            res.send(result); // Return the filtered rooms
+        }
+    });
+});
+
 // Start the server
 app.listen(3001, () => {
     console.log("Server is running on port 3001");
