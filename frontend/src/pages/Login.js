@@ -9,9 +9,17 @@ function Login(){
             <h1>
                 Login Page
             </h1>
-            <button onClick={() => navigate("/receptionist")}>
-        Go to Receptionist
-    </button>
+            <label>Email: </label>
+        <input
+          type="email"
+          value={""}
+        />
+        <label>Password: </label>
+        <input
+          type="password"
+          value={""}
+        />
+            <button onClick={() => navigate("/receptionist")}>Login</button>
 
         </div>
     );

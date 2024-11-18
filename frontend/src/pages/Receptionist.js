@@ -170,7 +170,7 @@ const Receptionist = () => {
         <button
           onClick={() => {
             setShowFilterModal(!showFilterModal);
-            setShowRooms(false); // Close room list when toggling filter modal
+            setShowRooms(true); // Close room list when toggling filter modal
           }}
         >
           {showFilterModal ? "Close Search" : "Search"}

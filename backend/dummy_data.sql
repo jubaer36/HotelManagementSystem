@@ -51,7 +51,7 @@ INSERT INTO Room (RoomNumber, RoomClassID, HotelID, BookingID, Status, MaxOccupa
 (101, 1, 1, 1, 'Available', 2, 150.00),
 (102, 2, 2, 2, 'Available', 4, 300.00),
 (103, 3, 3, 3, 'Occupied', 1, 100.00),
-(104, 4, 4, 4, 'Available', 2, 200.00),
+(104, 4, 4, 4, 'Occupied', 2, 200.00),
 (105, 5, 5, 5, 'Available', 6, 500.00);
 
 -- Insert into Bed_Type Table
