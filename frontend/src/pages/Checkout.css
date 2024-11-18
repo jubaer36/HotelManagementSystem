@@ -1,0 +1,137 @@
+.current-guests-container {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background-color: #f7f7f7;
+}
+
+.filter-guests-button {
+    padding: 10px 15px;
+    background-color: #3182ce;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.filter-guests-button:hover {
+    background-color: #2b6cb0;
+}
+
+.guest-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.guest-card {
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 300px;
+}
+
+.guest-card h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #333;
+}
+
+.guest-card p {
+    margin: 5px 0;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.guest-actions {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.extend-visit-button,
+.checkout-button {
+    padding: 8px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.extend-visit-button {
+    background-color: #f6ad55;
+    color: white;
+}
+
+.extend-visit-button:hover {
+    background-color: #dd6b20;
+}
+
+.checkout-button {
+    background-color: #e53e3e;
+    color: white;
+}
+
+.checkout-button:hover {
+    background-color: #c53030;
+}
+
+.popup,
+.filter-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+.popup h2,
+.filter-modal h2 {
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+}
+
+.popup-actions,
+.filter-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.popup-actions button,
+.filter-actions button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.popup-actions button:first-child,
+.filter-actions button:first-child {
+    background-color: #3182ce;
+    color: white;
+}
+
+.popup-actions button:first-child:hover,
+.filter-actions button:first-child:hover {
+    background-color: #2b6cb0;
+}
+
+.popup-actions button:last-child,
+.filter-actions button:last-child {
+    background-color: #e53e3e;
+    color: white;
+}
+
+.popup-actions button:last-child:hover,
+.filter-actions button:last-child:hover {
+    background-color: #c53030;
+}

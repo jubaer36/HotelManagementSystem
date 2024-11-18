@@ -172,7 +172,7 @@ app.post("/filter-rooms", (req, res) => {
     const bedType= req.body.bedType;
     const classType = req.body.classType;
     const maxOccupancy  = req.body.maxOccupancy;
-    const hotelID = req.body.hotelID;
+    const hotelID = 1;
 
     let query = `
         SELECT r.RoomID, r.RoomNumber, r.Status, r.MaxOccupancy, r.BasePrice, rc.ClassType, bt.BedType
@@ -203,7 +203,7 @@ app.post("/filter-rooms", (req, res) => {
         params.push(classType);
     }
     if (maxOccupancy && maxOccupancy > 0) {
-        conditions.push("r.MaxOccupancy <= ?");
+        conditions.push("r.MaxOccupancy >= ?");
         params.push(maxOccupancy);
     }
 
