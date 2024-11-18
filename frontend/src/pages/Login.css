@@ -1,0 +1,68 @@
+/* General styles */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7; /* Light gray background */
+}
+
+/* Container for the login */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full screen height */
+    background-color: #f7f7f7;
+}
+
+/* The login box styling */
+.login-box {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px; /* Set max width for alignment */
+    text-align: center;
+}
+
+/* Heading styles */
+.login-heading {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #333; /* Dark gray */
+}
+
+/* Input fields */
+.login-input {
+    width: 100%; /* Match the button width */
+    padding: 0.75rem;
+    margin: 0.5rem 0;
+    border: 1px solid #ddd; /* Light gray border */
+    border-radius: 4px;
+    font-size: 1rem;
+    box-sizing: border-box; /* Ensures consistent padding */
+}
+
+/* Input focus effect */
+.login-input:focus {
+    border-color: #3182ce; /* Blue border on focus */
+    outline: none;
+}
+
+/* Login button */
+.login-button {
+    width: 100%; /* Match input width */
+    padding: 0.75rem;
+    font-size: 1rem;
+    color: white;
+    background-color: #3182ce; /* Blue background */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 1rem;
+}
+
+/* Button hover effect */
+.login-button:hover {
+    background-color: #2b6cb0; /* Darker blue */
+}
