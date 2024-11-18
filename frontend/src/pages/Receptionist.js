@@ -6,7 +6,7 @@ import Axios from "axios";
 
 const Receptionist = () => {
   const navigate = useNavigate();
-  
+
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -91,7 +91,7 @@ const Receptionist = () => {
       alert("All guest fields are required.");
       return;
     }
-  
+
     Axios.post("http://localhost:3001/add-guest", {
       firstName,
       lastName,
@@ -118,121 +118,266 @@ const Receptionist = () => {
         alert("Failed to confirm booking.");
       });
   };
-  
+
   return (
-    <div>
-      <header>Receptionist Dashboard</header>
-      <div>
-        <label>First Name: </label>
-        <input
-          type="text"
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
-        />
-        <label>Last Name: </label>
-        <input
-          type="text"
-          value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
-        />
-        <label>Email: </label>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <label>Phone: </label>
-        <input
-          type="text"
-          value={phoneNumber}
-          onChange={(e) => setPhoneNumber(e.target.value)}
-        />
-        <label>Date of Birth: </label>
-        <input
-          type="date"
-          value={dob}
-          onChange={(e) => setDob(e.target.value)}
-        />
-        <label>NID: </label>
-        <input
-          type="text"
-          value={nid}
-          onChange={(e) => setNid(e.target.value)}
-        />
-        <button
-          onClick={() => {
-            setShowRooms(!showRooms);
-            setShowFilterModal(false); // Close filter modal when toggling rooms
-          }}
-        >
-          {showRooms ? "Hide Available Rooms" : "Show Available Rooms"}
-        </button>
-        <button
-          onClick={() => {
-            setShowFilterModal(!showFilterModal);
-            setShowRooms(true); // Close room list when toggling filter modal
-          }}
-        >
-          {showFilterModal ? "Close Search" : "Search"}
-        </button>
+    <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
+      <div style={{ marginBottom: "20px" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "15px" }}>
+          <div>
+            <label style={{ display: "block", fontWeight: "bold", marginBottom: "5px" }}>First Name:</label>
+            <input
+              type="text"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              style={{ padding: "10px", width: "200px", border: "1px solid #ccc", borderRadius: "4px" }}
+            />
+          </div>
+          <div>
+            <label style={{ display: "block", fontWeight: "bold", marginBottom: "5px" }}>Last Name:</label>
+            <input
+              type="text"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              style={{ padding: "10px", width: "200px", border: "1px solid #ccc", borderRadius: "4px" }}
+            />
+          </div>
+          <div>
+            <label style={{ display: "block", fontWeight: "bold", marginBottom: "5px" }}>Email:</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              style={{ padding: "10px", width: "250px", border: "1px solid #ccc", borderRadius: "4px" }}
+            />
+          </div>
+          <div>
+            <label style={{ display: "block", fontWeight: "bold", marginBottom: "5px" }}>Phone:</label>
+            <input
+              type="text"
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value)}
+              style={{ padding: "10px", width: "200px", border: "1px solid #ccc", borderRadius: "4px" }}
+            />
+          </div>
+          <div>
+            <label style={{ display: "block", fontWeight: "bold", marginBottom: "5px" }}>Date of Birth:</label>
+            <input
+              type="date"
+              value={dob}
+              onChange={(e) => setDob(e.target.value)}
+              style={{ padding: "10px", width: "200px", border: "1px solid #ccc", borderRadius: "4px" }}
+            />
+          </div>
+          <div>
+            <label style={{ display: "block", fontWeight: "bold", marginBottom: "5px" }}>NID:</label>
+            <input
+              type="text"
+              value={nid}
+              onChange={(e) => setNid(e.target.value)}
+              style={{ padding: "10px", width: "200px", border: "1px solid #ccc", borderRadius: "4px" }}
+            />
+          </div>
+        </div>
+
+        <div style={{ marginTop: "20px" }}>
+          <button
+            onClick={() => {
+              setShowRooms(!showRooms);
+              setShowFilterModal(false);
+            }}
+            style={{
+              padding: "10px 15px",
+              backgroundColor: showRooms ? "#f44336" : "#4CAF50",
+              color: "white",
+              border: "none",
+              borderRadius: "4px",
+              cursor: "pointer",
+              marginRight: "10px",
+            }}
+          >
+            {showRooms ? "Hide Available Rooms" : "Show Available Rooms"}
+          </button>
+          <button
+            onClick={() => {
+              setShowFilterModal(!showFilterModal);
+              setShowRooms(true);
+            }}
+            style={{
+              padding: "10px 15px",
+              backgroundColor: showFilterModal ? "#f44336" : "#2196F3",
+              color: "white",
+              border: "none",
+              borderRadius: "4px",
+              cursor: "pointer",
+            }}
+          >
+            {showFilterModal ? "Close Search" : "Search"}
+          </button>
+        </div>
       </div>
 
       {showRooms && (
-        <div>
+        <div style={{ marginTop: "20px" }}>
           <h2>Available Rooms</h2>
-          {availableRooms.map((room) => (
-            <button
-              key={room.RoomID}
-              onClick={() => handleRoomSelection(room)}
-              style={{
-                display: "block",
-                padding: "10px",
-                margin: "5px",
-                backgroundColor: selectedRooms.includes(room.RoomID)
-                  ? "green"
-                  : "lightgray",
-              }}
-            >
-              Room {room.RoomNumber} - {room.ClassType} (${room.BasePrice})
-            </button>
-          ))}
+          <table style={{ width: "100%", borderCollapse: "collapse", marginTop: "10px" }}>
+            <thead>
+              <tr style={{ backgroundColor: "#f2f2f2" }}>
+                <th style={{ border: "1px solid #ccc", padding: "10px", textAlign: "left" }}>Room Number</th>
+                <th style={{ border: "1px solid #ccc", padding: "10px", textAlign: "left" }}>Class Type</th>
+                <th style={{ border: "1px solid #ccc", padding: "10px", textAlign: "left" }}>Base Price</th>
+                <th style={{ border: "1px solid #ccc", padding: "10px", textAlign: "left" }}>Max Occupancy</th>
+                <th style={{ border: "1px solid #ccc", padding: "10px", textAlign: "left" }}>Select</th>
+              </tr>
+            </thead>
+            <tbody>
+              {availableRooms.map((room) => (
+                <tr
+                  key={room.RoomID}
+                  style={{
+                    backgroundColor: selectedRooms.includes(room.RoomID) ? "lightgreen" : "white",
+                  }}
+                >
+                  <td style={{ border: "1px solid #ccc", padding: "10px" }}>{room.RoomNumber}</td>
+                  <td style={{ border: "1px solid #ccc", padding: "10px" }}>{room.RoomClassID}</td>
+                  <td style={{ border: "1px solid #ccc", padding: "10px" }}>${room.BasePrice}</td>
+                  <td style={{ border: "1px solid #ccc", padding: "10px" }}>{room.MaxOccupancy}</td>
+                  <td style={{ border: "1px solid #ccc", padding: "10px" }}>
+                    <button
+                      onClick={() => handleRoomSelection(room)}
+                      style={{
+                        padding: "5px 10px",
+                        backgroundColor: selectedRooms.includes(room.RoomID) ? "green" : "#e0e0e0",
+                        color: selectedRooms.includes(room.RoomID) ? "white" : "black",
+                        border: "none",
+                        borderRadius: "4px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      {selectedRooms.includes(room.RoomID) ? "Deselect" : "Select"}
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
 
       {selectedRooms.length > 0 && (
-        <div>
-          <h2>Booking Details</h2>
-          <label>Check-In Date: </label>
-          <input
-            type="date"
-            name="checkInDate"
-            value={bookingDetails.checkInDate}
-            onChange={handleBookingInputChange}
-          />
-          <label>Check-Out Date: </label>
-          <input
-            type="date"
-            name="checkOutDate"
-            value={bookingDetails.checkOutDate}
-            onChange={handleBookingInputChange}
-          />
-          <label>Number of Adults: </label>
-          <input
-            type="number"
-            name="numAdults"
-            value={bookingDetails.numAdults}
-            onChange={handleBookingInputChange}
-          />
-          <label>Number of Children: </label>
-          <input
-            type="number"
-            name="numChildren"
-            value={bookingDetails.numChildren}
-            onChange={handleBookingInputChange}
-          />
-          <button onClick={handleConfirmBooking}>Confirm Booking</button>
+        <div
+          style={{
+            backgroundColor: "#ffffff",
+            padding: "30px",
+            boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.2)",
+            borderRadius: "10px",
+            width: "500px",
+            maxWidth: "90%",
+            fontFamily: "'Arial', sans-serif",
+            margin: "20px auto",
+          }}
+        >
+          <h2 style={{ textAlign: "center", marginBottom: "20px" }}>Booking Details</h2>
+
+          <div style={{ marginBottom: "15px" }}>
+            <label style={{ fontSize: "14px", fontWeight: "600", marginBottom: "5px" }}>
+              Check-In Date:
+            </label>
+            <input
+              type="date"
+              name="checkInDate"
+              value={bookingDetails.checkInDate}
+              onChange={handleBookingInputChange}
+              style={{
+                width: "100%",
+                padding: "10px",
+                border: "1px solid #ccc",
+                borderRadius: "5px",
+                fontSize: "14px",
+                marginBottom: "10px",
+              }}
+            />
+          </div>
+
+          <div style={{ marginBottom: "15px" }}>
+            <label style={{ fontSize: "14px", fontWeight: "600", marginBottom: "5px" }}>
+              Check-Out Date:
+            </label>
+            <input
+              type="date"
+              name="checkOutDate"
+              value={bookingDetails.checkOutDate}
+              onChange={handleBookingInputChange}
+              style={{
+                width: "100%",
+                padding: "10px",
+                border: "1px solid #ccc",
+                borderRadius: "5px",
+                fontSize: "14px",
+                marginBottom: "10px",
+              }}
+            />
+          </div>
+
+          <div style={{ marginBottom: "15px" }}>
+            <label style={{ fontSize: "14px", fontWeight: "600", marginBottom: "5px" }}>
+              Number of Adults:
+            </label>
+            <input
+              type="number"
+              name="numAdults"
+              value={bookingDetails.numAdults}
+              onChange={handleBookingInputChange}
+              style={{
+                width: "100%",
+                padding: "10px",
+                border: "1px solid #ccc",
+                borderRadius: "5px",
+                fontSize: "14px",
+                marginBottom: "10px",
+              }}
+            />
+          </div>
+
+          <div style={{ marginBottom: "15px" }}>
+            <label style={{ fontSize: "14px", fontWeight: "600", marginBottom: "5px" }}>
+              Number of Children:
+            </label>
+            <input
+              type="number"
+              name="numChildren"
+              value={bookingDetails.numChildren}
+              onChange={handleBookingInputChange}
+              style={{
+                width: "100%",
+                padding: "10px",
+                border: "1px solid #ccc",
+                borderRadius: "5px",
+                fontSize: "14px",
+                marginBottom: "20px",
+              }}
+            />
+          </div>
+
+          <div style={{ textAlign: "center" }}>
+            <button
+              onClick={handleConfirmBooking}
+              style={{
+                backgroundColor: "#4CAF50",
+                color: "white",
+                padding: "12px 20px",
+                border: "none",
+                borderRadius: "5px",
+                cursor: "pointer",
+                fontSize: "16px",
+                width: "100%",
+              }}
+            >
+              Confirm Booking
+            </button>
+          </div>
         </div>
       )}
+
 
       {showFilterModal && (
         <div
@@ -241,85 +386,181 @@ const Receptionist = () => {
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            backgroundColor: "white",
-            padding: "20px",
-            boxShadow: "0px 0px 10px rgba(0,0,0,0.5)",
+            backgroundColor: "#ffffff",
+            padding: "30px",
+            boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.3)",
             zIndex: 1000,
+            borderRadius: "10px",
+            width: "400px",
+            maxWidth: "90%",
+            fontFamily: "'Arial', sans-serif",
           }}
         >
-          <h2>Filter Rooms</h2>
-          <label>Min Price: </label>
-          <input
-            type="number"
-            name="minPrice"
-            value={filters.minPrice}
-            onChange={(e) =>
-              setFilters({ ...filters, minPrice: Number(e.target.value) })
-            }
-          />
-          <label>Max Price: </label>
-          <input
-            type="number"
-            name="maxPrice"
-            value={filters.maxPrice}
-            onChange={(e) =>
-              setFilters({ ...filters, maxPrice: Number(e.target.value) })
-            }
-          />
-          <label>Bed Type: </label>
-          <select
-            name="bedType"
-            value={filters.bedType}
-            onChange={(e) => setFilters({ ...filters, bedType: e.target.value })}
-          >
-            <option value="Any">Any</option>
-            <option value="King">King</option>
-            <option value="Queen">Queen</option>
-            <option value="Single">Single</option>
-            <option value="Double">Double</option>
-            <option value="Twin">Twin</option>
-          </select>
-          <label>Class Type: </label>
-          <select
-            name="classType"
-            value={filters.classType}
-            onChange={(e) =>
-              setFilters({ ...filters, classType: e.target.value })
-            }
-          >
-            <option value="Any">Any</option>
-            <option value="Standard">Standard</option>
-            <option value="Suite">Suite</option>
-            <option value="Single">Single</option>
-            <option value="Double">Double</option>
-            <option value="Family">Family</option>
-          </select>
-          <label>Max Occupancy: </label>
-          <input
-            type="number"
-            name="maxOccupancy"
-            value={filters.maxOccupancy}
-            onChange={(e) =>
-              setFilters({ ...filters, maxOccupancy: Number(e.target.value) })
-            }
-          />
-          <div style={{ marginTop: "10px" }}>
-            <button onClick={fetchFilteredRooms}>Apply Filters</button>
+          <h2 style={{ textAlign: "center", marginBottom: "20px" }}>Filter Rooms</h2>
+          <div style={{ marginBottom: "15px" }}>
+            <label style={{ fontSize: "14px", fontWeight: "600", marginBottom: "5px" }}>
+              Min Price:
+            </label>
+            <input
+              type="number"
+              name="minPrice"
+              value={filters.minPrice}
+              onChange={(e) =>
+                setFilters({ ...filters, minPrice: Number(e.target.value) })
+              }
+              style={{
+                width: "100%",
+                padding: "10px",
+                border: "1px solid #ccc",
+                borderRadius: "5px",
+                fontSize: "14px",
+                marginBottom: "10px",
+              }}
+            />
+          </div>
+          <div style={{ marginBottom: "15px" }}>
+            <label style={{ fontSize: "14px", fontWeight: "600", marginBottom: "5px" }}>
+              Max Price:
+            </label>
+            <input
+              type="number"
+              name="maxPrice"
+              value={filters.maxPrice}
+              onChange={(e) =>
+                setFilters({ ...filters, maxPrice: Number(e.target.value) })
+              }
+              style={{
+                width: "100%",
+                padding: "10px",
+                border: "1px solid #ccc",
+                borderRadius: "5px",
+                fontSize: "14px",
+                marginBottom: "10px",
+              }}
+            />
+          </div>
+          <div style={{ marginBottom: "15px" }}>
+            <label style={{ fontSize: "14px", fontWeight: "600", marginBottom: "5px" }}>
+              Bed Type:
+            </label>
+            <select
+              name="bedType"
+              value={filters.bedType}
+              onChange={(e) => setFilters({ ...filters, bedType: e.target.value })}
+              style={{
+                width: "100%",
+                padding: "10px",
+                border: "1px solid #ccc",
+                borderRadius: "5px",
+                fontSize: "14px",
+              }}
+            >
+              <option value="Any">Any</option>
+              <option value="King">King</option>
+              <option value="Queen">Queen</option>
+              <option value="Single">Single</option>
+              <option value="Double">Double</option>
+              <option value="Twin">Twin</option>
+            </select>
+          </div>
+          <div style={{ marginBottom: "15px" }}>
+            <label style={{ fontSize: "14px", fontWeight: "600", marginBottom: "5px" }}>
+              Class Type:
+            </label>
+            <select
+              name="classType"
+              value={filters.classType}
+              onChange={(e) =>
+                setFilters({ ...filters, classType: e.target.value })
+              }
+              style={{
+                width: "100%",
+                padding: "10px",
+                border: "1px solid #ccc",
+                borderRadius: "5px",
+                fontSize: "14px",
+              }}
+            >
+              <option value="Any">Any</option>
+              <option value="Standard">Standard</option>
+              <option value="Suite">Suite</option>
+              <option value="Single">Single</option>
+              <option value="Double">Double</option>
+              <option value="Family">Family</option>
+            </select>
+          </div>
+          <div style={{ marginBottom: "15px" }}>
+            <label style={{ fontSize: "14px", fontWeight: "600", marginBottom: "5px" }}>
+              Max Occupancy:
+            </label>
+            <input
+              type="number"
+              name="maxOccupancy"
+              value={filters.maxOccupancy}
+              onChange={(e) =>
+                setFilters({ ...filters, maxOccupancy: Number(e.target.value) })
+              }
+              style={{
+                width: "100%",
+                padding: "10px",
+                border: "1px solid #ccc",
+                borderRadius: "5px",
+                fontSize: "14px",
+              }}
+            />
+          </div>
+          <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px" }}>
+            <button
+              onClick={fetchFilteredRooms}
+              style={{
+                backgroundColor: "#4CAF50",
+                color: "white",
+                padding: "10px 20px",
+                border: "none",
+                borderRadius: "5px",
+                cursor: "pointer",
+                fontSize: "14px",
+              }}
+            >
+              Apply Filters
+            </button>
             <button
               onClick={() => setShowFilterModal(false)}
-              style={{ marginLeft: "10px" }}
+              style={{
+                backgroundColor: "#f44336",
+                color: "white",
+                padding: "10px 20px",
+                border: "none",
+                borderRadius: "5px",
+                cursor: "pointer",
+                fontSize: "14px",
+              }}
             >
               Cancel
             </button>
           </div>
         </div>
       )}
-       <div>
-          <h2>Manual Checkout</h2>
-          
-          <button onClick={() => navigate("/checkout")}>Checkout</button>
-        </div>
+
+
+      <div style={{ marginTop: "20px" }}>
+        <h2>Manual Checkout</h2>
+        <button
+          onClick={() => navigate("/checkout")}
+          style={{
+            padding: "10px 15px",
+            backgroundColor: "#FF9800",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer",
+          }}
+        >
+          Checkout
+        </button>
+      </div>
     </div>
+
   );
 };
 
