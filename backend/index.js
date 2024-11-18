@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const mysql = require("mysql2");
 const cors = require("cors");
+const cron = require("node-cron");
 
 app.use(cors());
 app.use(express.json());
@@ -234,6 +235,63 @@ app.post("/filter-rooms", (req, res) => {
         }
     });
 });
+
+
+// Cron job to run every day at 12:00 PM
+app.post("/manual-checkout", async (req, res) => {
+    const { bookingID } = req.body; // Get BookingID from the request body
+
+    if (!bookingID) {
+        return res.status(400).send("BookingID is required.");
+    }
+
+    console.log("Processing manual checkout for BookingID:", bookingID);
+
+    try {
+        // Step 1: Find all rooms associated with the BookingID
+        const queryRooms = `
+      SELECT RoomID FROM Room WHERE BookingID = ? AND Status = 'Occupied';
+    `;
+
+        db.query(queryRooms, [bookingID], (err, results) => {
+            if (err) {
+                console.error("SQL Query Error (Fetching Rooms):", err);
+                return res.status(500).send("Error fetching rooms for checkout.");
+            }
+
+            if (results.length === 0) {
+                console.log("No occupied rooms found for this BookingID.");
+                return res.status(404).send("No occupied rooms found for this BookingID.");
+            }
+
+            const roomIDs = results.map((row) => row.RoomID); // Extract all RoomIDs
+
+            // Step 2: Update all rooms to make them available
+            const updateRoomQuery = `
+        UPDATE Room SET Status = 'Available' WHERE RoomID IN (?);
+      `;
+
+            db.query(updateRoomQuery, [roomIDs], (err) => {
+                if (err) {
+                    console.error("SQL Query Error (Updating Room Statuses):", err);
+                    return res.status(500).send("Error updating room statuses.");
+                }
+
+                console.log(`Rooms with BookingID ${bookingID} are now available.`);
+                res.send(`Rooms with BookingID ${bookingID} are now available.`);
+            });
+        });
+    } catch (error) {
+        console.error("Unexpected Error (Manual Checkout):", error);
+        res.status(500).send("Unexpected error during manual checkout.");
+    }
+});
+
+
+
+
+
+
 
 // Start the server
 app.listen(3001, () => {
