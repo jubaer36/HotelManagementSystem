@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 import Axios from "axios";
 
 
 const Receptionist = () => {
+  const navigate = useNavigate();
+
+
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -13,7 +18,7 @@ const Receptionist = () => {
   const [availableRooms, setAvailableRooms] = useState([]);
   const [showRooms, setShowRooms] = useState(false);
   const [showFilterModal, setShowFilterModal] = useState(false);
-  const [bookingID, setBookingID] = useState("");
+  
   const [bookingDetails, setBookingDetails] = useState({
     checkInDate: "",
     checkOutDate: "",
@@ -115,26 +120,7 @@ const Receptionist = () => {
       });
   };
 
-  const handleCheckout = () => {
-    if (!bookingID) {
-      alert("Please enter a BookingID.");
-      return;
-    }
-
-    Axios.post("http://localhost:3001/manual-checkout", {bookingID})
-        .then((response) => {
-          alert(response.data); // Show success message
-          setBookingID(""); // Clear input field
-        })
-        .catch((error) => {
-          console.error("Error during manual checkout:", error);
-          const errorMessage =
-              error.response && error.response.data
-                  ? error.response.data
-                  : "Failed to process manual checkout. Please try again.";
-          alert(errorMessage);
-        });
-  }
+  
 
   
   return (
@@ -334,13 +320,8 @@ const Receptionist = () => {
         )}
         <div>
           <h2>Manual Checkout</h2>
-          <input
-              type="text"
-              placeholder="Enter BookingID"
-              value={bookingID}
-              onChange={(e) => setBookingID(e.target.value)}
-          />
-          <button onClick={handleCheckout}>Checkout</button>
+          
+          <button onClick={() => navigate("/checkout")}>Checkout</button>
         </div>
       </div>
 
