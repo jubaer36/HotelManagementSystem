@@ -399,6 +399,75 @@ app.post("/checkout", (req, res) => {
 });
 
 
+app.post("/filter-guests", (req, res) => {
+  const {
+    firstName,
+    lastName,
+    phoneNumber,
+    email,
+    guestID,
+    fromDate,
+    toDate,
+  } = req.body;
+
+  let query = `
+    SELECT
+      g.GuestID,
+      g.FirstName,
+      g.LastName,
+      g.EmailAddress,
+      g.PhoneNumber,
+      b.CheckInDate,
+      b.CheckOutDate,
+      b.NumAdults,
+      b.NumChildren,
+      r.RoomNumber
+    FROM Guest g
+    INNER JOIN Booking b ON g.GuestID = b.GuestID
+    INNER JOIN Room r ON b.BookingID = r.BookingID
+    WHERE 1=1
+  `;
+
+  const params = [];
+
+  if (firstName) {
+    query += " AND g.FirstName LIKE ?";
+    params.push(`%${firstName}%`);
+  }
+  if (lastName) {
+    query += " AND g.LastName LIKE ?";
+    params.push(`%${lastName}%`);
+  }
+  if (phoneNumber) {
+    query += " AND g.PhoneNumber LIKE ?";
+    params.push(`%${phoneNumber}%`);
+  }
+  if (email) {
+    query += " AND g.EmailAddress LIKE ?";
+    params.push(`%${email}%`);
+  }
+  if (guestID) {
+    query += " AND g.GuestID = ?";
+    params.push(guestID);
+  }
+  if (fromDate) {
+    query += " AND b.CheckInDate >= ?";
+    params.push(fromDate);
+  }
+  if (toDate) {
+    query += " AND b.CheckOutDate <= ?";
+    params.push(toDate);
+  }
+
+  db.query(query, params, (err, results) => {
+    if (err) {
+      console.error("Error filtering guests:", err);
+      res.status(500).send("Error filtering guests.");
+    } else {
+      res.send(results);
+    }
+  });
+});
 
 
 

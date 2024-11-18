@@ -6,7 +6,18 @@ const CurrentGuests = () => {
   const [loading, setLoading] = useState(true);
   const [showPopup, setShowPopup] = useState(false);
   const [selectedGuest, setSelectedGuest] = useState(null);
-  const [newCheckoutDate, setNewCheckoutDate] = useState("");
+  const [newCheckoutDate, setNewCheckoutDate] = useState("");  
+  const [showFilterModal, setShowFilterModal] = useState(false);
+  const [filters, setFilters] = useState({
+    firstName: "",
+    lastName: "",
+    phoneNumber: "",
+    email: "",
+    guestID: "",
+    fromDate: "",
+    toDate: "",
+  });
+
 
   useEffect(() => {
     fetchGuests();
@@ -25,6 +36,28 @@ const CurrentGuests = () => {
         setLoading(false);
       });
   };
+
+  
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [name]: value,
+    }));
+  };
+
+  const applyFilters = () => {
+    Axios.post("http://localhost:3001/filter-guests", filters)
+      .then((response) => {
+        setGuests(response.data);
+        setShowFilterModal(false); // Close the modal after applying filters
+      })
+      .catch((error) => {
+        console.error("Error applying filters:", error);
+        alert("Failed to apply filters.");
+      });
+  };
+
   
   const handleExtendVisit = (guest) => {
     setSelectedGuest(guest);
@@ -77,6 +110,23 @@ const CurrentGuests = () => {
   }
 
   return (
+    <div>
+            <button
+        style={{
+          position: "absolute",
+          top: "20px",
+          right: "20px",
+          padding: "10px",
+          backgroundColor: "blue",
+          color: "white",
+          border: "none",
+          borderRadius: "5px",
+          cursor: "pointer",
+        }}
+        onClick={() => setShowFilterModal(true)}
+      >
+        Filter Guests
+      </button>
     <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
       {guests.map((guest, index) => (
         <div
@@ -159,8 +209,84 @@ const CurrentGuests = () => {
           </div>
         </div>
       )}
+       {showFilterModal && (
+        <div
+          style={{
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            backgroundColor: "white",
+            padding: "20px",
+            boxShadow: "0px 0px 10px rgba(0,0,0,0.5)",
+            zIndex: 1000,
+          }}
+        >
+          <h2>Filter Guests</h2>
+          <label>First Name: </label>
+          <input
+            type="text"
+            name="firstName"
+            value={filters.firstName}
+            onChange={handleFilterChange}
+          />
+          <br />
+          <label>Last Name: </label>
+          <input
+            type="text"
+            name="lastName"
+            value={filters.lastName}
+            onChange={handleFilterChange}
+          />
+          <br />
+          <label>Phone Number: </label>
+          <input
+            type="text"
+            name="phoneNumber"
+            value={filters.phoneNumber}
+            onChange={handleFilterChange}
+          />
+          <br />
+          <label>Email: </label>
+          <input
+            type="email"
+            name="email"
+            value={filters.email}
+            onChange={handleFilterChange}
+          />
+          <br />
+          <label>Guest ID: </label>
+          <input
+            type="text"
+            name="guestID"
+            value={filters.guestID}
+            onChange={handleFilterChange}
+          />
+          <br />
+          <label>From Date: </label>
+          <input
+            type="date"
+            name="fromDate"
+            value={filters.fromDate}
+            onChange={handleFilterChange}
+          />
+          <br />
+          <label>To Date: </label>
+          <input
+            type="date"
+            name="toDate"
+            value={filters.toDate}
+            onChange={handleFilterChange}
+          />
+          <br />
+          <button onClick={applyFilters}>Apply Filters</button>
+          <button onClick={() => setShowFilterModal(false)}>Cancel</button>
+        </div>
+      )}
+    </div>
     </div>
   );
+  
 };
 
 export default CurrentGuests;
