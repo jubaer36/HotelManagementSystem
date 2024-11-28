@@ -14,8 +14,26 @@
     margin-bottom: 20px;
 }
 
+.show-current-guest-button {
+
+    padding: 10px 15px;
+    background-color: #00c13d;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    margin-left: 5px;
+
+}
+
 .filter-guests-button:hover {
     background-color: #2b6cb0;
+}
+
+.show-current-guest-button:hover {
+    background-color: #008547;
+
 }
 
 .guest-cards {
@@ -52,7 +70,7 @@
 }
 
 .extend-visit-button,
-.checkout-button {
+.features-button {
     padding: 8px 10px;
     border: none;
     border-radius: 5px;
@@ -69,12 +87,12 @@
     background-color: #dd6b20;
 }
 
-.checkout-button {
+.features-button {
     background-color: #e53e3e;
     color: white;
 }
 
-.checkout-button:hover {
+.features-button:hover {
     background-color: #c53030;
 }
 

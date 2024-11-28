@@ -3,6 +3,7 @@ const cors = require("cors");
 const db = require("./dbconn"); 
 const checkoutRoutes = require("./routes/checkout");
 const receptionist_dashboard_routes = require("./routes/receptionist_dashboard");
+const featuresRoutes = require("./routes/featuresRoute");
 
 const app = express();
 
@@ -12,6 +13,8 @@ app.use(express.json());
 app.use(receptionist_dashboard_routes);
 
 app.use(checkoutRoutes);
+
+app.use(featuresRoutes);
 
 
 // Start the server

@@ -17,7 +17,8 @@ router.post("/current-guests", (req, res) => {
         b.CheckOutDate,
         b.NumAdults,
         b.NumChildren,
-        r.RoomNumber
+        r.RoomNumber,
+        r.RoomID
       FROM Guest g
       INNER JOIN Booking b ON g.GuestID = b.GuestID
       INNER JOIN Room r ON b.BookingID = r.BookingID
@@ -114,7 +115,10 @@ router.post("/checkout", (req, res) => {
         });
     });
 });
-  
+
+// router.post("/features",(req,res)=>{
+//           console.log(req.body.roomID);
+// });
   
 router.post("/filter-guests", (req, res) => {
            const firstName= req.body.firstName;
@@ -139,7 +143,8 @@ router.post("/filter-guests", (req, res) => {
         b.CheckOutDate,
         b.NumAdults,
         b.NumChildren,
-        r.RoomNumber
+        r.RoomNumber,
+        r.RoomID
       FROM Guest g
       INNER JOIN Booking b ON g.GuestID = b.GuestID
       INNER JOIN Room r ON b.BookingID = r.BookingID
@@ -191,6 +196,8 @@ router.post("/filter-guests", (req, res) => {
       }
     });
 });
+
+
   
 module.exports = router;
   

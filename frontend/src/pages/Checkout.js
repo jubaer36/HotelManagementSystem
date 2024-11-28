@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Axios from "axios";
 import "./Checkout.css";
 
+
 const CurrentGuests = () => {
     const dummyHID = 2;
+    const navigate = useNavigate();
+
 
     const [guests, setGuests] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -95,30 +99,57 @@ const CurrentGuests = () => {
             });
     };
 
-    const handleCheckout = (guestID) => {
-        Axios.post("http://localhost:3001/checkout", { guestID })
-            .then(() => {
-                alert("Guest checked out successfully.");
-                fetchGuests();
-            })
-            .catch((error) => {
-                console.error("Error during checkout:", error);
-                alert("Failed to process checkout.");
-            });
-    };
+    // const handleCheckout = (guestID) => {
+    //     Axios.post("http://localhost:3001/checkout", { guestID })
+    //         .then(() => {
+    //             alert("Guest checked out successfully.");
+    //             fetchGuests();
+    //         })
+    //         .catch((error) => {
+    //             console.error("Error during checkout:", error);
+    //             alert("Failed to process checkout.");
+    //         });
+    // };
+
+    // const handleFeatures = (roomID) => {
+    //     Axios.post("http://localhost:3001/features", { 
+    //         roomID: roomID, 
+    //     })
+    //         .then(() => {
+    //             // alert("Guest checked out successfully.");
+    //             // fetchGuests();
+    //         })
+    //         .catch((error) => {
+    //             // console.error("Error during checkout:", error);
+    //             // alert("Failed to process checkout.");
+    //         });
+    // }
 
     if (loading) {
         return <p>Loading...</p>;
     }
 
     if (guests.length === 0) {
-        return <p>No guests are currently staying at the hotel.</p>;
+        return(
+            <div className="current-guests-container">
+            <button className="filter-guests-button" onClick={() => setShowFilterModal(true)}>
+                Filter Guests
+            </button>
+            <button className="show-current-guest-button" onClick={()=>fetchGuests()}>
+                Current Guests
+            </button>
+            <p>No Guests Found</p>;
+            </div>
+        ) 
     }
 
     return (
         <div className="current-guests-container">
             <button className="filter-guests-button" onClick={() => setShowFilterModal(true)}>
                 Filter Guests
+            </button>
+            <button className="show-current-guest-button" onClick={()=>fetchGuests()}>
+                Current Guests
             </button>
             <div className="guest-cards">
                 {guests.map((guest, index) => (
@@ -151,9 +182,12 @@ const CurrentGuests = () => {
                             <button className="extend-visit-button" onClick={() => handleExtendVisit(guest)}>
                                 Extend Visit
                             </button>
-                            <button className="checkout-button" onClick={() => handleCheckout(guest.GuestID)}>
-                                Checkout
+                            <button
+                               className="features-button"
+                                   onClick={() => navigate("/feature", { state: { roomID: guest.RoomID } })}>
+                                    Features
                             </button>
+
                         </div>
                     </div>
                 ))}
@@ -240,3 +274,4 @@ const CurrentGuests = () => {
 };
 
 export default CurrentGuests;
+
