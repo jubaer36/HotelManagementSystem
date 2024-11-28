@@ -1,45 +1,61 @@
 import React, { useState, useEffect } from "react";
 import Axios from "axios";
 import "./feature.css";
-
 import { useLocation } from "react-router-dom";
 
 const Features = () => {
     const location = useLocation();
     const roomID = location.state?.roomID; // Access the roomID passed via state
     const guestID = location.state?.guestID;
+    const [features, setFeatures] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (roomID) {
-            console.log("Room ID received:", roomID);
-            console.log("guestID is :", guestID);
-            // You can now use roomID to fetch or display features
-        } else {
-            console.log("No Room ID provided");
+        if (roomID && guestID) {
+            fetchFeatures();
         }
-        handleFeatures();
-    }, []);
+    }, [roomID, guestID]);
 
-
-    
-    const handleFeatures = () => {
-        Axios.post("http://localhost:3001/features", { 
-            roomID: roomID, 
+    const fetchFeatures = () => {
+        Axios.post("http://localhost:3001/features", {
+            roomID,
+            guestID,
         })
-            .then(() => {
-                // alert("Guest checked out successfully.");
-                // fetchGuests();
+            .then((response) => {
+                setFeatures(response.data); // Set all fetched features
+                setLoading(false);
             })
             .catch((error) => {
-                // console.error("Error during checkout:", error);
-                // alert("Failed to process checkout.");
+                console.error("Error fetching features:", error);
+                alert("Failed to fetch features.");
+                setLoading(false);
             });
+    };
+
+    if (loading) {
+        return <p>Loading features...</p>;
+    }
+
+    if (features.length === 0) {
+        return <p>No features available for this room and guest.</p>;
     }
 
     return (
-        <div>
+        <div className="features-container">
             <h1>Room Features</h1>
-            {roomID ? <p>Features for Room ID: {roomID}</p> : <p>No Room ID provided</p>}
+            {/* <p>Features for Room ID: {roomID}</p> */}
+            <div className="features-cards">
+                {features.map((feature) => (
+                    <div className="feature-card" key={feature.FeatureID}>
+                        <h3>{feature.FeatureName}</h3>
+                        <p>{feature.Description}</p>
+                        <p>
+                            <strong>Additional Price:</strong> $
+                            {feature.FeatureAdditionalPrice}
+                        </p>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 };
