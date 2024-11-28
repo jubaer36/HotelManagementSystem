@@ -172,24 +172,23 @@ const updateRoomStatus = (bookingID, roomID) => {
   
   // Endpoint to add a guest and book rooms
 router.post("/add-guest", async (req, res) => {
-    try {
-      const {
-        firstName,
-        lastName,
-        email,
-        phoneNumber,
-        dob,
-        nid,
-        hotelID,
-        selectedRooms,
-        checkInDate,
-        checkOutDate,
-        numAdults,
-        numChildren,
-      } = req.body;
+    try{
 
+        const firstName = req.body.firstName;
+        const lastName = req.body.lastName;
+        const email = req.body.email;
+        const phoneNumber = req.body.phoneNumber;
+        const dob = req.body.dob;
+        const nid = req.body.nid;
+        const hotelID = req.body.hotelID;
+        const selectedRooms = req.body.selectedRooms;
+        const checkInDate = req.body.checkInDate;
+        const checkOutDate = req.body.checkOutDate;
+        const numAdults = req.body.numAdults;
+        const numChildren = req.body.numChildren;
+        const empID = req.body.empID;
+        const deposite = req.body.deposite;
 
-  
       // Add guest
       const guestID = await addGuest({
         firstName,
@@ -203,13 +202,13 @@ router.post("/add-guest", async (req, res) => {
 
       const bookingID = await createBooking({
         guestID,
-        hotelID: 1,
-        empID: 1, // Static Employee ID (replace as needed)
+        hotelID,
+        empID, // Static Employee ID (replace as needed)
         checkInDate,
         checkOutDate,
         numAdults,
         numChildren,
-        totalBooking: 200.0, // Placeholder for total booking cost
+        totalBooking: deposite, // Placeholder for total booking cost *************************************
         paymentStatus: "Pending",
       });
       // Process bookings for selected rooms
@@ -218,12 +217,13 @@ router.post("/add-guest", async (req, res) => {
       }
   
       res.send("Guest and bookings added successfully.");
-    } catch (error) {
-      console.error("Error processing booking:", error);
-      res.status(500).send("Error processing booking.");
     }
-  });
-  
+      catch (error) {
+        console.error("Error processing booking:", error);
+        res.status(500).send("Error processing booking.");
+      }
+    
+});
 
 
 
