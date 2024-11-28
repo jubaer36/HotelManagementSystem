@@ -184,7 +184,7 @@ const CurrentGuests = () => {
                             </button>
                             <button
                                className="features-button"
-                                   onClick={() => navigate("/feature", { state: { roomID: guest.RoomID } })}>
+                                   onClick={() => navigate("/feature", { state: { roomID: guest.RoomID, guestID: guest.GuestID } })}>
                                     Features
                             </button>
 

@@ -7,16 +7,18 @@ import { useLocation } from "react-router-dom";
 const Features = () => {
     const location = useLocation();
     const roomID = location.state?.roomID; // Access the roomID passed via state
+    const guestID = location.state?.guestID;
 
     useEffect(() => {
         if (roomID) {
             console.log("Room ID received:", roomID);
+            console.log("guestID is :", guestID);
             // You can now use roomID to fetch or display features
         } else {
             console.log("No Room ID provided");
         }
         handleFeatures();
-    }, [roomID]);
+    }, []);
 
 
     
