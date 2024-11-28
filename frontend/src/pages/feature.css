@@ -1,51 +1,96 @@
 .features-container {
     padding: 20px;
-    max-width: 800px;
-    margin: 0 auto;
-    text-align: center;
-}
-
-.features-container h1 {
-    font-size: 2rem;
-    margin-bottom: 20px;
-    color: #333;
 }
 
 .features-cards {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
-    justify-content: center;
+    margin-top: 20px;
 }
 
 .feature-card {
-    border: 1px solid #ddd;
+    border: 1px solid #ccc;
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     padding: 16px;
     width: 300px;
-    text-align: left;
-    background-color: #f9f9f9;
-    transition: transform 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.feature-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+.new-feature-button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    position: absolute;
+    top: 20px;
+    right: 20px;
 }
 
-.feature-card h3 {
-    font-size: 1.25rem;
-    margin-bottom: 10px;
-    color: #444;
+.new-feature-button:hover {
+    background-color: #0056b3;
 }
 
-.feature-card p {
-    margin: 5px 0;
-    color: #666;
-    font-size: 1rem;
+.new-feature-form {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    z-index: 1000;
+    width: 400px;
 }
 
-.feature-card strong {
-    color: #000;
+.new-feature-form h2 {
+    margin-bottom: 20px;
+}
+
+.new-feature-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.new-feature-form input,
+.new-feature-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+.form-actions button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.form-actions button:first-child {
+    background-color: #007bff;
+    color: white;
+}
+
+.form-actions button:first-child:hover {
+    background-color: #0056b3;
+}
+
+.form-actions button:last-child {
+    background-color: #ccc;
+    color: black;
+}
+
+.form-actions button:last-child:hover {
+    background-color: #999;
 }

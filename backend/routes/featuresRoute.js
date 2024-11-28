@@ -21,4 +21,27 @@ router.post("/features",(req,res)=>{
     );
 });
 
+
+router.post("/add-feature", (req, res) => {
+    const { roomID, guestID, featureName, description, additionalPrice } = req.body;
+
+    const query = `
+        INSERT INTO Feature (RoomID, GuestID, FeatureName, Description, FeatureAdditionalPrice)
+        VALUES (?, ?, ?, ?, ?);
+    `;
+
+    db.query(
+        query,
+        [roomID, guestID, featureName, description, additionalPrice],
+        (err) => {
+            if (err) {
+                console.error("Error adding new feature:", err);
+                return res.status(500).send("Failed to add feature.");
+            }
+            res.send("Feature added successfully!");
+        }
+    );
+});
+
+
 module.exports = router;
