@@ -5,6 +5,8 @@ import Axios from "axios";
 
 
 const Receptionist = () => {
+  const dummyHID = 2;
+
   const navigate = useNavigate();
 
   const [firstName, setFirstName] = useState("");
@@ -31,12 +33,13 @@ const Receptionist = () => {
     bedType: "Any",
     classType: "Any",
     maxOccupancy: 0,
-    hotelID: 1,
   });
 
   useEffect(() => {
     if (showRooms) {
-      Axios.get("http://localhost:3001/available-rooms")
+      Axios.post("http://localhost:3001/available-rooms",{
+        hotelID: dummyHID,
+      })
         .then((response) => {
           setAvailableRooms(response.data);
         })
@@ -54,7 +57,7 @@ const Receptionist = () => {
       bedType: filters.bedType, // Default value
       classType: filters.classType, // Default value
       maxOccupancy: filters.maxOccupancy, // Default value
-      hotelID: filters.hotelID,
+      hotelID: dummyHID,
     })
       .then((response) => {
         setAvailableRooms(response.data);
@@ -99,7 +102,7 @@ const Receptionist = () => {
       phoneNumber,
       dob,
       nid,
-      HotelID: filters.hotelID,
+      HotelID: dummyHID,
       selectedRooms, // Room IDs array
       ...bookingDetails, // Check-in, Check-out, Adults, and Children
     })

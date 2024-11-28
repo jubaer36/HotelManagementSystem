@@ -3,6 +3,8 @@ import Axios from "axios";
 import "./Checkout.css";
 
 const CurrentGuests = () => {
+    const dummyHID = 2;
+
     const [guests, setGuests] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showPopup, setShowPopup] = useState(false);
@@ -25,7 +27,9 @@ const CurrentGuests = () => {
 
     const fetchGuests = () => {
         setLoading(true);
-        Axios.get("http://localhost:3001/current-guests")
+        Axios.post("http://localhost:3001/current-guests",{
+            hotelID : dummyHID,
+        })
             .then((response) => {
                 setGuests(response.data);
                 setLoading(false);
@@ -45,7 +49,16 @@ const CurrentGuests = () => {
     };
 
     const applyFilters = () => {
-        Axios.post("http://localhost:3001/filter-guests", filters)
+        Axios.post("http://localhost:3001/filter-guests",{
+            firstName: filters.firstName,
+            lastName: filters.lastName,
+            phoneNumber: filters.phoneNumber,
+            email: filters.email,
+            guestID: filters.guestID,
+            fromDate: filters.fromDate,
+            toDate: filters.toDate,
+            hotelID: dummyHID,
+        })
             .then((response) => {
                 setGuests(response.data);
                 setShowFilterModal(false); // Close the modal after applying filters
