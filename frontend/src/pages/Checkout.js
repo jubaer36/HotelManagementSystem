@@ -5,7 +5,7 @@ import "./Checkout.css";
 
 
 const CurrentGuests = () => {
-    const dummyHID = 2;
+    const dummyHID = 1;
     const navigate = useNavigate();
 
 

@@ -5,8 +5,8 @@ import Axios from "axios";
 
 
 const Receptionist = () => {
-  const dummyHID = 2;
-  const dummyEID = 6;
+  const dummyHID = 1;
+  const dummyEID = 2;
   const navigate = useNavigate();
 
   const [firstName, setFirstName] = useState("");
