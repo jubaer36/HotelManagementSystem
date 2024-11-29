@@ -68,11 +68,11 @@ INSERT INTO Room (RoomNumber, RoomClassID, HotelID, BookingID, Status, MaxOccupa
 
 
 INSERT INTO Room (RoomNumber, RoomClassID, HotelID, BookingID, Status, MaxOccupancy, BasePrice) VALUES
-(201, 1, 2, 1, 'Available', 2, 150.00),
-(202, 2, 2, 1, 'Available', 3, 120.00),
-(203, 3, 2, 1, 'Available', 1, 100.00),
-(204, 4, 2, 1, 'Occupied', 4, 200.00),
-(205, 5, 2, 1, 'Available', 2, 180.00);
+(201, 1, 2, 2, 'Available', 2, 150.00),
+(202, 2, 2, 2, 'Available', 3, 120.00),
+(203, 3, 2, 2, 'Available', 1, 100.00),
+(204, 4, 2, 2, 'Occupied', 4, 200.00),
+(205, 5, 2, 2, 'Available', 2, 180.00);
 
 INSERT INTO Bed_Type (RoomID, BedType, Size) VALUES
 (1, 'King', 'Large'),
@@ -89,4 +89,10 @@ INSERT INTO Bed_Type (RoomID, BedType, Size) VALUES
 (9, 'Double', 'Medium'),
 (10, 'Twin', 'Small');
 
+
+INSERT INTO Feature (RoomID, GuestID, FeatureName, Description, FeatureAdditionalPrice)
+VALUES  
+(9, 2, 'High-Speed WiFi', 'Unlimited high-speed internet access', 10.00), 
+(9, 2, 'Complimentary Breakfast', 'A delicious breakfast included with the room', 15.00), 
+(9, 2, 'Balcony with View', 'Private balcony with a scenic city view', 20.00);
 

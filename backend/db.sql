@@ -104,10 +104,12 @@ CREATE TABLE Bed_Type (
 CREATE TABLE Feature (
     FeatureID INT PRIMARY KEY AUTO_INCREMENT,
     RoomID INT,
+    GuestID INT,
     FeatureName VARCHAR(255) NOT NULL,
     Description TEXT, -- Added description for features
     FeatureAdditionalPrice DECIMAL(10, 2) NOT NULL,
-    FOREIGN KEY (RoomID) REFERENCES Room(RoomID) ON DELETE CASCADE
+    FOREIGN KEY (RoomID) REFERENCES Room(RoomID) ON DELETE CASCADE,
+    FOREIGN KEY (GuestID) REFERENCES Guest(GuestID) ON DELETE CASCADE
 );
 
 
