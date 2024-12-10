@@ -3,6 +3,8 @@ import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
 import Receptionist from "./pages/Receptionist";
 import Login from "./pages/Login";
 import Checkout from "./pages/Checkout";
+import Features from "./pages/feature";
+
 function App() {
   // const navigate = useNavigate();
 
@@ -16,6 +18,8 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/receptionist" element={<Receptionist />} />
       <Route path="/checkout" element={<Checkout />} />
+      <Route path="/feature" element={<Features/>} />
+
       </Routes>
     </div>
   );

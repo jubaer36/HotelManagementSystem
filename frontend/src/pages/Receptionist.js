@@ -5,6 +5,8 @@ import Axios from "axios";
 
 
 const Receptionist = () => {
+  const dummyHID = 1;
+  const dummyEID = 2;
   const navigate = useNavigate();
 
   const [firstName, setFirstName] = useState("");
@@ -23,6 +25,7 @@ const Receptionist = () => {
     checkOutDate: "",
     numAdults: 1,
     numChildren: 0,
+    deposite: 0,
   });
 
   const [filters, setFilters] = useState({
@@ -31,12 +34,13 @@ const Receptionist = () => {
     bedType: "Any",
     classType: "Any",
     maxOccupancy: 0,
-    hotelID: 1,
   });
 
   useEffect(() => {
     if (showRooms) {
-      Axios.get("http://localhost:3001/available-rooms")
+      Axios.post("http://localhost:3001/available-rooms",{
+        hotelID: dummyHID,
+      })
         .then((response) => {
           setAvailableRooms(response.data);
         })
@@ -54,7 +58,7 @@ const Receptionist = () => {
       bedType: filters.bedType, // Default value
       classType: filters.classType, // Default value
       maxOccupancy: filters.maxOccupancy, // Default value
-      hotelID: filters.hotelID,
+      hotelID: dummyHID,
     })
       .then((response) => {
         setAvailableRooms(response.data);
@@ -93,16 +97,21 @@ const Receptionist = () => {
     }
 
     Axios.post("http://localhost:3001/add-guest", {
-      firstName,
-      lastName,
-      email,
-      phoneNumber,
-      dob,
-      nid,
-      HotelID: filters.hotelID,
-      selectedRooms, // Room IDs array
-      ...bookingDetails, // Check-in, Check-out, Adults, and Children
-    })
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      phoneNumber: phoneNumber,
+      dob: dob,
+      nid: nid,
+      hotelID: dummyHID,
+      empID: dummyEID,
+      selectedRooms: selectedRooms, // Room IDs array
+      checkInDate: bookingDetails.checkInDate,
+      checkOutDate: bookingDetails.checkOutDate,
+      numAdults: bookingDetails.numAdults,
+      numChildren: bookingDetails.numChildren,
+      deposite: bookingDetails.deposite,
+      })
       .then(() => {
         alert("Booking confirmed successfully!");
         setSelectedRooms([]);
@@ -346,6 +355,27 @@ const Receptionist = () => {
               type="number"
               name="numChildren"
               value={bookingDetails.numChildren}
+              onChange={handleBookingInputChange}
+              style={{
+                width: "100%",
+                padding: "10px",
+                border: "1px solid #ccc",
+                borderRadius: "5px",
+                fontSize: "14px",
+                marginBottom: "20px",
+              }}
+            />
+          </div>
+
+
+          <div style={{ marginBottom: "15px" }}>
+            <label style={{ fontSize: "14px", fontWeight: "600", marginBottom: "5px" }}>
+              Deposite
+            </label>
+            <input
+              type="number"
+              name="deposite"
+              value={bookingDetails.deposite}
               onChange={handleBookingInputChange}
               style={{
                 width: "100%",
