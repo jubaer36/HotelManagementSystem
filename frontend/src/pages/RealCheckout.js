@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Axios from "axios";
 import "./RealCheckout.css"
+import BillingPopup from "../components/BillingPopup";
 
 const CurrentGuests = () =>{
 
@@ -65,6 +66,16 @@ const CurrentGuests = () =>{
             [name]: value,
         }));
     };
+
+    const openBillingPopup = (guest) => {
+        setSelectedGuest(guest);
+        setShowPopup(true);
+      };
+    
+      const closeBillingPopup = () => {
+        setShowPopup(false);
+        setSelectedGuest(null);
+      };
 
 
     if (guests.length === 0) {
@@ -155,7 +166,10 @@ const CurrentGuests = () =>{
                         <p>
                         <strong>Date of Birth:</strong> {new Date(guest.DateOfBirth).toISOString().split("T")[0]}                        </p>
                         <div className="guest-actions">
-                            <button className="billing">
+                            <button
+                                className="billing"
+                                onClick={() => openBillingPopup(guest)}
+                                >
                                 Billing
                             </button>
                         </div>
@@ -216,6 +230,10 @@ const CurrentGuests = () =>{
                     </div>
                 )
             }
+
+        {showPopup && selectedGuest && (
+        <BillingPopup guest={selectedGuest} onClose={closeBillingPopup} />
+        )}
         </div>
     );
 };
