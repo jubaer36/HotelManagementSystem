@@ -4,6 +4,7 @@ import Receptionist from "./pages/Receptionist";
 import Login from "./pages/Login";
 import Checkout from "./pages/Checkout";
 import Features from "./pages/feature";
+import Inventory from "./pages/Inventory";
 
 function App() {
   // const navigate = useNavigate();
@@ -19,6 +20,7 @@ function App() {
       <Route path="/receptionist" element={<Receptionist />} />
       <Route path="/checkout" element={<Checkout />} />
       <Route path="/feature" element={<Features/>} />
+      <Route path="/inventory" element={<Inventory/>} />
 
       </Routes>
     </div>
