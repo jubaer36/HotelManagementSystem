@@ -588,6 +588,20 @@ const Receptionist = () => {
         >
           Checkout
         </button>
+        <button
+          onClick={() => navigate("/real-checkout")}
+          style={{
+            padding: "10px 15px",
+            marginLeft: "5px",
+            backgroundColor: "#FF9800",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer",
+          }}
+        >
+         Real Checkout
+        </button>
       </div>
     </div>
 
