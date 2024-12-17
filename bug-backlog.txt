@@ -5,3 +5,5 @@
 3.Dates are being shown as a day before
 
 4.Checkout.js show filter when no guests
+
+5. Available room query just current check-in-dates

@@ -106,4 +106,72 @@ router.post("/filter-checkout", (req, res) => {
 });
 
 
+router.post("/billing-details", (req, res) => {
+    const { guestID } = req.body;
+  
+    if (!guestID) {
+      return res.status(400).send("GuestID is required.");
+    }
+  
+    // Query to fetch the paid amount (TotalBooking) and PaymentStatus
+    const queryPaid = `
+      SELECT TotalBooking, PaymentStatus
+      FROM Booking 
+      WHERE GuestID = ?;
+    `;
+  
+    // Query to calculate the room charges based on days stayed and room base price
+    const queryRoomCharges = `
+      SELECT SUM(DATEDIFF(b.CheckOutDate, b.CheckInDate) * r.BasePrice) AS RoomTotal
+      FROM Room r
+      INNER JOIN Booking b ON r.BookingID = b.BookingID
+      WHERE b.GuestID = ?;
+    `;
+  
+    // Query to calculate feature charges
+    const queryFeatureCharges = `
+      SELECT SUM(f.FeatureAdditionalPrice) AS FeatureTotal
+      FROM Feature f
+      INNER JOIN Booking b ON f.GuestID = b.GuestID
+      WHERE b.GuestID = ?;
+    `;
+  
+    let response = {};
+  
+    // Execute all queries
+    db.query(queryPaid, [guestID], (err, paidResults) => {
+      if (err) {
+        console.error("Error fetching billing details:", err);
+        return res.status(500).send("Error fetching billing details.");
+      }
+      if (paidResults.length === 0) {
+        return res.status(404).send("No billing details found for this GuestID.");
+      }
+  
+      response.TotalBooking = paidResults[0].TotalBooking;
+      response.PaymentStatus = paidResults[0].PaymentStatus;
+  
+      db.query(queryRoomCharges, [guestID], (err, roomResults) => {
+        if (err) {
+          console.error("Error calculating room charges:", err);
+          return res.status(500).send("Error calculating room charges.");
+        }
+        response.RoomTotal = roomResults[0]?.RoomTotal ? parseFloat(roomResults[0].RoomTotal) : 0;
+          
+        db.query(queryFeatureCharges, [guestID], (err, featureResults) => {
+          if (err) {
+            console.error("Error calculating feature charges:", err);
+            return res.status(500).send("Error calculating feature charges.");
+          }
+          response.FeatureTotal = featureResults[0]?.FeatureTotal ? parseFloat(featureResults[0].FeatureTotal) : 0;
+  
+          // Calculate the total to be paid
+          response.AmountToBePaid = response.RoomTotal + response.FeatureTotal;
+  
+          res.send(response);
+        });
+      });
+    });
+  });
+
 module.exports = router;
