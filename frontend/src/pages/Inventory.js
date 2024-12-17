@@ -131,12 +131,12 @@ const Inventory = () => {
                   type="text"
                   value={newItem.name}
                   onChange={(e) =>
-                      setNewItem({ ...newItem, name: e.target.value })
+                      setNewItem({...newItem, name: e.target.value})
                   }
                   required
               />
             </label>
-            <br />
+            <br/>
             <label>
               Unit Price:
               <input
@@ -152,7 +152,7 @@ const Inventory = () => {
                   required
               />
             </label>
-            <br />
+            <br/>
             <button type="submit">Add Item</button>
           </form>
         </section>
@@ -167,30 +167,24 @@ const Inventory = () => {
                   type="number"
                   value={order.inventoryID}
                   onChange={(e) =>
-                      setOrder({
-                        ...order,
-                        inventoryID: parseInt(e.target.value),
-                      })
+                      setOrder({...order, inventoryID: parseInt(e.target.value)})
                   }
                   required
               />
             </label>
-            <br />
+            <br/>
             <label>
               Quantity:
               <input
                   type="number"
                   value={order.quantity}
                   onChange={(e) =>
-                      setOrder({
-                        ...order,
-                        quantity: parseInt(e.target.value),
-                      })
+                      setOrder({...order, quantity: parseInt(e.target.value)})
                   }
                   required
               />
             </label>
-            <br />
+            <br/>
             <button type="submit">Place Order</button>
           </form>
         </section>
@@ -209,7 +203,7 @@ const Inventory = () => {
                   required
               />
             </label>
-            <br />
+            <br/>
             <button type="submit">Update Status</button>
           </form>
         </section>
@@ -226,6 +220,8 @@ const Inventory = () => {
               <th>Quantity</th>
               <th>Status</th>
               <th>Transaction Date</th>
+              <th>Receive Date</th>
+              {/* New Column */}
             </tr>
             </thead>
             <tbody>
@@ -238,6 +234,11 @@ const Inventory = () => {
                   <td>{transaction.Status}</td>
                   <td>
                     {new Date(transaction.TransactionDate).toLocaleString()}
+                  </td>
+                  <td>
+                    {transaction.ReceiveDate
+                        ? new Date(transaction.ReceiveDate).toLocaleString()
+                        : "N/A"}
                   </td>
                 </tr>
             ))}

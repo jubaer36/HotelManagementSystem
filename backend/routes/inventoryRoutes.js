@@ -50,59 +50,52 @@ router.post("/add-item", (req, res) => {
 router.post("/order-item", (req, res) => {
   const { inventoryID, quantity } = req.body;
 
-  if (!inventoryID || quantity <= 0) {
+  if (!inventoryID || !quantity || quantity <= 0) {
     return res.status(400).send("Inventory ID and valid quantity are required");
   }
 
-  // Step 1: Check if the inventory item exists and has sufficient quantity
-  const checkQuery = `SELECT Quantity FROM Inventory WHERE InventoryID = ? AND HotelID = ?`;
-  db.query(checkQuery, [inventoryID, HOTEL_ID], (err, results) => {
+  const query = `
+    UPDATE Inventory 
+    SET Quantity = Quantity - ? 
+    WHERE InventoryID = ?
+  `;
+
+  db.query(query, [quantity, inventoryID], (err, result) => {
     if (err) {
-      console.error("Error checking inventory:", err);
-      return res.status(500).send("Error processing order");
+      console.error("Error placing order:", err);
+      return res.status(500).send("Error placing order");
     }
 
-    if (results.length === 0 || results[0].Quantity < quantity) {
-      return res.status(400).send("Insufficient inventory quantity");
+    if (result.affectedRows === 0) {
+      return res.status(404).send("Inventory item not found");
     }
 
-    // Step 2: Reduce the quantity in inventory
-    const updateQuery = `UPDATE Inventory 
-                         SET Quantity = Quantity - ?
-                         WHERE InventoryID = ? AND HotelID = ?`;
+    // Log transaction
+    const insertTransactionQuery = `
+      INSERT INTO InventoryTransactions (InventoryID, HotelID, TransactionType, Quantity, Status)
+      VALUES (?, 1, 'Order', ?, 'Pending')
+    `;
 
-    db.query(updateQuery, [quantity, inventoryID, HOTEL_ID], (updateErr) => {
-      if (updateErr) {
-        console.error("Error updating inventory:", updateErr);
-        return res.status(500).send("Error updating inventory");
+    db.query(insertTransactionQuery, [inventoryID, quantity], (transactionErr) => {
+      if (transactionErr) {
+        console.error("Error inserting transaction:", transactionErr);
+        return res.status(500).send("Error inserting transaction");
       }
-
-      // Step 3: Log the transaction
-      const transactionQuery = `INSERT INTO InventoryTransactions 
-                                (InventoryID, HotelID, TransactionType, Quantity, Status)
-                                VALUES (?, ?, 'Order', ?, 'Pending')`;
-
-      db.query(transactionQuery, [inventoryID, HOTEL_ID, quantity], (transactionErr) => {
-        if (transactionErr) {
-          console.error("Error logging transaction:", transactionErr);
-          return res.status(500).send("Error logging transaction");
-        }
-
-        res.status(201).json({ message: "Order placed successfully" });
-      });
+      res.status(200).json({ message: "Order placed successfully" });
     });
   });
 });
+
 
 /* --------------------------------------------
    Fetch Inventory Transactions
 -------------------------------------------- */
 router.get("/transactions", (req, res) => {
-  const query = `SELECT TransactionID, InventoryID, TransactionType, Quantity, Status, TransactionDate
-                 FROM InventoryTransactions
-                 WHERE HotelID = ?`;
-
-  db.query(query, [HOTEL_ID], (err, results) => {
+  const query = `
+    SELECT TransactionID, InventoryID, TransactionType, Quantity, Status, TransactionDate, ReceiveDate
+    FROM InventoryTransactions
+  `;
+  db.query(query, (err, results) => {
     if (err) {
       console.error("Error fetching transactions:", err);
       return res.status(500).send("Error fetching transactions");
@@ -110,7 +103,6 @@ router.get("/transactions", (req, res) => {
     res.status(200).json(results);
   });
 });
-
 
 // Mark Order as Received
 router.post("/receive-order", (req, res) => {
