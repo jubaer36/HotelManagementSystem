@@ -113,4 +113,12 @@ CREATE TABLE Feature (
 );
 
 
+CREATE TABLE Transactions (
+    TransactionID INT PRIMARY KEY AUTO_INCREMENT,
+    BookingID INT NOT NULL,
+    AmountPaid DECIMAL(10, 2) NOT NULL,
+    PaymentDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (BookingID) REFERENCES Booking(BookingID) ON DELETE CASCADE
+)
+
 
