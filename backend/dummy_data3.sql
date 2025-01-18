@@ -138,13 +138,13 @@ VALUES
 INSERT INTO Booking (GuestID, HotelID, EmpID, CheckInDate, CheckOutDate, NumAdults, NumChildren, TotalBooking, PaymentStatus)
 VALUES
 -- Booking for GuestID = 1, HotelID = 1
-(2, 1, 2, DATE_SUB(CURDATE(), INTERVAL 5 DAY), DATE_ADD(CURDATE(), INTERVAL 5 DAY), 2, 1, 50, 'Pending'),
+(2, 1, 2, DATE_SUB(CURDATE(), INTERVAL 5 DAY), DATE_ADD(CURDATE(), INTERVAL 0 DAY), 2, 1, 50, 'Pending'),
 
 -- Booking for GuestID = 2, HotelID = 1
-(3, 1, 2, DATE_SUB(CURDATE(), INTERVAL 10 DAY), DATE_ADD(CURDATE(), INTERVAL 10 DAY), 1, 0, 30, 'Pending'),
+(3, 1, 2, DATE_SUB(CURDATE(), INTERVAL 10 DAY), DATE_ADD(CURDATE(), INTERVAL 0 DAY), 1, 0, 30, 'Pending'),
 
 -- Booking for GuestID = 3, HotelID = 2
-(4, 2, 12, DATE_SUB(CURDATE(), INTERVAL 15 DAY), DATE_ADD(CURDATE(), INTERVAL 10 DAY), 3, 2, 70, 'Pending');
+(4, 2, 12, DATE_SUB(CURDATE(), INTERVAL 15 DAY), DATE_ADD(CURDATE(), INTERVAL 00 DAY), 3, 2, 70, 'Pending');
 
 
 

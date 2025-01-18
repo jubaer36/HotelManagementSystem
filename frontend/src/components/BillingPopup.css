@@ -43,6 +43,7 @@
   border-radius: 4px;
   cursor: pointer;
   margin-top: 20px;
+  margin-left: 10px;
 }
 
 .close-popup-button:hover {

@@ -11,6 +11,7 @@ const BillingPopup = ({ guest, onClose }) => {
     AmountToBePaid: 0,
   });
   const [loading, setLoading] = useState(true);
+  const [isPaid, setIsPaid] = useState(false);
 
   useEffect(() => {
     fetchBillingDetails();
@@ -27,6 +28,29 @@ const BillingPopup = ({ guest, onClose }) => {
         setLoading(false);
       });
   };
+
+  const changePaymentStatus = () =>{
+    Axios.post("http://localhost:3001/payment-done",{guestID: guest.GuestID, amount: billingDetails.AmountToBePaid})
+    .then((response)=>{
+      console.log(response.data);
+      setLoading(false);
+
+      setBillingDetails((prevDetails)=>({
+        ...prevDetails,
+        PaymentStatus : 'Paid',
+      }));
+      setIsPaid (true);
+
+    })
+    .catch((error)=>{
+      setLoading(false);
+
+    });
+  };
+
+  const handleClose = () =>{
+    window.location.reload();
+  }
 
   return (
     <div className="popup-overlay">
@@ -56,7 +80,10 @@ const BillingPopup = ({ guest, onClose }) => {
             </p>
           </>
         )}
-        <button className="close-popup-button" onClick={onClose}>
+        {!isPaid && (<button className="close-popup-button" onClick={changePaymentStatus}>
+          Paid
+        </button>)}
+        <button className="close-popup-button" onClick={handleClose}>
           Close
         </button>
       </div>

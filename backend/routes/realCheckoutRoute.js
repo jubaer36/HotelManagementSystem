@@ -105,6 +105,63 @@ router.post("/filter-checkout", (req, res) => {
     });
 });
 
+router.post("/payment-done",(req,res)=>{
+  console.log("ciwB");
+  const {guestID, amount} = req.body;
+  // console.log(guestID);
+
+  const roomStatusChange = `
+    UPDATE ROOM
+    SET Status = 'Available'
+    WHERE BookingID = (SELECT BookingID
+                      FROM Booking B
+                      WHERE B.GuestID = ?)`
+
+    db.query(roomStatusChange, [guestID],(err)=>{
+      if(err){
+        console.error("error while updating room staus");
+      }
+      else
+      {
+        console.log("success changing room status");
+      }
+    })
+
+    const bookingStatusChange = `
+    UPDATE Booking
+    SET PaymentStatus = 'Paid'
+    WHERE GuestID = ?`
+
+    db.query(bookingStatusChange, [guestID],(err)=>{
+      if(err){
+        console.error("error while updating booking staus");
+      }
+      else
+      {
+        console.log("success changing booking status");
+      }
+    })
+
+    const transactionQuery = `
+    INSERT INTO Transactions (BookingID, AmountPaid)
+        SELECT BookingID, ?
+        FROM Booking
+        WHERE GuestID = ?`;
+    db.query(transactionQuery, [ amount,guestID],(err)=>{
+      if(err){
+        console.error("error while inserting into transactions");
+      }
+      else
+      {
+        console.log("successfully instered into transactions")
+      }
+    })
+  
+
+  res.send("Done");
+});
+
+
 
 router.post("/billing-details", (req, res) => {
     const { guestID } = req.body;
