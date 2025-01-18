@@ -5,6 +5,8 @@ import Login from "./pages/Login";
 import Checkout from "./pages/Checkout";
 import Features from "./pages/feature";
 import RealCheckout from "./pages/RealCheckout";
+import TempNav from "./pages/tempNavPage.js";
+import RPDash from "./pages/ReceptionistDB.js";
 
 function App() {
   // const navigate = useNavigate();
@@ -20,7 +22,9 @@ function App() {
       <Route path="/receptionist" element={<Receptionist />} />
       <Route path="/checkout" element={<Checkout />} />
       <Route path="/feature" element={<Features/>} />
-      <Route path="real-checkout" element={<RealCheckout/>} />
+      <Route path="/real-checkout" element={<RealCheckout/>} />
+      <Route path="/temp-page" element={<TempNav/>} />
+      <Route path="/rp-dashboard" element={<RPDash/>} />
 
       </Routes>
     </div>

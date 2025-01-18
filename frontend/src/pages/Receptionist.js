@@ -573,7 +573,7 @@ const Receptionist = () => {
       )}
 
 
-      <div style={{ marginTop: "20px" }}>
+      {/* <div style={{ marginTop: "20px" }}>
         <h2>Manual Checkout</h2>
         <button
           onClick={() => navigate("/checkout")}
@@ -602,7 +602,7 @@ const Receptionist = () => {
         >
          Real Checkout
         </button>
-      </div>
+      </div> */}
     </div>
 
   );

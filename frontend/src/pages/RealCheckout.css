@@ -1,0 +1,20 @@
+
+.billing {
+    background-color: #e53e3e; /* Red Background */
+    color: white; /* White Text */
+    padding: 10px 20px; /* Padding for size */
+    border: none; /* Remove Border */
+    border-radius: 5px; /* Rounded Corners */
+    cursor: pointer; /* Pointer Cursor */
+    font-size: 16px; /* Text Size */
+    font-weight: bold; /* Bold Font */
+    transition: background-color 0.3s ease-in-out;
+}
+
+.billing:hover {
+    background-color: darkred; /* Darker Red on Hover */
+}
+
+.billing:active {
+    background-color: #b30000; /* Even Darker Red on Click */
+}

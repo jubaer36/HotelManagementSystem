@@ -11,8 +11,10 @@ const CurrentGuests = () =>{
 
     const [guests, setGuests] = useState([]);
     const [showPopup, setShowPopup] = useState(false);
+    const [showPopupEX, setShowPopupEX] = useState(false);
     const [selectedGuest, setSelectedGuest] = useState(null);
     const [showFilterModal, setShowFilterModal] = useState(false);
+    const [newCheckoutDate, setNewCheckoutDate] = useState("");
 
     const [filters, setFilters] = useState({
         FirstName: "",
@@ -65,6 +67,32 @@ const CurrentGuests = () =>{
             ...prevFilter,
             [name]: value,
         }));
+    };
+
+    const handleExtendVisit = (guest) => {
+        setSelectedGuest(guest);
+        setShowPopupEX(true);
+    };
+
+    const handleConfirmExtendVisit = () => {
+        if (!newCheckoutDate) {
+            alert("Please select a new checkout date.");
+            return;
+        }
+
+        Axios.post("http://localhost:3001/extend-visit", {
+            guestID: selectedGuest.GuestID,
+            newCheckoutDate,
+        })
+            .then(() => {
+                alert("Checkout date updated successfully.");
+                setShowPopup(false);
+                fetchGuests();
+            })
+            .catch((error) => {
+                console.error("Error extending visit:", error);
+                alert("Failed to extend visit.");
+            });
     };
 
     const openBillingPopup = (guest) => {
@@ -166,6 +194,9 @@ const CurrentGuests = () =>{
                         <p>
                         <strong>Date of Birth:</strong> {new Date(guest.DateOfBirth).toISOString().split("T")[0]}                        </p>
                         <div className="guest-actions">
+                            <button className="extend-visit-button" onClick={() => handleExtendVisit(guest)}>
+                                Extend Visit
+                            </button>
                             <button
                                 className="billing"
                                 onClick={() => openBillingPopup(guest)}
@@ -176,6 +207,24 @@ const CurrentGuests = () =>{
                     </div>
                 ))}
             </div>
+
+            {showPopupEX && (
+                <div className="popup">
+                    <h2>
+                        Extend Visit for {selectedGuest?.FirstName} {selectedGuest?.LastName}
+                    </h2>
+                    <label>New Checkout Date:</label>
+                    <input
+                        type="date"
+                        value={newCheckoutDate}
+                        onChange={(e) => setNewCheckoutDate(e.target.value)}
+                    />
+                    <div className="popup-actions">
+                        <button onClick={handleConfirmExtendVisit}>Confirm</button>
+                        <button onClick={() => setShowPopupEX(false)}>Cancel</button>
+                    </div>
+                </div>
+            )}
 
             {
                 showFilterModal && (

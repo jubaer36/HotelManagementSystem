@@ -1,0 +1,49 @@
+/* Centering the content */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+  }
+  
+  /* Styling for the heading */
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  /* Button container to keep buttons centered */
+  .button-container {
+    display: flex;
+    gap: 20px;
+  }
+  
+  /* Common button styles */
+  .role-button {
+    padding: 15px 30px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  /* Different colors for each button */
+  .role-button:first-child {
+    background-color: #3498db;
+    color: white;
+  }
+  
+  .role-button:last-child {
+    background-color: #27ae60;
+    color: white;
+  }
+  
+  /* Hover effects */
+  .role-button:hover {
+    opacity: 0.8;
+  }
+  
