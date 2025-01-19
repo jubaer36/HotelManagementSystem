@@ -5,6 +5,7 @@ const checkoutRoutes = require("./routes/checkout");
 const receptionist_dashboard_routes = require("./routes/receptionist_dashboard");
 const featuresRoutes = require("./routes/featuresRoute");
 const realCheckout = require("./routes/realCheckoutRoute");
+const employeeRoute = require("./routes/employeeRoute.js");
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(featuresRoutes);
 
 app.use(realCheckout);
 
+app.use(employeeRoute);
 // Start the server
 app.listen(3001, () => {
     console.log("Server is running on port 3001");
