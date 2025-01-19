@@ -10,7 +10,7 @@ const navigate = useNavigate();
       <h1>Welcome</h1>
       <div className="button-container">
         <button className="role-button" onClick={() => navigate("/rp-dashboard")}>Receptionist</button>
-        <button className="role-button">Manager</button>
+        <button className="role-button" onClick={() => navigate("/manager-dashboard")}>Manager</button>
       </div>
     </div>
   );
