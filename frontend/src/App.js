@@ -9,6 +9,7 @@ import TempNav from "./pages/tempNavPage.js";
 import RPDash from "./pages/ReceptionistDB.js";
 import ManDash from "./pages/ManagerDash.js";
 import Employee  from "./pages/Employee.js";
+import Manexpenses from "./pages/Manexpenses.js";
 
 function App() {
   // const navigate = useNavigate();
@@ -29,6 +30,7 @@ function App() {
       <Route path="/rp-dashboard" element={<RPDash/>} />
       <Route path="manager-dashboard" element={<ManDash/>}/>
       <Route path="/employee-info" element={<Employee/>} />
+      <Route path="/expenses" element={<Manexpenses/>} />
 
       </Routes>
     </div>
