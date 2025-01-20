@@ -41,7 +41,9 @@ CREATE TABLE Employee (
     LastName VARCHAR(255) NOT NULL,
     Phone VARCHAR(15) NOT NULL,
     Email VARCHAR(255),
-    Salary DECIMAL(10, 2) NOT NULL CHECK (Salary > 0),
+    hourly_pay DECIMAL(10, 2) NOT NULL CHECK(hourly_pay > 0),
+    Salary DECIMAL(10, 2) ,
+    working_status VARCHAR(255) NOT NULL,
     Role VARCHAR(255) NOT NULL,
     HiredDate DATE, 
     Address JSON, -- Added JSON address for employee details
