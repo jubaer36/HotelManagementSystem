@@ -3,6 +3,7 @@ import Axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./Employee.css";
 import EmpPopUP from "../components/EmpPopup";
+import AddEmpPopUp from "../components/AddEmpPopUp";
 
 const Employee = () => {
     const navigate = useNavigate();
@@ -10,6 +11,7 @@ const Employee = () => {
     const [showPopup, setShowPopup] = useState(false);
     const [selectedemp, setSelectedemp] = useState(null);
     const [employees, setEmployees] = useState([]);
+    const [showPopupAdd, setShowPopupAdd] = useState(false);
 
     useEffect(() => {
         fetchEmployees();
@@ -31,8 +33,14 @@ const Employee = () => {
         setShowPopup(true);
       };
 
+    
+
+    const openEmpPopUpAdd = () =>{
+        setShowPopupAdd(true);
+    }
     return (
         <div className="employee-container">
+            <button className="addEmp" onClick={openEmpPopUpAdd}>Add Employee</button>
             <h2>Employee List</h2>
             <div className="employee-cards">
                 {employees.map((employee) => (
@@ -55,6 +63,11 @@ const Employee = () => {
         {showPopup && selectedemp && (
         <EmpPopUP empID={selectedemp.EmpID} onClose={() => setShowPopup(false)}/>
         )}
+        {
+            showPopupAdd && (
+                <AddEmpPopUp onClose = {() => setShowPopupAdd(false)}/>
+            )
+        }
 
         </div>
     );

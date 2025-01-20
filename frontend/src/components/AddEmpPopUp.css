@@ -1,0 +1,98 @@
+/* Fullscreen overlay */
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* Popup container */
+.popup-container {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 450px; /* Adjust for smaller screens */
+    max-height: 80vh; /* Prevents overflow */
+    overflow-y: auto; /* Enables scrolling if needed */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Center title */
+.popup-container h2 {
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+/* Labels for form fields */
+.popup-container label {
+    display: block;
+    font-weight: bold;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+/* Input fields & dropdowns */
+.popup-container input,
+.popup-container select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+/* Action buttons */
+.popup-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Add Employee button */
+.popup-actions button {
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+    width: 48%;
+}
+
+/* Add Employee (Green) */
+.popup-actions button:first-child {
+    background-color: #28a745;
+    color: white;
+}
+
+/* Close (Red) */
+.popup-actions .close-popup-button {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Responsive: Reduce padding & font size for smaller screens */
+@media (max-width: 500px) {
+    .popup-container {
+        padding: 15px;
+        max-width: 90%;
+    }
+    
+    .popup-container input,
+    .popup-container select {
+        font-size: 12px;
+        padding: 6px;
+    }
+
+    .popup-actions button {
+        font-size: 12px;
+        padding: 8px 10px;
+    }
+}
