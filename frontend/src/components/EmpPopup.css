@@ -4,7 +4,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -13,29 +13,49 @@
 .popup-container {
     background: white;
     padding: 20px;
+    border-radius: 8px;
     width: 400px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     text-align: center;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.popup-container h2 {
-    margin-bottom: 15px;
+.update-hourly-button,
+.update-button,
+.cancel-button,
+.close-popup-button {
+    margin-top: 10px;
+    padding: 10px;
+    width: 100%;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
 }
 
-.popup-container p {
-    margin: 5px 0;
+.update-hourly-button {
+    background-color: #007bff;
+    color: white;
+}
+
+.update-button {
+    background-color: #28a745;
+    color: white;
+}
+
+.cancel-button {
+    background-color: #dc3545;
+    color: white;
 }
 
 .close-popup-button {
-    background: red;
+    background-color: #6c757d;
     color: white;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
-    margin-top: 10px;
 }
 
-.close-popup-button:hover {
-    background: darkred;
+input[type="number"] {
+    width: 90%;
+    padding: 8px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }

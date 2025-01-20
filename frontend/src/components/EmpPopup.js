@@ -18,6 +18,9 @@ const EmpPopUP = ({ empID, onClose }) => {
         DeptName: "",
     });
 
+    const [showInput, setShowInput] = useState(false);
+    const [newHourlyPay, setNewHourlyPay] = useState("");
+
     useEffect(() => {
         if (empID) {
             fetchEmployeeDetails(empID);
@@ -38,6 +41,27 @@ const EmpPopUP = ({ empID, onClose }) => {
             });
     };
 
+    const handleUpdateHourlyPay = () => {
+        if (!newHourlyPay || isNaN(newHourlyPay) || newHourlyPay <= 0) {
+            alert("Please enter a valid hourly pay amount.");
+            return;
+        }
+
+        Axios.post("http://localhost:3001/update-hourly-pay", {
+            empID: empID,
+            newHourlyPay: parseFloat(newHourlyPay),
+        })
+            .then(() => {
+                alert("Hourly pay updated successfully.");
+                setShowInput(false);
+                fetchEmployeeDetails(empID); // Refresh the employee details
+            })
+            .catch((error) => {
+                console.error("Error updating hourly pay:", error);
+                alert("Failed to update hourly pay.");
+            });
+    };
+
     return (
         <div className="popup-overlay">
             <div className="popup-container">
@@ -51,6 +75,28 @@ const EmpPopUP = ({ empID, onClose }) => {
                 <p><strong>Email:</strong> {EmpDetails.Email}</p>
                 <p><strong>Hired Date:</strong> {EmpDetails.HiredDate ? new Date(EmpDetails.HiredDate).toISOString().split("T")[0] : "N/A"}</p>
                 <p><strong>Address:</strong> {EmpDetails.Address ? `${EmpDetails.Address.city}, ${EmpDetails.Address.state}` : "N/A"}</p>
+
+                {showInput ? (
+                    <>
+                        <input
+                            type="number"
+                            placeholder="Enter new hourly pay"
+                            value={newHourlyPay}
+                            onChange={(e) => setNewHourlyPay(e.target.value)}
+                        />
+                        <button className="update-button" onClick={handleUpdateHourlyPay}>
+                            Confirm Update
+                        </button>
+                        <button className="cancel-button" onClick={() => setShowInput(false)}>
+                            Cancel
+                        </button>
+                    </>
+                ) : (
+                    <button className="update-hourly-button" onClick={() => setShowInput(true)}>
+                        Update Hourly Pay
+                    </button>
+                )}
+
                 <button className="close-popup-button" onClick={onClose}>Close</button>
             </div>
         </div>

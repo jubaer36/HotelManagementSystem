@@ -42,7 +42,7 @@ CREATE TABLE Employee (
     Phone VARCHAR(15) NOT NULL,
     Email VARCHAR(255),
     hourly_pay DECIMAL(10, 2) NOT NULL CHECK(hourly_pay > 0),
-    Salary DECIMAL(10, 2) NOT NULL CHECK (Salary > 0),
+    Salary DECIMAL(10, 2) ,
     working_status VARCHAR(255) NOT NULL,
     Role VARCHAR(255) NOT NULL,
     HiredDate DATE, 
