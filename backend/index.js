@@ -14,21 +14,13 @@ app.use(cors());
 app.use(express.json());
 
 app.use(receptionist_dashboard_routes);
-
 app.use(checkoutRoutes);
-
 app.use(featuresRoutes);
-
 app.use(realCheckout);
-
 app.use(employeeRoute);
-// Start the server
-
 app.use(ManexpensesRoute);
-
 app.use(authRoutes);
 
-
 app.listen(3001, () => {
-    console.log("Server is running on port 3001");
+  console.log("Server is running on port 3001");
 });

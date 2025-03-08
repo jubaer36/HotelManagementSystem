@@ -12,15 +12,18 @@ const Login = () => {
         setCredentials({ ...credentials, [e.target.name]: e.target.value });
     };
 
-    const handleLogin = () => {
+    const handleSubmit = (e) => {
+        e.preventDefault(); // Prevents page reload
+        handleLogin();
+    };
 
+    const handleLogin = () => {
         Axios.post("http://localhost:3001/login", credentials)
             .then((response) => {
                 localStorage.setItem("token", response.data.token);
                 localStorage.setItem("role", response.data.role);
                 localStorage.setItem("userID", response.data.userID);
                 localStorage.setItem("hotelID", response.data.hotelID);
-
 
                 if (response.data.role === "receptionist") {
                     navigate("/rp-dashboard");
@@ -38,26 +41,27 @@ const Login = () => {
         <div className="login-container">
             <div className="login-box">
                 <h2 className="login-heading">Login to Your Account</h2>
-                <p className="login-subheading"></p>
-                <div className="login-form">
+                <form className="login-form" onSubmit={handleSubmit}>
                     <input
                         type="text"
-                        name="username"  
+                        name="username"
                         placeholder="Username"
                         className="login-input"
                         onChange={handleChange}
+                        value={credentials.username}
                     />
                     <input
                         type="password"
-                        name="password"  
+                        name="password"
                         placeholder="Password"
                         className="login-input"
                         onChange={handleChange}
+                        value={credentials.password}
                     />
-                    <button className="login-button" onClick={handleLogin}>
+                    <button type="submit" className="login-button">
                         Login
                     </button>
-                </div>
+                </form>
                 {error && <p className="error">{error}</p>}
             </div>
         </div>
