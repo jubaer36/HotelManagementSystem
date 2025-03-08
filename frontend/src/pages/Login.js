@@ -1,29 +1,64 @@
-import React from "react";
-import "./Login.css"; // Import the CSS file
-import {useNavigate} from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Axios from "axios";
+import "./Login.css";
+
 const Login = () => {
     const navigate = useNavigate();
+    const [credentials, setCredentials] = useState({ username: "", password: "" });
+    const [error, setError] = useState("");
+
+    const handleChange = (e) => {
+        setCredentials({ ...credentials, [e.target.name]: e.target.value });
+    };
+
+    const handleLogin = () => {
+
+        Axios.post("http://localhost:3001/login", credentials)
+            .then((response) => {
+                localStorage.setItem("token", response.data.token);
+                localStorage.setItem("role", response.data.role);
+                localStorage.setItem("userID", response.data.userID);
+                localStorage.setItem("hotelID", response.data.hotelID);
+
+
+                if (response.data.role === "receptionist") {
+                    navigate("/rp-dashboard");
+                } else if (response.data.role === "manager") {
+                    navigate("/manager-dashboard");
+                }
+            })
+            .catch((error) => {
+                console.error("Login error:", error);
+                setError("Invalid username or password");
+            });
+    };
+
     return (
         <div className="login-container">
             <div className="login-box">
                 <h2 className="login-heading">Login to Your Account</h2>
-                <p className="login-subheading">
-                </p>
-                <form className="login-form">
+                <p className="login-subheading"></p>
+                <div className="login-form">
                     <input
-                        type="email"
-                        placeholder="Email Address"
+                        type="text"
+                        name="username"  
+                        placeholder="Username"
                         className="login-input"
+                        onChange={handleChange}
                     />
                     <input
                         type="password"
+                        name="password"  
                         placeholder="Password"
                         className="login-input"
+                        onChange={handleChange}
                     />
-                    <button type="submit" className="login-button" onClick={() => navigate("/temp-page")}>
+                    <button className="login-button" onClick={handleLogin}>
                         Login
                     </button>
-                </form>
+                </div>
+                {error && <p className="error">{error}</p>}
             </div>
         </div>
     );
