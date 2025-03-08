@@ -7,6 +7,7 @@ const featuresRoutes = require("./routes/featuresRoute");
 const realCheckout = require("./routes/realCheckoutRoute");
 const employeeRoute = require("./routes/employeeRoute.js");
 const ManexpensesRoute = require("./routes/ManExpensesRoute.js");
+const authRoutes = require("./auth.js");
 const app = express();
 
 app.use(cors());
@@ -24,6 +25,8 @@ app.use(employeeRoute);
 // Start the server
 
 app.use(ManexpensesRoute);
+
+app.use(authRoutes);
 
 
 app.listen(3001, () => {
