@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from "react";
 import Axios from "axios";
-import "./Inventory.css"
+import "./Inventory.css";
 
 const Inventory = () => {
-  const [inventory, setInventory] = useState([]); // State for inventory list
-  const [transactions, setTransactions] = useState([]); // State for transaction list
-  const [newItem, setNewItem] = useState({ name: "", unitPrice: 0 }); // State for adding new item
-  const [order, setOrder] = useState({ inventoryID: "", quantity: 0 }); // State for placing order
+  const [inventory, setInventory] = useState([]);
+  const [transactions, setTransactions] = useState([]);
+  const [newItem, setNewItem] = useState({ name: "" }); // Only item name for adding new item
+  const [order, setOrder] = useState({
+    inventoryID: "",
+    quantity: 0,
+    unitPrice: 0, // Added unit price for placing orders
+  });
   const [transactionID, setTransactionID] = useState("");
-  // Fetch inventory and transactions on load
+
+  // Fetch inventory and transactions on component mount
   useEffect(() => {
     fetchInventory();
     fetchTransactions();
@@ -23,6 +28,7 @@ const Inventory = () => {
       setInventory(response.data);
     } catch (error) {
       console.error("Error fetching inventory:", error);
+      alert("Failed to fetch inventory. Please try again.");
     }
   };
 
@@ -35,6 +41,7 @@ const Inventory = () => {
       setTransactions(response.data);
     } catch (error) {
       console.error("Error fetching transactions:", error);
+      alert("Failed to fetch transactions. Please try again.");
     }
   };
 
@@ -46,12 +53,13 @@ const Inventory = () => {
     try {
       await Axios.post("http://localhost:3001/add-item", {
         itemName: newItem.name,
-        unitPrice: newItem.unitPrice,
       });
-      fetchInventory();
-      setNewItem({ name: "", unitPrice: 0 }); // Reset form
+      fetchInventory(); // Refresh inventory list
+      setNewItem({ name: "" }); // Reset form
+      alert("Item added successfully!");
     } catch (error) {
       console.error("Error adding item:", error);
+      alert("Failed to add item. Please try again.");
     }
   };
 
@@ -64,42 +72,49 @@ const Inventory = () => {
       await Axios.post("http://localhost:3001/order-item", {
         inventoryID: order.inventoryID,
         quantity: order.quantity,
+        unitPrice: order.unitPrice, // Include unit price in the order
       });
-      fetchInventory();
-      fetchTransactions();
-      setOrder({ inventoryID: "", quantity: 0 }); // Reset form
+      fetchTransactions(); // Refresh transactions list
+      setOrder({ inventoryID: "", quantity: 0, unitPrice: 0 }); // Reset form
+      alert("Order placed successfully!");
     } catch (error) {
       console.error("Error placing order:", error);
+      alert("Failed to place order. Please try again.");
     }
   };
 
+  /* --------------------------------------------
+     Mark Order as Received
+  -------------------------------------------- */
   const markAsReceived = async (e) => {
     e.preventDefault();
     try {
-      await Axios.post("http://localhost:3001/update-transaction", {
+      await Axios.post("http://localhost:3001/receive-order", {
         transactionID,
       });
       fetchTransactions(); // Refresh transactions list
-      setTransactionID(""); // Reset input
+      fetchInventory(); // Refresh inventory list
+      setTransactionID(""); // Reset form
+      alert("Order marked as received successfully!");
     } catch (error) {
-      console.error("Error marking transaction as received:", error);
+      console.error("Error receiving order:", error);
+      alert("Failed to mark order as received. Please try again.");
     }
   };
 
   return (
-      <div>
+      <div className="container">
         <h1>Inventory Management System</h1>
 
         {/* Inventory List */}
-        <section>
+        <section className="section">
           <h2>Inventory List</h2>
-          <table border="1">
+          <table className="table">
             <thead>
             <tr>
-              <th>Inventory ID</th>
+              <th>ID</th>
               <th>Item Name</th>
               <th>Quantity</th>
-              <th>Unit Price</th>
               <th>Last Updated</th>
             </tr>
             </thead>
@@ -109,11 +124,6 @@ const Inventory = () => {
                   <td>{item.InventoryID}</td>
                   <td>{item.ItemName}</td>
                   <td>{item.Quantity}</td>
-                  <td>
-                    {Number(item.UnitPrice)
-                        ? `$${Number(item.UnitPrice).toFixed(2)}`
-                        : "N/A"}
-                  </td>
                   <td>{new Date(item.LastUpdated).toLocaleString()}</td>
                 </tr>
             ))}
@@ -121,107 +131,112 @@ const Inventory = () => {
           </table>
         </section>
 
-        {/* Add Item */}
-        <section>
+        {/* Add New Item */}
+        <section className="section">
           <h2>Add New Item</h2>
-          <form onSubmit={addItem}>
-            <label>
-              Item Name:
-              <input
-                  type="text"
-                  value={newItem.name}
-                  onChange={(e) =>
-                      setNewItem({...newItem, name: e.target.value})
-                  }
-                  required
-              />
-            </label>
-            <br/>
-            <label>
-              Unit Price:
-              <input
-                  type="number"
-                  value={newItem.unitPrice}
-                  onChange={(e) =>
-                      setNewItem({
-                        ...newItem,
-                        unitPrice: parseFloat(e.target.value),
-                      })
-                  }
-                  step="0.01"
-                  required
-              />
-            </label>
-            <br/>
-            <button type="submit">Add Item</button>
+          <form onSubmit={addItem} className="form">
+            <div className="form-group">
+              <label>
+                Item Name:
+                <input
+                    type="text"
+                    value={newItem.name}
+                    onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
+                    required
+                />
+              </label>
+            </div>
+            <button type="submit" className="button">
+              Add Item
+            </button>
           </form>
         </section>
 
-        {/* Order Item */}
-        <section>
-          <h2>Order Item</h2>
-          <form onSubmit={orderItem}>
-            <label>
-              Inventory ID:
-              <input
-                  type="number"
-                  value={order.inventoryID}
-                  onChange={(e) =>
-                      setOrder({...order, inventoryID: parseInt(e.target.value)})
-                  }
-                  required
-              />
-            </label>
-            <br/>
-            <label>
-              Quantity:
-              <input
-                  type="number"
-                  value={order.quantity}
-                  onChange={(e) =>
-                      setOrder({...order, quantity: parseInt(e.target.value)})
-                  }
-                  required
-              />
-            </label>
-            <br/>
-            <button type="submit">Place Order</button>
+        {/* Place Order */}
+        <section className="section">
+          <h2>Place Order</h2>
+          <form onSubmit={orderItem} className="form">
+            <div className="form-group">
+              <label>
+                Inventory ID:
+                <input
+                    type="number"
+                    value={order.inventoryID}
+                    onChange={(e) =>
+                        setOrder({ ...order, inventoryID: e.target.value })
+                    }
+                    required
+                />
+              </label>
+            </div>
+            <div className="form-group">
+              <label>
+                Quantity:
+                <input
+                    type="number"
+                    value={order.quantity}
+                    onChange={(e) =>
+                        setOrder({ ...order, quantity: e.target.value })
+                    }
+                    required
+                />
+              </label>
+            </div>
+            <div className="form-group">
+              <label>
+                Unit Price:
+                <input
+                    type="number"
+                    value={order.unitPrice}
+                    onChange={(e) =>
+                        setOrder({ ...order, unitPrice: parseFloat(e.target.value) })
+                    }
+                    step="0.01"
+                    required
+                />
+              </label>
+            </div>
+            <button type="submit" className="button">
+              Place Order
+            </button>
           </form>
         </section>
 
-
-        {/* Mark Transaction as Received */}
-        <section>
-          <h2>Mark Transaction as Received</h2>
-          <form onSubmit={markAsReceived}>
-            <label>
-              Transaction ID:
-              <input
-                  type="number"
-                  value={transactionID}
-                  onChange={(e) => setTransactionID(e.target.value)}
-                  required
-              />
-            </label>
-            <br/>
-            <button type="submit">Update Status</button>
+        {/* Mark Order as Received */}
+        <section className="section">
+          <h2>Mark Order as Received</h2>
+          <form onSubmit={markAsReceived} className="form">
+            <div className="form-group">
+              <label>
+                Transaction ID:
+                <input
+                    type="number"
+                    value={transactionID}
+                    onChange={(e) => setTransactionID(e.target.value)}
+                    required
+                />
+              </label>
+            </div>
+            <button type="submit" className="button">
+              Mark as Received
+            </button>
           </form>
         </section>
 
         {/* Transactions List */}
-        <section>
-          <h2>Inventory Transactions</h2>
-          <table border="1">
+        <section className="section">
+          <h2>Transactions</h2>
+          <table className="table">
             <thead>
             <tr>
-              <th>Transaction ID</th>
+              <th>ID</th>
               <th>Inventory ID</th>
-              <th>Transaction Type</th>
-              <th>Quantity</th>
+              <th>Type</th>
+              <th>Qty</th>
+              <th>Unit Price</th>
               <th>Status</th>
-              <th>Transaction Date</th>
+              <th>Order Date</th>
               <th>Receive Date</th>
-              {/* New Column */}
             </tr>
             </thead>
             <tbody>
@@ -231,14 +246,13 @@ const Inventory = () => {
                   <td>{transaction.InventoryID}</td>
                   <td>{transaction.TransactionType}</td>
                   <td>{transaction.Quantity}</td>
+                  <td>${transaction.UnitPrice}</td>
                   <td>{transaction.Status}</td>
-                  <td>
-                    {new Date(transaction.TransactionDate).toLocaleString()}
-                  </td>
+                  <td>{new Date(transaction.TransactionDate).toLocaleString()}</td>
                   <td>
                     {transaction.ReceiveDate
                         ? new Date(transaction.ReceiveDate).toLocaleString()
-                        : "N/A"}
+                        : "Pending"}
                   </td>
                 </tr>
             ))}
