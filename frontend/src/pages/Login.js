@@ -20,7 +20,7 @@ const Login = () => {
                         placeholder="Password"
                         className="login-input"
                     />
-                    <button type="submit" className="login-button" onClick={() => navigate("/receptionist")}>
+                    <button type="submit" className="login-button" onClick={() => navigate("/temp-page")}>
                         Login
                     </button>
                 </form>

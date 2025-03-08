@@ -60,72 +60,67 @@ VALUES
 
 
 
-INSERT INTO Employee ( DeptID, FirstName, LastName, Phone, Email, Salary, Role, HiredDate, Address)
+-- Inserting employees with hourly_pay column
+INSERT INTO Employee (DeptID, FirstName, LastName, Phone, Email, hourly_pay, Salary,working_status, Role, HiredDate, Address)
 VALUES 
-( 1, 'System', 'Employee', '0000000000', 'system_employee@example.com', 1.00, 'System Role', '1900-01-01', '{"city": "N/A", "state": "N/A"}');
-
-INSERT INTO Employee (DeptID, FirstName, LastName, Phone, Email, Salary, Role, HiredDate, Address)
-VALUES
+-- System Employee
+(1, 'System', 'Employee', '0000000000', 'system_employee@example.com', 15.00, 1.00,'Not Working', 'System Role', '1900-01-01', '{"city": "N/A", "state": "N/A"}'),
 
 -- Employees for DeptID = 2
-(2, 'Emily', 'Johnson', '1231231234', 'emily.johnson@example.com', 2500.00, 'Housekeeper', '2021-09-10', '{"city": "Los Angeles", "state": "CA"}'),
-(2, 'Michael', 'Brown', '4564564567', 'michael.brown@example.com', 2800.00, 'Supervisor', '2022-12-01', '{"city": "Los Angeles", "state": "CA"}'),
+(2, 'Emily', 'Johnson', '1231231234', 'emily.johnson@example.com', 12.50, 2500.00,'Working', 'Housekeeper', '2021-09-10', '{"city": "Los Angeles", "state": "CA"}'),
+(2, 'Michael', 'Brown', '4564564567', 'michael.brown@example.com', 14.00, 2800.00,'Working',  'Supervisor', '2022-12-01', '{"city": "Los Angeles", "state": "CA"}'),
 
 -- Employees for DeptID = 3
-(3, 'William', 'Davis', '7897897890', 'william.davis@example.com', 3200.00, 'Chef', '2020-06-15', '{"city": "Chicago", "state": "IL"}'),
-(3, 'Sophia', 'Garcia', '3213213210', 'sophia.garcia@example.com', 3000.00, 'Kitchen Staff', '2023-03-10', '{"city": "Chicago", "state": "IL"}'),
+(3, 'William', 'Davis', '7897897890', 'william.davis@example.com', 15.50, 3200.00,'Working',  'Chef', '2020-06-15', '{"city": "Chicago", "state": "IL"}'),
+(3, 'Sophia', 'Garcia', '3213213210', 'sophia.garcia@example.com', 13.50, 3000.00,'Working',  'Kitchen Staff', '2023-03-10', '{"city": "Chicago", "state": "IL"}'),
 
 -- Employees for DeptID = 4
-(4, 'James', 'Martinez', '9871234560', 'james.martinez@example.com', 2700.00, 'Technician', '2021-08-20', '{"city": "Houston", "state": "TX"}'),
-(4, 'Olivia', 'Hernandez', '4569876540', 'olivia.hernandez@example.com', 2600.00, 'Maintenance Staff', '2022-11-05', '{"city": "Houston", "state": "TX"}'),
+(4, 'James', 'Martinez', '9871234560', 'james.martinez@example.com', 14.25, 2700.00,'Working',  'Technician', '2021-08-20', '{"city": "Houston", "state": "TX"}'),
+(4, 'Olivia', 'Hernandez', '4569876540', 'olivia.hernandez@example.com', 13.75, 2600.00,'Working',  'Maintenance Staff', '2022-11-05', '{"city": "Houston", "state": "TX"}'),
 
 -- Employees for DeptID = 5
-(5, 'Benjamin', 'Wilson', '1239876540', 'benjamin.wilson@example.com', 3300.00, 'Security Officer', '2023-04-15', '{"city": "Phoenix", "state": "AZ"}'),
-(5, 'Emma', 'Moore', '3217894560', 'emma.moore@example.com', 3400.00, 'Head of Security', '2021-07-25', '{"city": "Phoenix", "state": "AZ"}'),
+(5, 'Benjamin', 'Wilson', '1239876540', 'benjamin.wilson@example.com', 16.00, 3300.00,'Working',  'Security Officer', '2023-04-15', '{"city": "Phoenix", "state": "AZ"}'),
+(5, 'Emma', 'Moore', '3217894560', 'emma.moore@example.com', 16.50, 3400.00,'Working',  'Head of Security', '2021-07-25', '{"city": "Phoenix", "state": "AZ"}'),
 
 -- Employees for DeptID = 6
-(6, 'Liam', 'Taylor', '7891234560', 'liam.taylor@example.com', 3600.00, 'Receptionist', '2022-01-10', '{"city": "Philadelphia", "state": "PA"}'),
-(6, 'Charlotte', 'Anderson', '9874563210', 'charlotte.anderson@example.com', 3700.00, 'Manager', '2020-10-15', '{"city": "Philadelphia", "state": "PA"}'),
+(6, 'Liam', 'Taylor', '7891234560', 'liam.taylor@example.com', 17.00, 3600.00,'Working',  'Receptionist', '2022-01-10', '{"city": "Philadelphia", "state": "PA"}'),
+(6, 'Charlotte', 'Anderson', '9874563210', 'charlotte.anderson@example.com', 18.00, 3700.00,'Working',  'Manager', '2020-10-15', '{"city": "Philadelphia", "state": "PA"}'),
 
 -- Employees for DeptID = 7
-(7, 'Elijah', 'Thomas', '6547891230', 'elijah.thomas@example.com', 2800.00, 'Housekeeper', '2023-05-01', '{"city": "San Antonio", "state": "TX"}'),
-(7, 'Amelia', 'Jackson', '3216549870', 'amelia.jackson@example.com', 3000.00, 'Supervisor', '2021-09-15', '{"city": "San Antonio", "state": "TX"}'),
+(7, 'Elijah', 'Thomas', '6547891230', 'elijah.thomas@example.com', 12.75, 2800.00,'Working',  'Housekeeper', '2023-05-01', '{"city": "San Antonio", "state": "TX"}'),
+(7, 'Amelia', 'Jackson', '3216549870', 'amelia.jackson@example.com', 13.25, 3000.00,'Working',  'Supervisor', '2021-09-15', '{"city": "San Antonio", "state": "TX"}'),
 
 -- Employees for DeptID = 8
-(8, 'Alexander', 'White', '1233217890', 'alexander.white@example.com', 3100.00, 'Chef', '2020-06-20', '{"city": "San Diego", "state": "CA"}'),
-(8, 'Isabella', 'Harris', '6541239870', 'isabella.harris@example.com', 2900.00, 'Kitchen Staff', '2022-08-15', '{"city": "San Diego", "state": "CA"}'),
+(8, 'Alexander', 'White', '1233217890', 'alexander.white@example.com', 15.25, 3100.00,'Working',  'Chef', '2020-06-20', '{"city": "San Diego", "state": "CA"}'),
+(8, 'Isabella', 'Harris', '6541239870', 'isabella.harris@example.com', 14.00, 2900.00,'Working',  'Kitchen Staff', '2022-08-15', '{"city": "San Diego", "state": "CA"}'),
 
 -- Employees for DeptID = 9
-(9, 'Henry', 'Martin', '7896541230', 'henry.martin@example.com', 2750.00, 'Technician', '2021-07-10', '{"city": "Dallas", "state": "TX"}'),
-(9, 'Mia', 'Thompson', '4567893210', 'mia.thompson@example.com', 2800.00, 'Maintenance Staff', '2023-03-05', '{"city": "Dallas", "state": "TX"}'),
+(9, 'Henry', 'Martin', '7896541230', 'henry.martin@example.com', 14.50, 2750.00,'Working',  'Technician', '2021-07-10', '{"city": "Dallas", "state": "TX"}'),
+(9, 'Mia', 'Thompson', '4567893210', 'mia.thompson@example.com', 14.75, 2800.00,'Working',  'Maintenance Staff', '2023-03-05', '{"city": "Dallas", "state": "TX"}'),
 
 -- Employees for DeptID = 10
-(10, 'Daniel', 'Martinez', '1237896540', 'daniel.martinez@example.com', 3500.00, 'Security Officer', '2021-11-15', '{"city": "San Jose", "state": "CA"}'),
-(10, 'Ava', 'Gonzalez', '3216547890', 'ava.gonzalez@example.com', 3400.00, 'Head of Security', '2020-09-25', '{"city": "San Jose", "state": "CA"}'),
+(10, 'Daniel', 'Martinez', '1237896540', 'daniel.martinez@example.com', 17.50, 3500.00,'Working',  'Security Officer', '2021-11-15', '{"city": "San Jose", "state": "CA"}'),
+(10, 'Ava', 'Gonzalez', '3216547890', 'ava.gonzalez@example.com', 17.00, 3400.00,'Working',  'Head of Security', '2020-09-25', '{"city": "San Jose", "state": "CA"}'),
 
 -- Employees for DeptID = 11
-(11, 'Matthew', 'Clark', '9873216540', 'matthew.clark@example.com', 3600.00, 'Receptionist', '2022-02-05', '{"city": "Austin", "state": "TX"}'),
-(11, 'Harper', 'Lewis', '6549871230', 'harper.lewis@example.com', 3700.00, 'Assistant Manager', '2021-08-10', '{"city": "Austin", "state": "TX"}'),
+(11, 'Matthew', 'Clark', '9873216540', 'matthew.clark@example.com', 18.00, 3600.00,'Working',  'Receptionist', '2022-02-05', '{"city": "Austin", "state": "TX"}'),
+(11, 'Harper', 'Lewis', '6549871230', 'harper.lewis@example.com', 19.00, 3700.00,'Working',  'Assistant Manager', '2021-08-10', '{"city": "Austin", "state": "TX"}'),
 
 -- Employees for DeptID = 12
-(12, 'Lucas', 'Walker', '7891239870', 'lucas.walker@example.com', 2900.00, 'Housekeeper', '2020-04-10', '{"city": "Jacksonville", "state": "FL"}'),
-(12, 'Evelyn', 'Hall', '1236547890', 'evelyn.hall@example.com', 3100.00, 'Supervisor', '2023-01-15', '{"city": "Jacksonville", "state": "FL"}'),
+(12, 'Lucas', 'Walker', '7891239870', 'lucas.walker@example.com', 13.00, 2900.00,'Working',  'Housekeeper', '2020-04-10', '{"city": "Jacksonville", "state": "FL"}'),
+(12, 'Evelyn', 'Hall', '1236547890', 'evelyn.hall@example.com', 15.00, 3100.00,'Working',  'Supervisor', '2023-01-15', '{"city": "Jacksonville", "state": "FL"}'),
 
 -- Employees for DeptID = 13
-(13, 'David', 'Allen', '3219876540', 'david.allen@example.com', 3200.00, 'Chef', '2022-06-25', '{"city": "Fort Worth", "state": "TX"}'),
-(13, 'Ella', 'Young', '9874561230', 'ella.young@example.com', 3000.00, 'Kitchen Staff', '2020-03-05', '{"city": "Fort Worth", "state": "TX"}'),
+(13, 'David', 'Allen', '3219876540', 'david.allen@example.com', 16.00, 3200.00,'Working',  'Chef', '2022-06-25', '{"city": "Fort Worth", "state": "TX"}'),
+(13, 'Ella', 'Young', '9874561230', 'ella.young@example.com', 14.50, 3000.00,'Working',  'Kitchen Staff', '2020-03-05', '{"city": "Fort Worth", "state": "TX"}'),
 
 -- Employees for DeptID = 14
-(14, 'Joseph', 'King', '6543219870', 'joseph.king@example.com', 2700.00, 'Technician', '2021-09-20', '{"city": "Columbus", "state": "OH"}'),
-(14, 'Grace', 'Wright', '3217896540', 'grace.wright@example.com', 2800.00, 'Maintenance Staff', '2022-07-15', '{"city": "Columbus", "state": "OH"}'),
+(14, 'Joseph', 'King', '6543219870', 'joseph.king@example.com', 13.75, 2700.00,'Working',  'Technician', '2021-09-20', '{"city": "Columbus", "state": "OH"}'),
+(14, 'Grace', 'Wright', '3217896540', 'grace.wright@example.com', 14.25, 2800.00,'Working',  'Maintenance Staff', '2022-07-15', '{"city": "Columbus", "state": "OH"}'),
 
 -- Employees for DeptID = 15
-(15, 'Sebastian', 'Scott', '9871236540', 'sebastian.scott@example.com', 3500.00, 'Security Officer', '2021-03-20', '{"city": "Charlotte", "state": "NC"}'),
-(15, 'Aria', 'Green', '6547893210', 'aria.green@example.com', 3400.00, 'Head of Security', '2020-11-10', '{"city": "Charlotte", "state": "NC"}'),
-
--- Employees for DeptID = 1
-(16, 'John', 'Doe', '1234567890', 'john.doe@example.com', 3500.00, 'Receptionist', '2022-01-15', '{"city": "New York", "state": "NY"}'),
-(16, 'Jane', 'Smith', '9876543210', 'jane.smith@example.com', 3600.00, 'Assistant Manager', '2023-05-20', '{"city": "New York", "state": "NY"}');
+(15, 'Sebastian', 'Scott', '9871236540', 'sebastian.scott@example.com', 17.00, 3500.00,'Working',  'Security Officer', '2021-03-20', '{"city": "Charlotte", "state": "NC"}'),
+(15, 'Aria', 'Green', '6547893210', 'aria.green@example.com', 16.50, 3400.00, 'Working', 'Head of Security', '2020-11-10', '{"city": "Charlotte", "state": "NC"}');
 
 
 
@@ -138,13 +133,13 @@ VALUES
 INSERT INTO Booking (GuestID, HotelID, EmpID, CheckInDate, CheckOutDate, NumAdults, NumChildren, TotalBooking, PaymentStatus)
 VALUES
 -- Booking for GuestID = 1, HotelID = 1
-(2, 1, 2, DATE_SUB(CURDATE(), INTERVAL 5 DAY), DATE_ADD(CURDATE(), INTERVAL 5 DAY), 2, 1, 50, 'Pending'),
+(2, 1, 2, DATE_SUB(CURDATE(), INTERVAL 5 DAY), DATE_ADD(CURDATE(), INTERVAL 0 DAY), 2, 1, 50, 'Pending'),
 
 -- Booking for GuestID = 2, HotelID = 1
-(3, 1, 2, DATE_SUB(CURDATE(), INTERVAL 10 DAY), DATE_ADD(CURDATE(), INTERVAL 10 DAY), 1, 0, 30, 'Pending'),
+(3, 1, 2, DATE_SUB(CURDATE(), INTERVAL 10 DAY), DATE_ADD(CURDATE(), INTERVAL 0 DAY), 1, 0, 30, 'Pending'),
 
 -- Booking for GuestID = 3, HotelID = 2
-(4, 2, 12, DATE_SUB(CURDATE(), INTERVAL 15 DAY), DATE_ADD(CURDATE(), INTERVAL 10 DAY), 3, 2, 70, 'Pending');
+(4, 2, 12, DATE_SUB(CURDATE(), INTERVAL 15 DAY), DATE_ADD(CURDATE(), INTERVAL 00 DAY), 3, 2, 70, 'Pending');
 
 
 
@@ -239,3 +234,56 @@ VALUES
 (7, 3, 'High-Speed WiFi', 'Unlimited high-speed internet access', 10.00), 
 (7, 3, 'Complimentary Breakfast', 'A delicious breakfast included with the room', 15.00), 
 (2, 2, 'Balcony with View', 'Private balcony with a scenic city view', 20.00);
+
+
+
+INSERT INTO Transactions (BookingID, AmountPaid, PaymentDate) VALUES
+    (3, 120.50, '2020-02-15 10:30:00'),
+    (3, 89.99, '2020-05-10 14:15:00'),
+    (3, 75.75, '2020-07-20 08:45:00'),
+    (3, 99.50, '2020-09-05 16:25:00'),
+    (3, 110.00, '2020-11-18 12:10:00'),
+    (3, 135.25, '2020-12-22 19:40:00'),
+
+    (3, 140.00, '2021-01-14 11:20:00'),
+    (3, 95.75, '2021-03-23 09:50:00'),
+    (3, 85.00, '2021-06-11 15:35:00'),
+    (3, 78.99, '2021-08-30 18:05:00'),
+    (3, 102.25, '2021-10-12 07:25:00'),
+    (3, 120.00, '2021-12-28 22:10:00'),
+
+    (3, 130.50, '2022-02-05 08:15:00'),
+    (3, 99.99, '2022-04-15 13:50:00'),
+    (3, 110.75, '2022-06-22 17:20:00'),
+    (3, 115.25, '2022-08-18 20:40:00'),
+    (3, 125.00, '2022-10-25 09:30:00'),
+    (3, 135.75, '2022-12-19 21:15:00'),
+
+    (3, 150.00, '2023-01-10 14:50:00'),
+    (3, 88.25, '2023-03-28 06:35:00'),
+    (3, 105.50, '2023-06-05 19:10:00'),
+    (3, 115.00, '2023-08-24 08:25:00'),
+    (3, 132.25, '2023-10-19 11:45:00'),
+    (3, 145.00, '2023-12-29 23:20:00'),
+
+    (3, 160.50, '2024-01-15 07:45:00'),
+    (3, 99.99, '2024-03-12 10:55:00'),
+    (3, 112.75, '2024-05-28 18:05:00'),
+    (3, 123.50, '2024-08-07 20:30:00'),
+    (3, 135.00, '2024-10-14 09:15:00'),
+    (3, 145.25, '2024-12-21 22:50:00');
+
+
+
+INSERT INTO Transactions (BookingID, AmountPaid, PaymentDate)
+VALUES
+(3, 200.00, '2025-01-15 10:30:00'),
+(3, 150.50, '2025-02-20 14:45:00'),
+(3, 300.75, '2025-03-10 08:20:00'),
+(3, 400.00, '2025-04-05 12:10:00'),
+(3, 275.90, '2025-05-25 16:30:00'),
+(3, 500.00, '2025-06-18 09:50:00'),
+(3, 350.25, '2025-07-22 18:40:00'),
+(3, 425.60, '2025-08-09 11:25:00'),
+(3, 600.80, '2025-09-30 20:15:00'),
+(3, 320.45, '2025-10-14 07:55:00');

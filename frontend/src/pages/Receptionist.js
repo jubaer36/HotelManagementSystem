@@ -573,7 +573,7 @@ const Receptionist = () => {
       )}
 
 
-      <div style={{ marginTop: "20px" }}>
+      {/* <div style={{ marginTop: "20px" }}>
         <h2>Manual Checkout</h2>
         <button
           onClick={() => navigate("/checkout")}
@@ -592,6 +592,10 @@ const Receptionist = () => {
           onClick={() => navigate("/inventory")}
           style={{
             padding: "10px 15px",
+          onClick={() => navigate("/real-checkout")}
+          style={{
+            padding: "10px 15px",
+            marginLeft: "5px",
             backgroundColor: "#FF9800",
             color: "white",
             border: "none",
@@ -604,6 +608,9 @@ const Receptionist = () => {
 
 
       </div>
+         Real Checkout
+        </button>
+      </div> */}
     </div>
 
   );

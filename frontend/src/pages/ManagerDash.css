@@ -1,0 +1,46 @@
+/* Center the dashboard */
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+}
+
+/* Style the heading */
+.dashboard-container h1 {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Container for buttons */
+.button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Dashboard buttons */
+.dashboard-button {
+    background-color: #007bff;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 250px;
+    text-align: center;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.dashboard-button:hover {
+    background-color: #0056b3;
+}
+
+.dashboard-button:active {
+    background-color: #00408a;
+}
