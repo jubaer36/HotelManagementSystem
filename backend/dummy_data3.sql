@@ -287,3 +287,11 @@ VALUES
 (3, 425.60, '2025-08-09 11:25:00'),
 (3, 600.80, '2025-09-30 20:15:00'),
 (3, 320.45, '2025-10-14 07:55:00');
+
+
+INSERT INTO Users (Username, Password, HotelID, Role)
+VALUES 
+('receptionist1', '$2b$10$q9Oa2VY17WMwMkFjtej8ve7Ur/bgOpoLelpY2t5IG9z3KQ6CRICl2', 1, 'receptionist'),
+('manager1', '$2b$10$q9Oa2VY17WMwMkFjtej8ve7Ur/bgOpoLelpY2t5IG9z3KQ6CRICl2', 1, 'manager'),
+('admin1', '$2b$10$q9Oa2VY17WMwMkFjtej8ve7Ur/bgOpoLelpY2t5IG9z3KQ6CRICl2', 1, 'admin');
+
