@@ -1,0 +1,11 @@
+1. In the checkout section all the system guests are being showed when filtered is set to (checkout - today)
+
+2. Initial frontend is opening slowly
+
+3.Dates are being shown as a day before
+
+4.Checkout.js show filter when no guests
+
+5. Available room query just current check-in-dates
+
+6. Expenses need to be more well thoughtout

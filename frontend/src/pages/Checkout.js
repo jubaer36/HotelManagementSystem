@@ -179,9 +179,9 @@ const CurrentGuests = () => {
                             <strong>Children:</strong> {guest.NumChildren}
                         </p>
                         <div className="guest-actions">
-                            <button className="extend-visit-button" onClick={() => handleExtendVisit(guest)}>
+                            {/* <button className="extend-visit-button" onClick={() => handleExtendVisit(guest)}>
                                 Extend Visit
-                            </button>
+                            </button> */}
                             <button
                                className="features-button"
                                    onClick={() => navigate("/feature", { state: { roomID: guest.RoomID, guestID: guest.GuestID } })}>
