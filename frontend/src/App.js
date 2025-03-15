@@ -1,15 +1,16 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import Receptionist from "./pages/Receptionist";
-import Login from "./pages/Login";
-import Checkout from "./pages/Checkout";
-import Features from "./pages/feature";
-import RealCheckout from "./pages/RealCheckout";
-import RPDash from "./pages/ReceptionistDB.js";
-import ManDash from "./pages/ManagerDash.js";
-import Employee from "./pages/Employee.js";
-import Manexpenses from "./pages/Manexpenses.js";
+import Receptionist from "./pages/receptionist-pages/Receptionist.js";
+import Login from "./pages/login-pages/Login.js";
+import Checkout from "./pages/receptionist-pages/Checkout.js";
+import Features from "./pages/receptionist-pages/feature.js";
+import RealCheckout from "./pages/receptionist-pages/RealCheckout.js";
+import RPDash from "./pages/receptionist-pages/ReceptionistDB.js";
+import ManDash from "./pages/manager-pages/ManagerDash.js";
+import Employee from "./pages/manager-pages/Employee.js";
+import Manexpenses from "./pages/manager-pages/Manexpenses.js";
 import AdminDashBoard from "./pages/admin-pages/AdminDashBoard.js";
+import UpdateManager from "./pages/admin-pages/UpdateManager.js";
 
 const PrivateRoute = ({ element, role }) => {
   const storedRole = localStorage.getItem("role");
@@ -35,6 +36,7 @@ function App() {
         <Route path="/expenses" element={<PrivateRoute element={<Manexpenses />} role="manager" />} />
         {/* Admin Pages */}
         <Route path="/admin-dashboard" element={<PrivateRoute element={<AdminDashBoard/>} role="admin"/>} />
+        <Route path="/update-managers" element={<PrivateRoute element={<UpdateManager/>} role="admin"/>} />
       </Routes>
     </div>
   );

@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import Axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./Employee.css";
-import EmpPopUP from "../components/EmpPopup";
-import AddEmpPopUp from "../components/AddEmpPopUp";
+import EmpPopUP from "../../components/EmpPopup";
+import AddEmpPopUp from "../../components/AddEmpPopUp";
 
 const Employee = () => {
     const navigate = useNavigate();
