@@ -16,7 +16,7 @@ To clone the repository, type the command in any folder.
 ```
 git clone https://github.com/jubaer36/HotelManagementSystem
 ```
-This will create a folder 'HotelManagementSystem' in that directory. 
+This will create a folder `HotelManagementSystem` in that directory. 
 It will have a complete copy of this repository. With a '.git' folder inside.
 
 ### Download packages
@@ -25,10 +25,12 @@ Open the terminal and run this command once in the frontend folder and once in b
 ```
 npm i
 ```
+Then setup the `.env` .In .env to generate the `JWT_SECRET` type this command
 
-<p>
+```
+node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
+```
 open an terminal and run in the frontend folder
-</p>
 
 ```
  npm start

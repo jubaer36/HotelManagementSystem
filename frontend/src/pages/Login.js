@@ -30,6 +30,9 @@ const Login = () => {
                 } else if (response.data.role === "manager") {
                     navigate("/manager-dashboard");
                 }
+                else if(response.data.role === "admin"){
+                    navigate("/admin-dashboard");
+                }
             })
             .catch((error) => {
                 console.error("Login error:", error);

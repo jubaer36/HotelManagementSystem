@@ -5,7 +5,7 @@ import "./Checkout.css";
 
 
 const CurrentGuests = () => {
-    const dummyHID = 1;
+    const dummyHID = localStorage.getItem("hotelID");
     const navigate = useNavigate();
 
 

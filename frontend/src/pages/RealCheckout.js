@@ -6,7 +6,7 @@ import BillingPopup from "../components/BillingPopup";
 
 const CurrentGuests = () =>{
 
-    const dummyHID = 1;
+    const dummyHID = localStorage.getItem("hotelID");   
     const navigate = useNavigate();
 
     const [guests, setGuests] = useState([]);
