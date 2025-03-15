@@ -14,7 +14,7 @@ const AddEmpPopUp = ({ onClose }) => {
         hourlyPay: "",
         salary: "",
         workingStatus: "Working",
-        role: "",
+        role: "manager",
         hiredDate: "",
         address: { city: "", state: "" }
     });
@@ -25,7 +25,10 @@ const AddEmpPopUp = ({ onClose }) => {
 
     // Fetch Available Departments
     const fetchDepartments = () => {
-        Axios.post("http://localhost:3001/departments", { hotelID })
+        
+
+
+        Axios.post("http://localhost:3001/all-hotels")
             .then((response) => {
                 setDepartments(response.data);
             })
@@ -42,6 +45,8 @@ const AddEmpPopUp = ({ onClose }) => {
             ...prev,
             [name]: value
         }));
+
+
     };
 
     // Handle Address Change
@@ -55,7 +60,27 @@ const AddEmpPopUp = ({ onClose }) => {
 
     // Submit Employee Data
     const addEmployee = () => {
-        Axios.post("http://localhost:3001/add-employee", employee)
+        Axios.post("http://localhost:3001/find-departments", { hotelID: employee.deptID })
+            .then((response) => {
+                console.log("Response from BE:", response.data[0].DeptID);
+    
+                // Update the state and ensure it's updated before sending the request
+                setEmployee((prev) => {
+                    const updatedEmployee = { ...prev, deptID: response.data[0].DeptID };
+                    console.log("Updated Employee:", updatedEmployee); // Check if it updates
+                    sendEmployeeData(updatedEmployee); // Call function to send data
+                    return updatedEmployee;
+                });
+            })
+            .catch((error) => {
+                console.error("Error fetching departments:", error);
+                alert("Failed to fetch departments.");
+            });
+    };
+    
+    // Separate function to send employee data after state update
+    const sendEmployeeData = (updatedEmployee) => {
+        Axios.post("http://localhost:3001/add-employee", updatedEmployee)
             .then(() => {
                 alert("Employee added successfully!");
                 onClose(); // Close the popup
@@ -65,18 +90,19 @@ const AddEmpPopUp = ({ onClose }) => {
                 alert("Failed to add employee.");
             });
     };
+    
 
     return (
         <div className="popup-overlay">
             <div className="popup-container">
                 <h2>Add Employee</h2>
 
-                <label>Department:</label>
+                <label>Hotels:</label>
                 <select name="deptID" value={employee.deptID} onChange={handleChange}>
-                    <option value="">Select Department</option>
+                    <option value="">Select Hotels</option>
                     {departments.map((dept) => (
-                        <option key={dept.DeptID} value={dept.DeptID}>
-                            {dept.DeptName}
+                        <option key={dept.HotelID} value={dept.HotelID}>
+                            {dept.Name}
                         </option>
                     ))}
                 </select>
@@ -105,8 +131,7 @@ const AddEmpPopUp = ({ onClose }) => {
                     <option value="Not Working">Not Working</option>
                 </select>
 
-                <label>Role:</label>
-                <input type="text" name="role" value={employee.role} onChange={handleChange} />
+
 
                 <label>Hired Date:</label>
                 <input type="date" name="hiredDate" value={employee.hiredDate} onChange={handleChange} />

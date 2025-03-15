@@ -7,7 +7,7 @@ import AddEmpPopUp from "../../components/AddEmpPopUp";
 
 const Employee = () => {
     const navigate = useNavigate();
-    const hotelID = 1; // Change based on requirement
+    const hotelID = localStorage.getItem("hotelID"); // Change based on requirement
     const [showPopup, setShowPopup] = useState(false);
     const [selectedemp, setSelectedemp] = useState(null);
     const [employees, setEmployees] = useState([]);

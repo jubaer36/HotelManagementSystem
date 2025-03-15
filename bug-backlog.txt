@@ -9,3 +9,9 @@
 5. Available room query just current check-in-dates
 
 6. Expenses need to be more well thoughtout
+
+7. Create Receptionist user while creating Receptionist employee
+
+8. in the manager page don't show manager info
+
+9. delete employee

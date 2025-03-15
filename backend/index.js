@@ -7,7 +7,7 @@ const featuresRoutes = require("./routes/receptionistRoutes/featuresRoute");
 const realCheckout = require("./routes/receptionistRoutes/realCheckoutRoute");
 const employeeRoute = require("./routes/managerRoutes/employeeRoute");
 const ManexpensesRoute = require("./routes/managerRoutes/ManExpensesRoute");
-const AdminDashBoard = require("./routes/adminRoutes/adminDashBoardRoute");
+const AdminDashBoard = require("./routes/adminRoutes/updateManagerRoute");
 const authRoutes = require("./auth.js");
 const app = express();
 
