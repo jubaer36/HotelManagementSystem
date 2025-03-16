@@ -15,3 +15,5 @@
 8. in the manager page don't show manager info
 
 9. delete employee
+
+10. feature button missing when no feature
