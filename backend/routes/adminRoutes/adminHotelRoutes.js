@@ -49,5 +49,25 @@ router.put("/deactivate-hotel/:id", (req, res) => {
     });
 });
 
+// ✅ Route to Update Hotel Details
+router.put("/update-hotel/:id", (req, res) => {
+    const hotelId = req.params.id;
+    const { Name, Description, StarRating, Location } = req.body;
+
+    const sql = `UPDATE Hotel 
+                 SET Name = ?, Description = ?, StarRating = ?, Location = ? 
+                 WHERE HotelID = ?`;
+
+    db.query(sql, [Name, Description, StarRating, JSON.stringify(Location), hotelId], (err, result) => {
+        if (err) {
+            console.error("Error updating hotel:", err);
+            res.status(500).send("Error updating hotel");
+        } else {
+            res.status(200).send("Hotel updated successfully");
+        }
+    });
+});
+
+
 
 module.exports = router;
