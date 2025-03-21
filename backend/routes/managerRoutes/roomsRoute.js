@@ -24,4 +24,38 @@ router.get("/get-available-rooms/:hotelID", (req, res) => {
 });
 
 
+router.get("/get-room-classes", (req, res) => {
+    const sql = "SELECT * FROM Room_Class";
+
+    db.query(sql, (err, result) => {
+        if (err) {
+            console.error("Error fetching room classes:", err);
+            res.status(500).send("Error fetching room classes");
+        } else {
+            res.status(200).json(result);
+        }
+    });
+});
+
+router.put("/update-room/:roomID", (req, res) => {
+    const { classTypeID, basePrice, maxOccupancy } = req.body;
+    const roomID = req.params.roomID;
+
+    const sql = `
+        UPDATE Room 
+        SET RoomClassID = ?, BasePrice = ?, MaxOccupancy = ? 
+        WHERE RoomID = ?`;
+
+    db.query(sql, [classTypeID, basePrice, maxOccupancy, roomID], (err, result) => {
+        if (err) {
+            console.error("Error updating room:", err);
+            res.status(500).send("Error updating room details");
+        } else {
+            res.status(200).send("Room updated successfully");
+        }
+    });
+});
+
+
+
 module.exports = router;
