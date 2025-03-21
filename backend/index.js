@@ -9,6 +9,7 @@ const employeeRoute = require("./routes/managerRoutes/employeeRoute");
 const ManexpensesRoute = require("./routes/managerRoutes/ManExpensesRoute");
 const AdminDashBoard = require("./routes/adminRoutes/updateManagerRoute");
 const AdminHotel = require("./routes/adminRoutes/adminHotelRoutes.js");
+const manRoomRoute = require("./routes/managerRoutes/roomsRoute");
 const authRoutes = require("./auth.js");
 const app = express();
 
@@ -24,6 +25,7 @@ app.use(realCheckout);
 app.use(employeeRoute);
 app.use(ManexpensesRoute);
 app.use(AdminHotel);
+app.use(manRoomRoute);
 
 
 app.listen(3001, () => {
