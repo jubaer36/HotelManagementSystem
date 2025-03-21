@@ -32,3 +32,25 @@ BEGIN
 END;
 //
 DELIMITER ;
+
+DELIMITER //
+
+CREATE TRIGGER after_employee_removed
+AFTER UPDATE ON Employee
+FOR EACH ROW
+BEGIN
+    -- Check if the working status is changed to 'Not Working' and role is 'manager' or 'receptionist'
+    IF NEW.working_status = 'Not Working' AND OLD.working_status != 'Not Working' 
+       AND OLD.Role IN ('manager', 'receptionist') THEN
+       
+        -- Remove the user from the Users table based on FirstName + LastName
+        DELETE FROM Users 
+        WHERE Username = CONCAT(OLD.FirstName, OLD.LastName);
+        
+    END IF;
+END;
+
+//
+
+DELIMITER ;
+

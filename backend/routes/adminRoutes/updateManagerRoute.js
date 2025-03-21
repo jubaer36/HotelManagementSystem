@@ -63,4 +63,23 @@ router.post("/find-departments", (req, res) => {
 }
 );
 
+router.post("/remove-employee", (req, res) => {
+    const { empID } = req.body;
+
+    const query = `
+        UPDATE Employee
+        SET working_status = 'Not Working'
+        WHERE EmpID = ?;
+    `;
+
+    db.query(query, [empID], (err, result) => {
+        if (err) {
+            console.error("Error updating employee status:", err);
+            return res.status(500).send("Error updating employee status.");
+        }
+        res.send("Employee status updated successfully.");
+    });
+});
+
+
 module.exports = router;
