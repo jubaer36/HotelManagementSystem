@@ -125,11 +125,11 @@ const AddEmpPopUp = ({ onClose }) => {
                 {/* <label>Salary:</label>
                 <input type="number" name="salary" value={employee.salary} onChange={handleChange} /> */}
 
-                <label>Working Status:</label>
+                {/* <label>Working Status:</label>
                 <select name="workingStatus" value={employee.workingStatus} onChange={handleChange}>
                     <option value="Working">Working</option>
                     <option value="Not Working">Not Working</option>
-                </select>
+                </select> */}
 
 
 

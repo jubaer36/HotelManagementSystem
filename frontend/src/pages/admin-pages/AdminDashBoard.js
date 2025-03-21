@@ -12,7 +12,7 @@ const AdminDashBoard = () => {
             <div className="dashboard-buttons">
                 <button className="dashboard-button" onClick={() => navigate("/update-managers")}>Managers</button>
                 <button className="dashboard-button" onClick={() => navigate("/all-expenses")}>Expenses</button>
-                <button className="dashboard-button" onClick={() => navigate("/update-hotels")}>Hotels</button>
+                <button className="dashboard-button" onClick={() => navigate("/admin-hotels")}>Hotels</button>
             </div>
         </div>
         </>
