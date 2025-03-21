@@ -12,10 +12,35 @@ const UpdateManager = () => {
     const [selectedemp, setSelectedemp] = useState(null);
     const [employees, setEmployees] = useState([]);
     const [showPopupAdd, setShowPopupAdd] = useState(false);
-
+    const [showConfirmation, setShowConfirmation] = useState(false);
+    const [employeeToRemove, setEmployeeToRemove] = useState(null);
+    
     useEffect(() => {
         fetchEmployees();
     }, []);
+
+    const confirmRemoveEmployee = (employee) => {
+        setEmployeeToRemove(employee);
+        setShowConfirmation(true);
+    };
+
+    const removeEmployee = () => {
+        if (employeeToRemove) {
+            Axios.post("http://localhost:3001/remove-employee", { empID: employeeToRemove.EmpID })
+                .then(() => {
+                    alert("Employee removed successfully.");
+                    fetchEmployees(); // Refresh the list
+                })
+                .catch((error) => {
+                    console.error("Error removing employee:", error);
+                    alert("Failed to remove employee.");
+                })
+                .finally(() => {
+                    setShowConfirmation(false);
+                    setEmployeeToRemove(null);
+                });
+        }
+    };  
 
     const fetchEmployees = () => {
         Axios.post("http://localhost:3001/show-managers")
@@ -38,7 +63,8 @@ const UpdateManager = () => {
     const openEmpPopUpAdd = () =>{
         setShowPopupAdd(true);
     }
-    return (
+
+    return( 
         <div className="employee-container">
             <button className="addEmp" onClick={openEmpPopUpAdd}>Add Employee</button>
             <h2>Managers List</h2>
@@ -54,8 +80,10 @@ const UpdateManager = () => {
                         >
                         Expand
                         </button>
-
-                        
+                        <button className="remove-button" 
+                        onClick={() => confirmRemoveEmployee(employee)}>
+                        Remove
+                        </button>   
                     </div>
                 ))}
             </div>
@@ -68,6 +96,17 @@ const UpdateManager = () => {
                 <AddEmpPopUp onClose = {() => setShowPopupAdd(false)}/>
             )
         }
+
+        {showConfirmation && employeeToRemove && (
+            <div className="confirmation-popup">
+                <div className="confirmation-content">
+                    <p>Are you sure you want to remove {employeeToRemove.FullName}?</p>
+                    <button className="confirm-button" onClick={removeEmployee}>Yes</button>
+                    <button className="cancel-button" onClick={() => setShowConfirmation(false)}>No</button>
+                </div>
+            </div>
+        )}
+
 
         </div>
     );
