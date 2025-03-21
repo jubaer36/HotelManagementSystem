@@ -1,9 +1,8 @@
-INSERT INTO Hotel (Name, Description, StarRating, Location)
+INSERT INTO Hotel (Name, Description, StarRating, Location, Status)
 VALUES 
-('Ocean Breeze Resort', 'A luxurious beachfront resort with premium amenities and stunning ocean views.', 5, '{"city": "Miami", "state": "FL", "country": "USA", "zip": "33139"}'),
-('Mountain Escape Lodge', 'A cozy lodge nestled in the heart of the mountains, perfect for adventure seekers.', 4, '{"city": "Aspen", "state": "CO", "country": "USA", "zip": "81611"}'),
-('Urban Haven Hotel', 'A modern hotel located in the city center, ideal for business and leisure travelers.', 3, '{"city": "Chicago", "state": "IL", "country": "USA", "zip": "60601"}');
-
+('Ocean Breeze Resort', 'A luxurious beachfront resort with premium amenities and stunning ocean views.', 5, '{"city": "Miami", "state": "FL", "country": "USA", "zip": "33139"}, "active"'),
+('Mountain Escape Lodge', 'A cozy lodge nestled in the heart of the mountains, perfect for adventure seekers.', 4, '{"city": "Aspen", "state": "CO", "country": "USA", "zip": "81611"}, "active"'),
+('Urban Haven Hotel', 'A modern hotel located in the city center, ideal for business and leisure travelers.', 3, '{"city": "Chicago", "state": "IL", "country": "USA", "zip": "60601"}, "active"');
 
 
 

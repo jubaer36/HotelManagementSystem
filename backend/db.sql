@@ -16,7 +16,8 @@ CREATE TABLE Hotel (
     Name VARCHAR(255) NOT NULL,
     Description TEXT, -- Added description for hotel details
     StarRating INT CHECK (StarRating BETWEEN 1 AND 5), -- Added a star rating
-    Location JSON NOT NULL -- Storing location as a JSON object
+    Location JSON NOT NULL, -- Storing location as a JSON object
+    Status ENUM('active', 'inactive') DEFAULT 'active' -- Added status field for hotel
 );
 
 -- Create Guest Table
