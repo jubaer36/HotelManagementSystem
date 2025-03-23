@@ -1,46 +1,98 @@
-/* Center the dashboard */
+.dashboard-wrapper {
+    min-height: 100vh;
+    background: #f8fafc;
+    padding-bottom: 2rem;
+}
+
 .dashboard-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background-color: #f4f4f4;
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
-/* Style the heading */
-.dashboard-container h1 {
-    font-size: 28px;
-    color: #333;
-    margin-bottom: 20px;
+.dashboard-header {
+    margin-bottom: 3rem;
 }
 
-/* Container for buttons */
-.button-container {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+.dashboard-title {
+    color: #1e293b;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    font-weight: 600;
 }
 
-/* Dashboard buttons */
-.dashboard-button {
-    background-color: #007bff;
-    color: white;
-    font-size: 18px;
-    font-weight: bold;
-    padding: 12px 24px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    width: 250px;
-    text-align: center;
-    transition: background-color 0.3s ease-in-out;
+.stats-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
 }
 
-.dashboard-button:hover {
-    background-color: #0056b3;
+.stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border: 1px solid #e2e8f0;
 }
 
-.dashboard-button:active {
-    background-color: #00408a;
+.stat-card h3 {
+    color: #64748b;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.stat-card p {
+    color: #1e293b;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+.stat-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.stat-badge.success {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.stat-badge.warning {
+    background: #fff4e6;
+    color: #ea580c;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4rem;
+}
+
+@media (max-width: 1024px) {
+    .grid-container {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-title {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-container {
+        padding: 1.5rem;
+    }
+
+    .stats-container {
+        grid-template-columns: 1fr;
+    }
+
+    .stat-card p {
+        font-size: 1.25rem;
+    }
 }
