@@ -1,106 +1,68 @@
-/* Employee.css */
-.employee-container {
-  padding: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
-}
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 16px;
+    text-align: left;
+  }
 
-.addEmp {
-  background-color: #3B82F6;
-  color: white;
-  padding: 0.8rem 1.5rem;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  margin-bottom: 1.5rem;
-  transition: background-color 0.3s;
-}
+  table th, table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+  }
 
-.addEmp:hover {
-  background-color: #2563eb;
-}
+  table th {
+    background-color: #f4f4f4;
+    color: #333;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
 
-.spreadsheet-container {
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
+  table tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
 
-.employee-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: white;
-}
+  table tr:hover {
+    background-color: #f1f1f1;
+  }
 
-.employee-table th,
-.employee-table td {
-  padding: 1rem;
-  text-align: left;
-  border-bottom: 1px solid #e2e8f0;
-}
+  h1, h2 {
+    color: #333;
+    font-family: Arial, sans-serif;
+    text-align: center;
+  }
 
-.employee-table th {
-  background-color: #f8fafc;
-  font-weight: 600;
-  color: #1e293b;
-}
+  section {
+    margin: 20px auto;
+    max-width: 800px;
+    font-family: Arial, sans-serif;
+  }
 
-.employee-row:hover {
-  background-color: #f8fafc;
-}
+  form {
+    margin-top: 20px;
+  }
 
-.editable-row input {
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 4px;
-  font-size: 1rem;
-}
+  form label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+  }
 
-.editable-row input:focus {
-  outline: none;
-  border-color: #3B82F6;
-  box-shadow: 0 0 0 2px #bfdbfe;
-}
+  form input, form button {
+    padding: 10px;
+    margin-bottom: 10px;
+    font-size: 14px;
+  }
 
-.expand-button {
-  background-color: #10B981;
-  color: white;
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
+  form button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
 
-.expand-button:hover {
-  background-color: #059669;
-}
-
-.save-button {
-  background-color: #3B82F6;
-  color: white;
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-right: 0.5rem;
-}
-
-.cancel-button {
-  background-color: #ef4444;
-  color: white;
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.save-button:hover {
-  background-color: #2563eb;
-}
-
-.cancel-button:hover {
-  background-color: #dc2626;
-}
+  form button:hover {
+    background-color: #45a049;
+  }
