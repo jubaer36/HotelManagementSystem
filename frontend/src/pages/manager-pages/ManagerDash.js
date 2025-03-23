@@ -21,6 +21,9 @@ const Dashboard = () => {
                 <button className="dashboard-button" onClick={() => navigate("/expenses")}>
                     Expenses
                 </button>
+                <button className="dashboard-button" onClick={() => navigate("/rooms")}>
+                    Rooms
+                </button>
             </div>
         </div>
     );

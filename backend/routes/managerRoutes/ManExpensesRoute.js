@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const db = require("../dbconn");
+const db = require("../../dbconn");
 
 // Fetch total salary cost and earnings (only for the current year)
 router.post("/hotel-expenses", (req, res) => {

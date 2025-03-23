@@ -5,7 +5,7 @@ import "chart.js/auto";
 import "./Manexpenses.css";
 
 const Manexpenses = () => {
-    const hotelID = 1; 
+    const hotelID = localStorage.getItem("hotelID"); // Static Hotel ID
     const [selectedGraph, setSelectedGraph] = useState("yearly");
     const [yearlyData, setYearlyData] = useState([]);
     const [monthlyData, setMonthlyData] = useState([]);

@@ -1,0 +1,57 @@
+/* Centering the entire dashboard */
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+  }
+  
+  /* Styling for the heading */
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 30px;
+    color: #333;
+  }
+  
+  /* Button container to stack buttons vertically */
+  .dashboard-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  /* Common styles for all buttons */
+  .dashboard-button {
+    padding: 15px 40px;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    width: 200px;
+    text-align: center;
+  }
+  
+  /* Unique colors for each button */
+  .dashboard-button:nth-child(1) {
+    background-color: #3498db;
+    color: white;
+  }
+  
+  .dashboard-button:nth-child(2) {
+    background-color: #e67e22;
+    color: white;
+  }
+  
+  .dashboard-button:nth-child(3) {
+    background-color: #27ae60;
+    color: white;
+  }
+  
+  /* Hover effect */
+  .dashboard-button:hover {
+    opacity: 0.8;
+  }
+  

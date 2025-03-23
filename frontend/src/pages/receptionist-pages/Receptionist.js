@@ -5,8 +5,8 @@ import Axios from "axios";
 
 
 const Receptionist = () => {
-  const dummyHID = 1;
-  const dummyEID = 2;
+  const dummyHID = localStorage.getItem("hotelID");
+  const dummyEID = localStorage.getItem("userID");
   const navigate = useNavigate();
 
   const [firstName, setFirstName] = useState("");

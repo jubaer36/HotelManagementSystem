@@ -72,4 +72,8 @@ router.get("/manager-dashboard", verifyToken("manager"), (req, res) => {
   res.send("Welcome to the Manager Dashboard");
 });
 
+router.get("/admin-dashboard", verifyToken("admin"), (req, res) => {
+  res.send("Welcome to the Admin Dashboard");
+});
+
 module.exports = router;

@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Axios from "axios";
 import "./RealCheckout.css"
-import BillingPopup from "../components/BillingPopup";
+import BillingPopup from "../../components/BillingPopup";
 
 const CurrentGuests = () =>{
 
-    const dummyHID = 1;
+    const dummyHID = localStorage.getItem("hotelID");   
     const navigate = useNavigate();
 
     const [guests, setGuests] = useState([]);

@@ -1,9 +1,8 @@
-INSERT INTO Hotel (Name, Description, StarRating, Location)
+INSERT INTO Hotel (Name, Description, StarRating, Location, Status)
 VALUES 
-('Ocean Breeze Resort', 'A luxurious beachfront resort with premium amenities and stunning ocean views.', 5, '{"city": "Miami", "state": "FL", "country": "USA", "zip": "33139"}'),
-('Mountain Escape Lodge', 'A cozy lodge nestled in the heart of the mountains, perfect for adventure seekers.', 4, '{"city": "Aspen", "state": "CO", "country": "USA", "zip": "81611"}'),
-('Urban Haven Hotel', 'A modern hotel located in the city center, ideal for business and leisure travelers.', 3, '{"city": "Chicago", "state": "IL", "country": "USA", "zip": "60601"}');
-
+('Ocean Breeze Resort', 'A luxurious beachfront resort with premium amenities and stunning ocean views.', 5, '{"city": "Miami", "state": "FL", "country": "USA", "zip": "33139"}, "active"'),
+('Mountain Escape Lodge', 'A cozy lodge nestled in the heart of the mountains, perfect for adventure seekers.', 4, '{"city": "Aspen", "state": "CO", "country": "USA", "zip": "81611"}, "active"'),
+('Urban Haven Hotel', 'A modern hotel located in the city center, ideal for business and leisure travelers.', 3, '{"city": "Chicago", "state": "IL", "country": "USA", "zip": "60601"}, "active"');
 
 
 
@@ -84,7 +83,7 @@ VALUES
 
 -- Employees for DeptID = 6
 (6, 'Liam', 'Taylor', '7891234560', 'liam.taylor@example.com', 17.00, 3600.00,'Working',  'Receptionist', '2022-01-10', '{"city": "Philadelphia", "state": "PA"}'),
-(6, 'Charlotte', 'Anderson', '9874563210', 'charlotte.anderson@example.com', 18.00, 3700.00,'Working',  'Manager', '2020-10-15', '{"city": "Philadelphia", "state": "PA"}'),
+(6, 'Charlotte', 'Anderson', '9874563210', 'charlotte.anderson@example.com', 18.00, 3700.00,'Working',  'watchman', '2020-10-15', '{"city": "Philadelphia", "state": "PA"}'),
 
 -- Employees for DeptID = 7
 (7, 'Elijah', 'Thomas', '6547891230', 'elijah.thomas@example.com', 12.75, 2800.00,'Working',  'Housekeeper', '2023-05-01', '{"city": "San Antonio", "state": "TX"}'),
@@ -123,6 +122,13 @@ VALUES
 (15, 'Aria', 'Green', '6547893210', 'aria.green@example.com', 16.50, 3400.00, 'Working', 'Head of Security', '2020-11-10', '{"city": "Charlotte", "state": "NC"}');
 
 
+INSERT INTO Employee (DeptID, FirstName, LastName, Phone, Email, hourly_pay, Salary, working_status, Role, HiredDate, Address)  
+VALUES  
+(5, 'John', 'Doe', '01700000001', 'john.doe@example.com', 50.00, 5000.00, 'Working', 'manager', '2023-01-15', '{"street": "123 Main St", "city": "Dhaka", "country": "Bangladesh"}'),  
+
+(10, 'Jane', 'Smith', '01700000002', 'jane.smith@example.com', 55.00, 5500.00, 'Working', 'manager', '2022-06-20', '{"street": "456 Elm St", "city": "Sylhet", "country": "Bangladesh"}'),  
+
+(15, 'David', 'Rahman', '01700000003', 'david.rahman@example.com', 60.00, 6000.00, 'Working', 'manager', '2021-09-10', '{"street": "789 Oak St", "city": "Chittagong", "country": "Bangladesh"}');  
 
 
 
