@@ -124,11 +124,11 @@ VALUES
 
 INSERT INTO Employee (DeptID, FirstName, LastName, Phone, Email, hourly_pay, Salary, working_status, Role, HiredDate, Address)  
 VALUES  
-(5, 'John', 'Doe', '01700000001', 'john.doe@example.com', 50.00, 5000.00, 'Working', 'manager', '2023-01-15', '{"street": "123 Main St", "city": "Dhaka", "country": "Bangladesh"}'),  
+(5, 'John', 'Doe', '01700000001', 'john.doe@example.com', 50.00, 5000.00, 'Working', 'manager', '2023-01-15', '{"street": "123 Main St", "city": "Dhaka", "country": "Bangladesh", "state":"Daka"}'),  
 
-(10, 'Jane', 'Smith', '01700000002', 'jane.smith@example.com', 55.00, 5500.00, 'Working', 'manager', '2022-06-20', '{"street": "456 Elm St", "city": "Sylhet", "country": "Bangladesh"}'),  
+(10, 'Jane', 'Smith', '01700000002', 'jane.smith@example.com', 55.00, 5500.00, 'Working', 'manager', '2022-06-20', '{"street": "456 Elm St", "city": "Sylhet", "country": "Bangladesh","state":"Daka"}'),  
 
-(15, 'David', 'Rahman', '01700000003', 'david.rahman@example.com', 60.00, 6000.00, 'Working', 'manager', '2021-09-10', '{"street": "789 Oak St", "city": "Chittagong", "country": "Bangladesh"}');  
+(15, 'David', 'Rahman', '01700000003', 'david.rahman@example.com', 60.00, 6000.00, 'Working', 'manager', '2021-09-10', '{"street": "789 Oak St", "city": "Chittagong", "country": "Bangladesh","state":"Daka"}');  
 
 
 
