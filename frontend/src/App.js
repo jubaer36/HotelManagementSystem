@@ -29,6 +29,7 @@ function App() {
         <Route path="/checkout" element={<PrivateRoute element={<Checkout />} role="receptionist" />} />
         <Route path="/feature" element={<PrivateRoute element={<Features />} role="receptionist" />} />
         <Route path="/real-checkout" element={<PrivateRoute element={<RealCheckout />} role="receptionist" />} />
+        <Route path="/inventory" element={<PrivateRoute element={<Inventory />} role="receptionist" />} />
         {/* Manager Pages */}
         <Route path="/manager-dashboard" element={<PrivateRoute element={<ManDash />} role="manager" />} />
         <Route path="/employee-info" element={<PrivateRoute element={<Employee />} role="manager" />} />
