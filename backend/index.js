@@ -10,7 +10,7 @@ const ManexpensesRoute = require("./routes/managerRoutes/ManExpensesRoute");
 const AdminDashBoard = require("./routes/adminRoutes/updateManagerRoute");
 const AdminHotel = require("./routes/adminRoutes/adminHotelRoutes.js");
 const manRoomRoute = require("./routes/managerRoutes/roomsRoute");
-const inventoryRoutes = require("./routes/inventoryRoutes")
+const inventoryRoutes = require("./routes/managerRoutes/inventoryRoutes.js")
 const authRoutes = require("./auth.js");
 const app = express();
 

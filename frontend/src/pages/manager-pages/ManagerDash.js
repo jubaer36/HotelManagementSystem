@@ -24,6 +24,10 @@ const Dashboard = () => {
                 <button className="dashboard-button" onClick={() => navigate("/rooms")}>
                     Rooms
                 </button>
+
+                <button className="dashboard-button" onClick={() => navigate("/inventory")}>
+                    Inventory
+                </button>
             </div>
         </div>
     );

@@ -12,7 +12,7 @@ const DashBoard = () => {
         <button className="dashboard-button" onClick={() => navigate("/receptionist")}>Book Rooms</button>
         <button className="dashboard-button" onClick={() => navigate("/checkout")}>Guest Info</button>
         <button className="dashboard-button" onClick={() => navigate("/real-checkout")}>Billing</button>
-        <button className="dashboard-button" onClick={() => navigate("/inventory")}>Inventory</button>
+       
       </div>
     </div>
   );
