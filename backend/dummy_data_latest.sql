@@ -134,7 +134,7 @@ VALUES
 
 INSERT INTO Booking ( GuestID, HotelID, EmpID, CheckInDate, CheckOutDate, NumAdults, NumChildren, TotalBooking, PaymentStatus)
 VALUES 
-(1, 1, 1, CURDATE() - INTERVAL 7 DAY, CURDATE() + INTERVAL 7 DAY, 1, 0, 100.00, 'Pending');
+(1, 1, 1, CURDATE() - INTERVAL 7 DAY, CURDATE() - INTERVAL 6 DAY, 1, 0, 100.00, 'Pending');
 
 INSERT INTO Booking (GuestID, HotelID, EmpID, CheckInDate, CheckOutDate, NumAdults, NumChildren, TotalBooking, PaymentStatus)
 VALUES

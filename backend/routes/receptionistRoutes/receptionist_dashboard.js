@@ -11,14 +11,23 @@ router.post("/available-rooms", (req, res) => {
 
     const hotelID = req.body.hotelID;
 
-    let query = `SELECT * FROM hotelmanagementsystem.room WHERE status = 'Available' AND HotelID = ?;`;
-
+    // let query = `SELECT * FROM hotelmanagementsystem.room WHERE status = 'Available' AND HotelID = ?;`;
+    let query = `
+    SELECT R.RoomID, R.RoomNumber, C.ClassType, B.BedType, R.MaxOccupancy, R.BasePrice
+    FROM Room R
+    INNER JOIN Room_Class C ON R.RoomClassID = C.RoomClassID
+    INNER JOIN Bed_Type B ON R.RoomID = B.RoomID
+    LEFT JOIN Booking Bk ON R.BookingID = Bk.BookingID
+    WHERE R.HotelID = ?
+    AND (Bk.BookingID IS NULL OR CURDATE() NOT BETWEEN Bk.CheckInDate AND Bk.CheckOutDate);
+`;
 
     db.query(query , hotelID, (err, result) => {
             if (err) {
                 console.error("Error fetching rooms:", err);
                 return res.status(500).send("Error fetching available rooms.");
             }
+            console.log("Available Rooms:", result);
             res.send(result);
         }
     );
@@ -28,73 +37,83 @@ router.post("/available-rooms", (req, res) => {
 
 
 router.post("/filter-rooms", (req, res) => {
-    const minPrice = req.body.minPrice;
-    const maxPrice = req.body.maxPrice;
-    const bedType= req.body.bedType;
-    const classType = req.body.classType;
-    const maxOccupancy  = req.body.maxOccupancy;
-    const hotelID = req.body.hotelID;
+  const {
+    minPrice,
+    maxPrice,
+    bedType,
+    classType,
+    maxOccupancy,
+    hotelID,
+    checkInDate,
+    checkOutDate,
+  } = req.body;
 
-    let query = `
-        SELECT r.RoomID, r.RoomNumber, r.Status, r.MaxOccupancy, r.BasePrice, rc.ClassType, bt.BedType
-        FROM Room r
-        INNER JOIN Room_Class rc ON r.RoomClassID = rc.RoomClassID
-        LEFT JOIN Bed_Type bt ON r.RoomID = bt.RoomID
-        WHERE r.Status = 'Available'
-    `;
+  let query = `
+    SELECT r.RoomID, r.RoomNumber, r.Status, r.MaxOccupancy, r.BasePrice, rc.ClassType, bt.BedType
+    FROM Room r
+    INNER JOIN Room_Class rc ON r.RoomClassID = rc.RoomClassID
+    LEFT JOIN Bed_Type bt ON r.RoomID = bt.RoomID
+    LEFT JOIN Booking b ON r.BookingID = b.BookingID
+    WHERE 1=1
+  `;
 
-    let conditions = [];
-    let params = [];
+  let conditions = [];
+  let params = [];
 
-    // Add conditions dynamically based on filters
-    if (minPrice && minPrice > 0) {
-        conditions.push("r.BasePrice >= ?");
-        params.push(minPrice);
+  if (minPrice && minPrice > 0) {
+    conditions.push("r.BasePrice >= ?");
+    params.push(minPrice);
+  }
+  if (maxPrice && maxPrice > 0) {
+    conditions.push("r.BasePrice <= ?");
+    params.push(maxPrice);
+  }
+  if (bedType && bedType !== "Any") {
+    conditions.push("bt.BedType = ?");
+    params.push(bedType);
+  }
+  if (classType && classType !== "Any") {
+    conditions.push("rc.ClassType = ?");
+    params.push(classType);
+  }
+  if (maxOccupancy && maxOccupancy > 0) {
+    conditions.push("r.MaxOccupancy >= ?");
+    params.push(maxOccupancy);
+  }
+  if (hotelID && hotelID > 0) {
+    conditions.push("r.HotelID = ?");
+    params.push(hotelID);
+  }
+
+  // ✅ Exclude rooms that are already booked between given dates
+  if (checkInDate && checkOutDate) {
+    conditions.push(`
+      (
+        b.BookingID IS NULL OR
+        NOT (
+          ? < b.CheckOutDate AND ? > b.CheckInDate
+        )
+      )
+    `);
+    params.push(checkInDate, checkOutDate);
+  }
+
+  if (conditions.length > 0) {
+    query += " AND " + conditions.join(" AND ");
+  }
+
+  console.log("Generated Query:", query);
+  console.log("Query Parameters:", params);
+
+  db.query(query, params, (err, result) => {
+    if (err) {
+      console.error("Error filtering rooms:", err);
+      res.status(500).send({ message: "Error filtering rooms.", error: err });
+    } else {
+      console.log("Filtered Rooms:", result);
+      res.send(result);
     }
-    if (maxPrice && maxPrice > 0) {
-        conditions.push("r.BasePrice <= ?");
-        params.push(maxPrice);
-    }
-    if (bedType && bedType !== "Any") {
-        conditions.push("bt.BedType = ?");
-        params.push(bedType);
-    }
-    if (classType && classType !== "Any") {
-        conditions.push("rc.ClassType = ?");
-        params.push(classType);
-    }
-    if (maxOccupancy && maxOccupancy > 0) {
-        conditions.push("r.MaxOccupancy >= ?");
-        params.push(maxOccupancy);
-    }
-
-    if (hotelID && hotelID > 0) {
-        conditions.push("r.HotelID = ?");
-        params.push(hotelID);
-    }
-
-    // Append conditions to the query
-    if (conditions.length > 0) {
-        query += " AND " + conditions.join(" AND ");
-    }
-
-
-    console.log("Generated Query:", query);
-    console.log("Query Parameters:", params);
-
-
-
-
-
-    // Execute the query
-    db.query(query, params, (err, result) => {
-        if (err) {
-            console.error("Error filtering rooms:", err);
-            res.status(500).send({ message: "Error filtering rooms.", error: err });
-        } else {
-            res.send(result); // Return the filtered rooms
-        }
-    });
+  });
 });
 
 
