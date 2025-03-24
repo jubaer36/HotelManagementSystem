@@ -37,6 +37,14 @@ const Dashboard = () => {
             path: "/inventory",
             icon: <FiPackage className="card-icon" />,
             stat: "32 Low stock items"
+        },
+        {
+            title: "Ledger Book",
+            description: "Track 1,240 items",
+            color: "#8B5CF6",
+            path: "/ledgerbook",
+            icon: <FiPackage className="card-icon" />,
+            stat: "32 Low stock items"
         }
     ];
 

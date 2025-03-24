@@ -17,6 +17,8 @@ const Navbar = () => {
                 return 'Room Management';
             case '/inventory':
                 return 'Inventory Control';
+            case '/ledgerbook':
+                return 'Ledger Book';
             case '/profile':
                 return 'User Profile';
             case '/settings':
