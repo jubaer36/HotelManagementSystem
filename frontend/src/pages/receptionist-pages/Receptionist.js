@@ -587,6 +587,7 @@ const Receptionist = () => {
             <input
               type="date"
               name="checkOutDate"
+              min={filters.checkInDate}
               value={filters.checkOutDate}
               onChange={(e) =>
                 setFilters({ ...filters, checkOutDate: e.target.value })
