@@ -1,57 +1,82 @@
-/* Centering the entire dashboard */
-.dashboard-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background-color: #f4f4f4;
+.admin-dashboard-wrapper {
+  min-height: 100vh;
+  background: #f8fafc;
+}
+
+.admin-dashboard-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.admin-grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Always show 2 columns */
+  gap: 4rem;
+}
+
+/* Card styles (keep your existing card styles) */
+.admin-dashboard-card {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  min-height: 200px;
+  position: relative;
+}
+
+.admin-dashboard-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+.admin-dashboard-card h3 {
+  color: #1e293b;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.admin-dashboard-card p {
+  color: #64748b;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 2rem;
+}
+
+.nav-button {
+  background: #3B82F6;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+  position: absolute;
+  bottom: 1.5rem;
+}
+
+.nav-button:hover {
+  background: #2563eb;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 1.5rem;
   }
-  
-  /* Styling for the heading */
-  h1 {
-    font-size: 2rem;
-    margin-bottom: 30px;
-    color: #333;
+
+  /* Switch to single column on mobile */
+  .grid-container {
+    grid-template-columns: 1fr;
   }
-  
-  /* Button container to stack buttons vertically */
-  .dashboard-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+}
+
+@media (min-width: 1200px) {
+  /* Optional: Add max-width to cards on very large screens */
+  .dashboard-card {
+    max-width: 500px;
   }
-  
-  /* Common styles for all buttons */
-  .dashboard-button {
-    padding: 15px 40px;
-    font-size: 1.2rem;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: 0.3s;
-    width: 200px;
-    text-align: center;
-  }
-  
-  /* Unique colors for each button */
-  .dashboard-button:nth-child(1) {
-    background-color: #3498db;
-    color: white;
-  }
-  
-  .dashboard-button:nth-child(2) {
-    background-color: #e67e22;
-    color: white;
-  }
-  
-  .dashboard-button:nth-child(3) {
-    background-color: #27ae60;
-    color: white;
-  }
-  
-  /* Hover effect */
-  .dashboard-button:hover {
-    opacity: 0.8;
-  }
-  
+}

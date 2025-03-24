@@ -23,6 +23,10 @@ const Navbar = () => {
                 return 'User Profile';
             case '/settings':
                 return 'System Settings';
+            case '/update-managers':
+                return 'Manager List';
+            case '/admin-dashboard':
+                return 'Admin Dashboard';
             default:
                 return 'Dashboard';
         }

@@ -2,19 +2,16 @@ import React, { useState, useEffect } from "react";
 import Axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./UpdateManager.css";
-import EmpPopUP from "../../components/EmpPopup";
 import AddEmpPopUp from "../../components/AddManagerPopUp";
+import Navbar from "../../components/Navbar";
 
 const UpdateManager = () => {
     const navigate = useNavigate();
-    // const hotelID = localStorage.getItem("hotelID"); // Change based on requirement
-    const [showPopup, setShowPopup] = useState(false);
-    const [selectedemp, setSelectedemp] = useState(null);
     const [employees, setEmployees] = useState([]);
     const [showPopupAdd, setShowPopupAdd] = useState(false);
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [employeeToRemove, setEmployeeToRemove] = useState(null);
-    
+
     useEffect(() => {
         fetchEmployees();
     }, []);
@@ -29,7 +26,7 @@ const UpdateManager = () => {
             Axios.post("http://localhost:3001/remove-employee", { empID: employeeToRemove.EmpID })
                 .then(() => {
                     alert("Employee removed successfully.");
-                    fetchEmployees(); // Refresh the list
+                    fetchEmployees();
                 })
                 .catch((error) => {
                     console.error("Error removing employee:", error);
@@ -40,7 +37,7 @@ const UpdateManager = () => {
                     setEmployeeToRemove(null);
                 });
         }
-    };  
+    };
 
     const fetchEmployees = () => {
         Axios.post("http://localhost:3001/show-managers")
@@ -53,66 +50,75 @@ const UpdateManager = () => {
             });
     };
 
-    const openEmpPopup = (employee) => {
-        setSelectedemp(employee);
-        setShowPopup(true);
-      };
-
-    
-
-    const openEmpPopUpAdd = () =>{
+    const openEmpPopUpAdd = () => {
         setShowPopupAdd(true);
     }
 
-    return( 
-        <div className="employee-container">
-            <button className="addEmp" onClick={openEmpPopUpAdd}>Add Employee</button>
-            <h2>Managers List</h2>
-            <div className="employee-cards">
-                {employees.map((employee) => (
-                    <div key={employee.EmpID} className="employee-card">
-                        <h3>{employee.FullName}</h3>
-                        <p><strong>Department:</strong> {employee.DeptName}</p>
-                        <p><strong>Salary:</strong> ${Number(employee.hourly_pay || 0).toFixed(2)}</p>
-                        <button 
-                        className="expand-button"
-                        onClick={() => openEmpPopup(employee)}  
-                        >
-                        Expand
-                        </button>
-                        <button className="remove-button" 
-                        onClick={() => confirmRemoveEmployee(employee)}>
-                        Remove
-                        </button>   
+    return(
+        <div>
+        <Navbar/>
+        <div className="update-manager-container">
+            <div className="header-section">
+
+                <button className="add-button" onClick={openEmpPopUpAdd}>
+                    + Add New Manager
+                </button>
+            </div>
+
+            <div className="table-container">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Full Name</th>
+                        <th>Department</th>
+                        <th>Salary</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Hired Date</th>
+                        <th>Remove</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {employees.map((employee) => (
+                        <tr key={employee.EmpID}>
+                            <td>{employee.FullName}</td>
+                            <td>{employee.DeptName}</td>
+                            <td>${Number(employee.hourly_pay || 0).toFixed(2)}</td>
+                            <td>{employee.Email}</td>
+                            <td>{employee.Phone}</td>
+                            <td>{new Date(employee.HiredDate).toLocaleDateString()}</td>
+                            <td>
+                                <button
+                                    className="remove-button"
+                                    onClick={() => confirmRemoveEmployee(employee)}
+                                >
+                                    Remove
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            </div>
+
+            {showPopupAdd && (
+                <AddEmpPopUp onClose={() => setShowPopupAdd(false)} />
+            )}
+
+            {showConfirmation && employeeToRemove && (
+                <div className="confirmation-popup">
+                    <div className="confirmation-content">
+                        <p>Are you sure you want to remove {employeeToRemove.FullName}?</p>
+                        <div className="confirmation-buttons">
+                            <button className="confirm-button" onClick={removeEmployee}>Yes</button>
+                            <button className="cancel-button" onClick={() => setShowConfirmation(false)}>No</button>
+                        </div>
                     </div>
-                ))}
-            </div>
-
-        {showPopup && selectedemp && (
-        <EmpPopUP empID={selectedemp.EmpID} onClose={() => setShowPopup(false)}/>
-        )}
-        {
-            showPopupAdd && (
-                <AddEmpPopUp onClose = {() => setShowPopupAdd(false)}/>
-            )
-        }
-
-        {showConfirmation && employeeToRemove && (
-            <div className="confirmation-popup">
-                <div className="confirmation-content">
-                    <p>Are you sure you want to remove {employeeToRemove.FullName}?</p>
-                    <button className="confirm-button" onClick={removeEmployee}>Yes</button>
-                    <button className="cancel-button" onClick={() => setShowConfirmation(false)}>No</button>
                 </div>
-            </div>
-        )}
-
-
+            )}
+        </div>
         </div>
     );
 }
 
 export default UpdateManager;
-
-
-
