@@ -31,7 +31,13 @@ router.post("/current-guests", (req, res) => {
         console.error("Error fetching current guests:", err);
         res.status(500).send("Error fetching current guests.");
       } else {
-        res.send(results);
+        results = results.map(guest => {
+          guest.CheckInDate = adjustDate(guest.CheckInDate);
+          guest.CheckOutDate = adjustDate(guest.CheckOutDate);
+          return guest;
+      });
+  
+      res.send(results);
       }
     });
 });
@@ -148,7 +154,7 @@ router.post("/filter-guests", (req, res) => {
       FROM Guest g
       INNER JOIN Booking b ON g.GuestID = b.GuestID
       INNER JOIN Room r ON b.BookingID = r.BookingID
-      WHERE 1=1
+      WHERE g.FirstName <> 'System'
     `;
   
     const params = [];
@@ -192,11 +198,24 @@ router.post("/filter-guests", (req, res) => {
         console.error("Error filtering guests:", err);
         res.status(500).send("Error filtering guests.");
       } else {
-        res.send(results);
+        results = results.map(guest => {
+          guest.CheckInDate = adjustDate(guest.CheckInDate);
+          guest.CheckOutDate = adjustDate(guest.CheckOutDate);
+          return guest;
+      });
+  
+      res.send(results);
       }
     });
 });
 
+
+function adjustDate(date) {
+  if (!date) return null;
+  let d = new Date(date);
+  d.setDate(d.getDate() + 1); // Add 1 day
+  return d.toISOString().split("T")[0]; // Return only the date part
+}
 
   
 module.exports = router;

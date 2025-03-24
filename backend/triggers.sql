@@ -22,6 +22,8 @@ BEGIN
 END;
 //
 
+DELIMITER ;
+
 DELIMITER //
 CREATE TRIGGER after_employee_insert
 AFTER INSERT ON Employee

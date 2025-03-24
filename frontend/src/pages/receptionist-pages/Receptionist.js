@@ -28,12 +28,18 @@ const Receptionist = () => {
     deposite: 0,
   });
 
+  const today = new Date();
+
+  const formatDate = (date) => date.toISOString().split("T")[0];
+
   const [filters, setFilters] = useState({
     minPrice: 0,
     maxPrice: 0,
     bedType: "Any",
     classType: "Any",
     maxOccupancy: 0,
+    checkInDate: formatDate(today),     // ✅ today's date
+    checkOutDate: formatDate(today), // ✅ tomorrow's date
   });
 
   useEffect(() => {
@@ -51,13 +57,24 @@ const Receptionist = () => {
     }
   }, [showRooms]);
 
+  const defaultDate = () =>{
+    filters.checkInDate = formatDate(today);
+    filters.checkOutDate = formatDate(today);
+  }
+
   const fetchFilteredRooms = () => {
+    if(filters.checkInDate === "" || filters.checkOutDate === ""){
+    defaultDate();
+    }
+    console.log("Filters:", filters);
     Axios.post("http://localhost:3001/filter-rooms", {
       minPrice: filters.minPrice, // Default value
       maxPrice: filters.maxPrice, // Default value
       bedType: filters.bedType, // Default value
       classType: filters.classType, // Default value
       maxOccupancy: filters.maxOccupancy, // Default value
+      checkInDate: filters.checkInDate,  // ✅ new
+      checkOutDate: filters.checkOutDate, // ✅ new
       hotelID: dummyHID,
     })
       .then((response) => {
@@ -233,6 +250,7 @@ const Receptionist = () => {
               <tr style={{ backgroundColor: "#f2f2f2" }}>
                 <th style={{ border: "1px solid #ccc", padding: "10px", textAlign: "left" }}>Room Number</th>
                 <th style={{ border: "1px solid #ccc", padding: "10px", textAlign: "left" }}>Class Type</th>
+                <th style={{ border: "1px solid #ccc", padding: "10px", textAlign: "left" }}>Bed Type</th>
                 <th style={{ border: "1px solid #ccc", padding: "10px", textAlign: "left" }}>Base Price</th>
                 <th style={{ border: "1px solid #ccc", padding: "10px", textAlign: "left" }}>Max Occupancy</th>
                 <th style={{ border: "1px solid #ccc", padding: "10px", textAlign: "left" }}>Select</th>
@@ -247,7 +265,8 @@ const Receptionist = () => {
                   }}
                 >
                   <td style={{ border: "1px solid #ccc", padding: "10px" }}>{room.RoomNumber}</td>
-                  <td style={{ border: "1px solid #ccc", padding: "10px" }}>{room.RoomClassID}</td>
+                  <td style={{ border: "1px solid #ccc", padding: "10px" }}>{room.ClassType}</td>
+                  <td style={{ border: "1px solid #ccc", padding: "10px" }}>{room.BedType}</td>
                   <td style={{ border: "1px solid #ccc", padding: "10px" }}>${room.BasePrice}</td>
                   <td style={{ border: "1px solid #ccc", padding: "10px" }}>{room.MaxOccupancy}</td>
                   <td style={{ border: "1px solid #ccc", padding: "10px" }}>
@@ -539,6 +558,50 @@ const Receptionist = () => {
               }}
             />
           </div>
+          <div style={{ marginBottom: "15px" }}>
+            <label style={{ fontSize: "14px", fontWeight: "600", marginBottom: "5px" }}>
+              Check-In Date:
+            </label>
+            <input
+              type="date"
+              name="checkInDate"
+              value={filters.checkInDate}
+              onChange={(e) =>
+                setFilters({ ...filters, checkInDate: e.target.value })
+              }
+              style={{
+                width: "100%",
+                padding: "10px",
+                border: "1px solid #ccc",
+                borderRadius: "5px",
+                fontSize: "14px",
+                marginBottom: "10px",
+              }}
+            />
+          </div>
+            
+          <div style={{ marginBottom: "15px" }}>
+            <label style={{ fontSize: "14px", fontWeight: "600", marginBottom: "5px" }}>
+              Check-Out Date:
+            </label>
+            <input
+              type="date"
+              name="checkOutDate"
+              min={filters.checkInDate}
+              value={filters.checkOutDate}
+              onChange={(e) =>
+                setFilters({ ...filters, checkOutDate: e.target.value })
+              }
+              style={{
+                width: "100%",
+                padding: "10px",
+                border: "1px solid #ccc",
+                borderRadius: "5px",
+                fontSize: "14px",
+              }}
+            />
+          </div>
+
           <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px" }}>
             <button
               onClick={fetchFilteredRooms}
