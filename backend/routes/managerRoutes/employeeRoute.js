@@ -20,7 +20,7 @@ router.post("/employees", (req, res) => {
             d.DeptID
         FROM Employee e
         INNER JOIN Department d ON e.DeptID = d.DeptID
-        WHERE d.HotelID = ?;
+        WHERE d.HotelID = ? AND e.working_status = 'Working' AND e.Role <> 'manager';
     `;
 
     db.query(query, [hotelID], (err, results) => {

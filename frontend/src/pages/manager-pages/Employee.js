@@ -80,10 +80,37 @@ const Employee = () => {
         },
     });
 
+    const [showPopupAdd, setShowPopupAdd] = useState(false);
+    const [showConfirmation, setShowConfirmation] = useState(false);
+    const [employeeToRemove, setEmployeeToRemove] = useState(null);
+        
     useEffect(() => {
         fetchEmployees();
         fetchDepartments();
     }, []);
+
+    const confirmRemoveEmployee = (employee) => {
+        setEmployeeToRemove(employee);
+        setShowConfirmation(true);
+    };
+
+    const removeEmployee = () => {
+        if (employeeToRemove) {
+            Axios.post("http://localhost:3001/remove-employee", { empID: employeeToRemove.EmpID })
+                .then(() => {
+                    alert("Employee removed successfully.");
+                    fetchEmployees(); // Refresh the list
+                })
+                .catch((error) => {
+                    console.error("Error removing employee:", error);
+                    alert("Failed to remove employee.");
+                })
+                .finally(() => {
+                    setShowConfirmation(false);
+                    setEmployeeToRemove(null);
+                });
+        }
+    };  
 
     const fetchEmployees = () => {
         Axios.post("http://localhost:3001/employees", { hotelID })
