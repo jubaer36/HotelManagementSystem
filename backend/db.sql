@@ -132,4 +132,27 @@ CREATE TABLE Transactions (
     FOREIGN KEY (BookingID) REFERENCES Booking(BookingID) ON DELETE CASCADE
 )
 
+CREATE TABLE Inventory (
+    InventoryID INT PRIMARY KEY AUTO_INCREMENT,
+    HotelID INT NOT NULL,
+    ItemName VARCHAR(255) NOT NULL,
+    Quantity INT DEFAULT 0,
+    LastUpdated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (HotelID) REFERENCES Hotel(HotelID) ON DELETE CASCADE
+);
+
+CREATE TABLE InventoryTransactions (
+    TransactionID INT PRIMARY KEY AUTO_INCREMENT,
+    InventoryID INT NOT NULL,
+    HotelID INT NOT NULL,
+    TransactionType ENUM('Order', 'Received') NOT NULL,
+    Quantity INT NOT NULL,
+    UnitPrice DECIMAL(10, 2),
+    TransactionDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    ReceiveDate TIMESTAMP NULL DEFAULT NULL,
+    Status ENUM('Pending', 'Completed') DEFAULT 'Pending',
+    FOREIGN KEY (InventoryID) REFERENCES Inventory(InventoryID) ON DELETE CASCADE,
+    FOREIGN KEY (HotelID) REFERENCES Hotel(HotelID) ON DELETE CASCADE
+);
+
 

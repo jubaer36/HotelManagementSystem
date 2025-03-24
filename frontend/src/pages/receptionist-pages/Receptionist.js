@@ -589,6 +589,9 @@ const Receptionist = () => {
           Checkout
         </button>
         <button
+          onClick={() => navigate("/inventory")}
+          style={{
+            padding: "10px 15px",
           onClick={() => navigate("/real-checkout")}
           style={{
             padding: "10px 15px",
@@ -600,6 +603,11 @@ const Receptionist = () => {
             cursor: "pointer",
           }}
         >
+          Inventory
+        </button>
+
+
+      </div>
          Real Checkout
         </button>
       </div> */}
