@@ -1,4 +1,4 @@
--- drop database hotelmanagementsystem;
+drop database hotelmanagementsystem;
 create database hotelmanagementsystem;
 use hotelmanagementsystem;
 -- Create Hotel Table
@@ -85,6 +85,17 @@ CREATE TABLE Room_Class (
 
 );
 
+CREATE TABLE Available_Rooms (
+    RoomID INT PRIMARY KEY AUTO_INCREMENT,
+    RoomNumber INT NOT NULL,
+    RoomClassID INT NOT NULL,
+    HotelID INT NOT NULL,
+    MaxOccupancy INT NOT NULL CHECK (MaxOccupancy <= 20), -- Added maximum occupancy
+    BasePrice DECIMAL(10, 2) NOT NULL,-- Added daily rate for room pricing
+    FOREIGN KEY (RoomClassID) REFERENCES Room_Class(RoomClassID) ON DELETE CASCADE,
+    FOREIGN KEY (HotelID) REFERENCES Hotel(HotelID) ON DELETE CASCADE
+);
+
 -- Create Room Table
 CREATE TABLE Room (
     RoomID INT PRIMARY KEY AUTO_INCREMENT,
@@ -92,7 +103,6 @@ CREATE TABLE Room (
     RoomClassID INT NOT NULL,
     HotelID INT NOT NULL,
     BookingID INT NOT NULL,
-    Status VARCHAR(20) NOT NULL,
     MaxOccupancy INT NOT NULL CHECK (MaxOccupancy <= 20), -- Added maximum occupancy
     BasePrice DECIMAL(10, 2) NOT NULL,-- Added daily rate for room pricing
     FOREIGN KEY (RoomClassID) REFERENCES Room_Class(RoomClassID) ON DELETE CASCADE,
