@@ -15,6 +15,8 @@ const CurrentGuests = () => {
     const [selectedGuest, setSelectedGuest] = useState(null);
     const [newCheckoutDate, setNewCheckoutDate] = useState("");
     const [showFilterModal, setShowFilterModal] = useState(false);
+    const [minCheckOutDate, setMinCheckOutDate] = useState("");
+    const [maxCheckOutDate, setMaxCheckOutDate] = useState("");
     const [filters, setFilters] = useState({
         firstName: "",
         lastName: "",
@@ -74,6 +76,17 @@ const CurrentGuests = () => {
     };
 
     const handleExtendVisit = (guest) => {
+        setMinCheckOutDate(guest.CheckOutDate);
+
+        // Axios.post("http://localhost:3001/find-maxCheckOutDate", {
+        //     bookingID: guest.BookingID,
+            
+        // }).then((response) => {
+        //     setMaxCheckOutDate(response.data[0].maxCheckOutDate);
+        // }).catch((error) => {   
+        //     console.error("Error fetching maxCheckOutDate:", error);
+        // });
+
         setSelectedGuest(guest);
         setShowPopup(true);
     };
@@ -99,31 +112,7 @@ const CurrentGuests = () => {
             });
     };
 
-    // const handleCheckout = (guestID) => {
-    //     Axios.post("http://localhost:3001/checkout", { guestID })
-    //         .then(() => {
-    //             alert("Guest checked out successfully.");
-    //             fetchGuests();
-    //         })
-    //         .catch((error) => {
-    //             console.error("Error during checkout:", error);
-    //             alert("Failed to process checkout.");
-    //         });
-    // };
 
-    // const handleFeatures = (roomID) => {
-    //     Axios.post("http://localhost:3001/features", { 
-    //         roomID: roomID, 
-    //     })
-    //         .then(() => {
-    //             // alert("Guest checked out successfully.");
-    //             // fetchGuests();
-    //         })
-    //         .catch((error) => {
-    //             // console.error("Error during checkout:", error);
-    //             // alert("Failed to process checkout.");
-    //         });
-    // }
 
     if (loading) {
         return <p>Loading...</p>;
@@ -202,6 +191,7 @@ const CurrentGuests = () => {
                     <input
                         type="date"
                         value={newCheckoutDate}
+                        min={minCheckOutDate}
                         onChange={(e) => setNewCheckoutDate(e.target.value)}
                     />
                     <div className="popup-actions">

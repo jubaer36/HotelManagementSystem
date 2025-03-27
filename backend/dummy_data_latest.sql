@@ -13,9 +13,9 @@ VALUES
 
 INSERT INTO Guest (HotelID, FirstName, LastName, EmailAddress, PhoneNumber, NID, DateOfBirth)
 VALUES 
-(1, 'John', 'Doe', 'john.doe@example.com', '1234567890', 'NID12345', '1985-07-15'),
-(1, 'Alice', 'Johnson', 'alice.johnson@example.com', '1122334455', 'NID67890', '1988-11-10'),
-(2, 'Jane', 'Smith', 'jane.smith@example.com', '0987654321', 'NID54321', '1990-03-25');
+(1, 'John', 'Doe', 'john.doe@example.com', '1234567890', '12345', '1985-07-15'),
+(1, 'Alice', 'Johnson', 'alice.johnson@example.com', '1122334455', '67890', '1988-11-10'),
+(2, 'Jane', 'Smith', 'jane.smith@example.com', '0987654321', '54321', '1990-03-25');
 
 
 
