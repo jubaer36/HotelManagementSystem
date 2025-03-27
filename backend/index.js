@@ -10,7 +10,8 @@ const ManexpensesRoute = require("./routes/managerRoutes/ManExpensesRoute");
 const AdminDashBoard = require("./routes/adminRoutes/updateManagerRoute");
 const AdminHotel = require("./routes/adminRoutes/adminHotelRoutes.js");
 const manRoomRoute = require("./routes/managerRoutes/roomsRoute");
-const inventoryRoutes = require("./routes/managerRoutes/inventoryRoutes.js")
+const inventoryRoutes = require("./routes/managerRoutes/inventoryRoutes.js");
+const expenseRoutes = require("./routes/adminRoutes/expenseRoutes.js")
 const authRoutes = require("./auth.js");
 const app = express();
 
@@ -30,6 +31,7 @@ app.use(employeeRoute);
 app.use(ManexpensesRoute);
 app.use(AdminHotel);
 app.use(manRoomRoute);
+app.use(expenseRoutes);
 
 
 app.listen(3001, () => {
