@@ -11,7 +11,10 @@ router.post("/show-managers", (req, res) => {
             e.EmpID, 
             CONCAT(e.FirstName, ' ', e.LastName) AS FullName, 
             e.hourly_pay, 
-            d.DeptName
+            d.DeptName,
+            e.Email,
+            e.Phone,
+            e.HiredDate
         FROM Employee e
         INNER JOIN Department d ON e.DeptID = d.DeptID
         WHERE e.working_status = 'Working' AND e.Role = 'manager';

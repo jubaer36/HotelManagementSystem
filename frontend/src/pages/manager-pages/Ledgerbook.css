@@ -1,0 +1,113 @@
+.ledger-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.controls {
+    margin: 20px 0;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.refresh-button {
+    padding: 8px 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.refresh-button:hover {
+    background-color: #45a049;
+}
+
+.transactions-section {
+    margin-top: 30px;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.ledger-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.ledger-table th,
+.ledger-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.ledger-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.ledger-table tr:hover {
+    background-color: #f5f5f5;
+}
+
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+.status-badge.pending {
+    background-color: #ff9800;
+    color: white;
+}
+
+.status-badge.completed {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.receive-button {
+    padding: 6px 12px;
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.receive-button:hover {
+    background-color: #0b7dda;
+}
+
+.no-transactions {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+}
+
+.loading {
+    text-align: center;
+    padding: 20px;
+    color: #333;
+}
+
+.error {
+    text-align: center;
+    padding: 20px;
+    color: #d32f2f;
+    background-color: #ffebee;
+    border-radius: 4px;
+}
+
+/* Status-based row coloring */
+.status-pending {
+    background-color: #fff3e0;
+}
+
+.status-completed {
+    background-color: #e8f5e9;
+}
