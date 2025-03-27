@@ -2,117 +2,118 @@ const express = require("express");
 const router = express.Router();
 const db = require("../../dbconn");
 
-router.post("/checkout-today", (req, res)=>{
-    const hotelID = req.body.hotelID;
-    const query = `
-        SELECT DISTINCT
-            G.GuestID,
-            G.FirstName,
-            G.LastName,
-            G.EmailAddress,
-            G.PhoneNumber,
-            G.NID,
-            G.DateOfBirth,
-            B.CheckInDate,
-            B.CheckOutDate
-            FROM Guest G
-            INNER JOIN Booking B ON G.GuestID = B.GuestID
-            INNER JOIN Room R ON B.BookingID = R.BookingID
-            WHERE DATE(B.CheckOutDate) <= CURDATE()
-            AND R.Status = 'Occupied'
-            AND G.HotelID = ?;
-    `;
-    // console.log(query);
+router.post("/checkout-today", (req, res) => {
+  const hotelID = req.body.hotelID;
 
-    db.query(query, hotelID, (err, results) => {
-        if(err) {
-            console.error("Error fetching todays checkouts");
-            res.status(500).send("Error fetching todays checkouts");
-        }
-        else{
-          results = results.map(guest => {
-            guest.DateOfBirth = adjustDate(guest.DateOfBirth);
-            return guest;
-        });
-    
-        res.send(results);
-        }
+  const query = `
+    SELECT DISTINCT
+      G.GuestID,
+      G.FirstName,
+      G.LastName,
+      G.EmailAddress,
+      G.PhoneNumber,
+      G.NID,
+      G.DateOfBirth,
+      B.CheckInDate,
+      B.CheckOutDate
+    FROM Guest G
+    INNER JOIN Booking B ON G.GuestID = B.GuestID
+    WHERE DATE(B.CheckOutDate) <= CURDATE()
+      AND B.HotelID = ? AND G.FirstName <> 'System' AND B.PaymentStatus <> 'Paid';
+  `;
+
+  db.query(query, [hotelID], (err, results) => {
+    if (err) {
+      console.error("Error fetching today's checkouts:", err);
+      return res.status(500).send("Error fetching today's checkouts.");
+    }
+
+    results = results.map(guest => {
+      guest.DateOfBirth = adjustDate(guest.DateOfBirth);
+      guest.CheckInDate = adjustDate(guest.CheckInDate);
+      guest.CheckOutDate = adjustDate(guest.CheckOutDate);
+      return guest;
     });
+
+    res.send(results);
+  });
 });
 
 router.post("/filter-checkout", (req, res) => {
-    const HotelID = req.body.HotelID;
-    const FirstName = req.body.FirstName;
-    const LastName = req.body.LastName;
-    const EmailAddress = req.body.EmailAddress;
-    const PhoneNumber = req.body.PhoneNumber;
-    const NID = req.body.NID;
-    const DateOfBirth = req.body.DateOfBirth;
+  const {
+    HotelID,
+    FirstName,
+    LastName,
+    EmailAddress,
+    PhoneNumber,
+    NID,
+    DateOfBirth
+  } = req.body;
 
-    let query = `
-        SELECT DISTINCT
-            G.GuestID,
-            G.FirstName,
-            G.LastName,
-            G.EmailAddress,
-            G.PhoneNumber,
-            G.NID,
-            G.DateOfBirth,
-            B.CheckInDate,
-            B.CheckOutDate
-            FROM Guest G
-        INNER JOIN Booking B ON G.GuestID = B.GuestID
-        INNER JOIN Room R ON B.BookingID = R.BookingID
-        WHERE DATE(B.CheckOutDate) <= CURDATE()
-        AND R.Status = 'Occupied'
-    `;
+  let query = `
+    SELECT DISTINCT
+      G.GuestID,
+      G.FirstName,
+      G.LastName,
+      G.EmailAddress,
+      G.PhoneNumber,
+      G.NID,
+      G.DateOfBirth,
+      B.CheckInDate,
+      B.CheckOutDate
+    FROM Guest G
+    INNER JOIN Booking B ON G.GuestID = B.GuestID
+    INNER JOIN Room R ON B.BookingID = R.BookingID
+    WHERE DATE(B.CheckOutDate) <= CURDATE() AND G.FirstName <> 'System' AND B.PaymentStatus <> 'Paid'
+  `;
 
-    const params = [];
+  const params = [];
 
-    // Apply filters dynamically based on the provided fields
-    if (HotelID) {
-        query += " AND G.HotelID = ?";
-        params.push(HotelID);
+  // Dynamic filters
+  if (HotelID) {
+    query += " AND B.HotelID = ?";
+    params.push(HotelID);
+  }
+  if (FirstName) {
+    query += " AND G.FirstName LIKE ?";
+    params.push(`%${FirstName}%`);
+  }
+  if (LastName) {
+    query += " AND G.LastName LIKE ?";
+    params.push(`%${LastName}%`);
+  }
+  if (EmailAddress) {
+    query += " AND G.EmailAddress LIKE ?";
+    params.push(`%${EmailAddress}%`);
+  }
+  if (PhoneNumber) {
+    query += " AND G.PhoneNumber LIKE ?";
+    params.push(`%${PhoneNumber}%`);
+  }
+  if (NID) {
+    query += " AND G.NID LIKE ?";
+    params.push(`%${NID}%`);
+  }
+  if (DateOfBirth) {
+    query += " AND G.DateOfBirth = ?";
+    params.push(DateOfBirth);
+  }
+
+  db.query(query, params, (err, results) => {
+    if (err) {
+      console.error("Error filtering checkouts:", err);
+      return res.status(500).send("Error filtering checkouts.");
     }
-    if (FirstName) {
-        query += " AND G.FirstName LIKE ?";
-        params.push(`%${FirstName}%`);
-    }
-    if (LastName) {
-        query += " AND G.LastName LIKE ?";
-        params.push(`%${LastName}%`);
-    }
-    if (EmailAddress) {
-        query += " AND G.EmailAddress LIKE ?";
-        params.push(`%${EmailAddress}%`);
-    }
-    if (PhoneNumber) {
-        query += " AND G.PhoneNumber LIKE ?";
-        params.push(`%${PhoneNumber}%`);
-    }
-    if (NID) {
-        query += " AND G.NID LIKE ?";
-        params.push(`%${NID}%`);
-    }
-    if (DateOfBirth) {
-        query += " AND G.DateOfBirth = ?";
-        params.push(DateOfBirth);
-    }
-    
-    // Execute the query
-    db.query(query, params, (err, results) => {
-        if (err) {
-            console.error("Error filtering checkouts:", err);
-            res.status(500).send("Error filtering checkouts.");
-        } else {
-          results = results.map(guest => {
-            guest.DateOfBirth = adjustDate(guest.DateOfBirth);
-            return guest;
-        });
-    
-        res.send(results);
-        }
-    });
+
+    results = results.map(guest => ({
+      ...guest,
+      DateOfBirth: adjustDate(guest.DateOfBirth),
+      CheckInDate: adjustDate(guest.CheckInDate),
+      CheckOutDate: adjustDate(guest.CheckOutDate),
+    }));
+
+    res.send(results);
+  });
 });
 
 router.post("/payment-done",(req,res)=>{
@@ -120,22 +121,22 @@ router.post("/payment-done",(req,res)=>{
   const {guestID, amount} = req.body;
   // console.log(guestID);
 
-  const roomStatusChange = `
-    UPDATE ROOM
-    SET Status = 'Available'
-    WHERE BookingID = (SELECT BookingID
-                      FROM Booking B
-                      WHERE B.GuestID = ?)`
+  // const roomStatusChange = `
+  //   UPDATE ROOM
+  //   SET Status = 'Available'
+  //   WHERE BookingID = (SELECT BookingID
+  //                     FROM Booking B
+  //                     WHERE B.GuestID = ?)`
 
-    db.query(roomStatusChange, [guestID],(err)=>{
-      if(err){
-        console.error("error while updating room staus");
-      }
-      else
-      {
-        console.log("success changing room status");
-      }
-    })
+  //   db.query(roomStatusChange, [guestID],(err)=>{
+  //     if(err){
+  //       console.error("error while updating room staus");
+  //     }
+  //     else
+  //     {
+  //       console.log("success changing room status");
+  //     }
+  //   })
 
     const bookingStatusChange = `
     UPDATE Booking

@@ -8,22 +8,22 @@ router.post("/current-guests", (req, res) => {
     const hotelID  = req.body.hotelID;
     const query = `
       SELECT
-        g.GuestID,
-        g.FirstName,
-        g.LastName,
-        g.EmailAddress,
-        g.PhoneNumber,
-        b.CheckInDate,
-        b.CheckOutDate,
-        b.NumAdults,
-        b.NumChildren,
-        r.RoomNumber,
-        r.RoomID
-      FROM Guest g
-      INNER JOIN Booking b ON g.GuestID = b.GuestID
-      INNER JOIN Room r ON b.BookingID = r.BookingID
-      WHERE r.Status = 'Occupied'
-      AND r.HotelID = ?;
+      g.GuestID,
+      g.FirstName,
+      g.LastName,
+      g.EmailAddress,
+      g.PhoneNumber,
+      b.CheckInDate,
+      b.CheckOutDate,
+      b.NumAdults,
+      b.NumChildren,
+      r.RoomNumber,
+      r.RoomID
+    FROM Guest g
+    INNER JOIN Booking b ON g.GuestID = b.GuestID
+    INNER JOIN Room r ON b.BookingID = r.BookingID
+    WHERE b.HotelID = ?
+    AND CURDATE() BETWEEN b.CheckInDate AND b.CheckOutDate
     `;
   
     db.query(query, hotelID  , (err, results) => {
@@ -82,49 +82,7 @@ router.post("/extend-visit", (req, res) => {
     });
 });
   
-  
-router.post("/checkout", (req, res) => {
-    const { guestID } = req.body;
-  
-    if (!guestID) {
-        return res.status(400).send("GuestID is required.");
-    }
-  
-    // Query to find the BookingID associated with the GuestID
-    const fetchBookingQuery = `SELECT BookingID FROM Booking WHERE GuestID = ?`;
-  
-    db.query(fetchBookingQuery, [guestID], (err, results) => {
-        if (err) {
-            console.error("Error fetching BookingID:", err);
-            return res.status(500).send("Error fetching BookingID.");
-        }
-  
-        if (results.length === 0) {
-            return res.status(404).send("No booking found for this GuestID.");
-        }
-  
-        const bookingID = results[0].BookingID;
-  
-        // Update the Room table to make rooms available
-        const updateRoomQuery = `
-            UPDATE Room 
-            SET Status = 'Available', BookingID = 1 
-            WHERE BookingID = ?;
-        `;
-  
-        db.query(updateRoomQuery, [bookingID], (err) => {
-            if (err) {
-                console.error("Error during checkout:", err);
-                return res.status(500).send("Error during checkout.");
-            }
-            res.send("Guest checked out successfully.");
-        });
-    });
-});
 
-// router.post("/features",(req,res)=>{
-//           console.log(req.body.roomID);
-// });
   
 router.post("/filter-guests", (req, res) => {
            const firstName= req.body.firstName;
