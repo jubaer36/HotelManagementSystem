@@ -5,6 +5,7 @@ import {
 } from 'recharts';
 import Navbar from '../../components/Navbar';
 import './FinancialReport.css';
+import './FincacialCard.css'
 
 const FinancialReport = () => {
     const { hotelId } = useParams();
@@ -16,10 +17,26 @@ const FinancialReport = () => {
     const [transactionChart, setTransactionChart] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [summary, setSummary] = useState({ inventory: 0, maintenance: 0, salaries: 0, revenue: 0 });
+
 
     const formatCurrency = (value) => {
         const num = Number(value || 0);
         return isNaN(num) ? '$0.00' : `$${num.toFixed(2)}`;
+    };
+    const fetchTotalSummary = async () => {
+        if (!startMonth || !endMonth) return;
+        const start = `${startMonth}-01`;
+        const end = `${endMonth}-31`;
+
+        try {
+            const res = await fetch(`http://localhost:3001/financial-summary/${hotelId}?start=${start}&end=${end}`);
+            if (!res.ok) throw new Error('Failed to fetch summary totals');
+            const data = await res.json();
+            setSummary(data);
+        } catch (err) {
+            console.error('Total Summary Error:', err);
+        }
     };
 
     const formatRange = () => {
@@ -108,6 +125,7 @@ const FinancialReport = () => {
 
     useEffect(() => {
         if (startMonth && endMonth) {
+            fetchTotalSummary();
             fetchInventorySummary();
             fetchMaintenanceSummary();
             fetchSalarySummary();
@@ -133,25 +151,28 @@ const FinancialReport = () => {
             <div className="financial-content">
                 <div className="date-filter-bar">
                     <label>Select Start Month:
-                        <input type="month" value={startMonth} onChange={e => setStartMonth(e.target.value)} />
+                        <input type="month" value={startMonth} onChange={e => setStartMonth(e.target.value)}/>
                     </label>
                     <label>Select End Month:
-                        <input type="month" value={endMonth} onChange={e => setEndMonth(e.target.value)} />
+                        <input type="month" value={endMonth} onChange={e => setEndMonth(e.target.value)}/>
                     </label>
                 </div>
 
                 <div className="summary-cards">
                     <div className="summary-card revenue-card">
                         <h4>Total Revenue</h4>
-                        <p>{formatCurrency(totalRevenue)}</p>
+                        <p>{summary.revenue}</p> {/* raw number */}
                     </div>
                     <div className="summary-card expense-card">
                         <h4>Total Expenses</h4>
-                        <p>{formatCurrency(totalExpenses)}</p>
+                        <p>{Number(summary.inventory) + Number(summary.maintenance) + Number(summary.salaries)}</p>
+
                     </div>
-                    <div className={`summary-card ${netProfit > 0 ? 'profit-card' : netProfit < 0 ? 'loss-card' : 'breakeven-card'}`}>
+                    <div
+                        className={`summary-card ${netProfit > 0 ? 'profit-card' : netProfit < 0 ? 'loss-card' : 'breakeven-card'}`}>
                         <h4>Net {profitStatus}</h4>
-                        <p>{formatCurrency(netProfit)}</p>
+                        <p>{Number(summary.revenue) - (Number(summary.inventory) + Number(summary.maintenance) + Number(summary.salaries))}</p>
+
                     </div>
                 </div>
 
@@ -161,12 +182,12 @@ const FinancialReport = () => {
                         <div className="chart-container">
                             <ResponsiveContainer width="100%" height={300}>
                                 <BarChart data={inventoryChart}>
-                                    <CartesianGrid strokeDasharray="3 3" />
-                                    <XAxis dataKey="InventoryMonth" />
-                                    <YAxis />
-                                    <Tooltip formatter={formatCurrency} />
-                                    <Legend />
-                                    <Bar dataKey="TotalInventoryCost" fill="#10b981" name="Inventory Cost" />
+                                    <CartesianGrid strokeDasharray="3 3"/>
+                                    <XAxis dataKey="InventoryMonth"/>
+                                    <YAxis/>
+                                    <Tooltip formatter={formatCurrency}/>
+                                    <Legend/>
+                                    <Bar dataKey="TotalInventoryCost" fill="#10b981" name="Inventory Cost"/>
                                 </BarChart>
                             </ResponsiveContainer>
                         </div>
@@ -177,12 +198,12 @@ const FinancialReport = () => {
                         <div className="chart-container">
                             <ResponsiveContainer width="100%" height={300}>
                                 <BarChart data={maintenanceChart}>
-                                    <CartesianGrid strokeDasharray="3 3" />
-                                    <XAxis dataKey="MaintenanceMonth" />
-                                    <YAxis />
-                                    <Tooltip formatter={formatCurrency} />
-                                    <Legend />
-                                    <Bar dataKey="TotalMaintenanceCost" fill="#f97316" name="Maintenance Cost" />
+                                    <CartesianGrid strokeDasharray="3 3"/>
+                                    <XAxis dataKey="MaintenanceMonth"/>
+                                    <YAxis/>
+                                    <Tooltip formatter={formatCurrency}/>
+                                    <Legend/>
+                                    <Bar dataKey="TotalMaintenanceCost" fill="#f97316" name="Maintenance Cost"/>
                                 </BarChart>
                             </ResponsiveContainer>
                         </div>
@@ -193,12 +214,12 @@ const FinancialReport = () => {
                         <div className="chart-container">
                             <ResponsiveContainer width="100%" height={300}>
                                 <BarChart data={salaryChart}>
-                                    <CartesianGrid strokeDasharray="3 3" />
-                                    <XAxis dataKey="DeptName" />
-                                    <YAxis />
-                                    <Tooltip formatter={formatCurrency} />
-                                    <Legend />
-                                    <Bar dataKey="TotalDeptSalary" fill="#6366f1" name="Salaries" />
+                                    <CartesianGrid strokeDasharray="3 3"/>
+                                    <XAxis dataKey="DeptName"/>
+                                    <YAxis/>
+                                    <Tooltip formatter={formatCurrency}/>
+                                    <Legend/>
+                                    <Bar dataKey="TotalDeptSalary" fill="#6366f1" name="Salaries"/>
                                 </BarChart>
                             </ResponsiveContainer>
                         </div>
@@ -209,12 +230,13 @@ const FinancialReport = () => {
                         <div className="chart-container">
                             <ResponsiveContainer width="100%" height={300}>
                                 <BarChart data={transactionChart}>
-                                    <CartesianGrid strokeDasharray="3 3" />
-                                    <XAxis dataKey="RevenueMonth" tickFormatter={(month) => month === 'TOTAL' ? 'TOTAL' : month} />
-                                    <YAxis />
-                                    <Tooltip formatter={formatCurrency} />
-                                    <Legend />
-                                    <Bar dataKey="TotalRevenue" fill="#a855f7" name="Transaction Revenue" />
+                                    <CartesianGrid strokeDasharray="3 3"/>
+                                    <XAxis dataKey="RevenueMonth"
+                                           tickFormatter={(month) => month === 'TOTAL' ? 'TOTAL' : month}/>
+                                    <YAxis/>
+                                    <Tooltip formatter={formatCurrency}/>
+                                    <Legend/>
+                                    <Bar dataKey="TotalRevenue" fill="#a855f7" name="Transaction Revenue"/>
                                 </BarChart>
                             </ResponsiveContainer>
                         </div>

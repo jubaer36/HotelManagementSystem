@@ -127,6 +127,40 @@ router.get('/transaction-summary/:hotelId', async (req, res) => {
     }
 });
 
+router.get('/financial-summary/:hotelId', async (req, res) => {
+    const { hotelId } = req.params;
+    const { start, end } = req.query;
+
+    try {
+        const [[{ inventory }]] = await db.promise().query(
+            'SELECT inventory_total(?, ?, ?) AS inventory',
+            [hotelId, start, end]
+        );
+
+        const [[{ maintenance }]] = await db.promise().query(
+            'SELECT maintenance_total(?, ?, ?) AS maintenance',
+            [hotelId, start, end]
+        );
+
+        const [[{ salaries }]] = await db.promise().query(
+            'SELECT salary_total(?) AS salaries',
+            [hotelId]
+        );
+
+        const [[{ revenue }]] = await db.promise().query(
+            'SELECT revenue_total(?, ?, ?) AS revenue',
+            [hotelId, start, end]
+        );
+
+        res.status(200).json({ inventory, maintenance, salaries, revenue });
+    } catch (err) {
+        console.error('Summary function error:', err);
+        res.status(500).json({ error: 'Failed to load summary totals' });
+    }
+});
+
+
+
 
 
 
