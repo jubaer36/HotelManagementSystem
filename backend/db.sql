@@ -165,4 +165,33 @@ CREATE TABLE InventoryTransactions (
     FOREIGN KEY (HotelID) REFERENCES Hotel(HotelID) ON DELETE CASCADE
 );
 
+CREATE TABLE BillMaintenanceLedger (
+    LedgerID INT PRIMARY KEY AUTO_INCREMENT,
+    HotelID INT NOT NULL,
+    ServiceType VARCHAR(255) NOT NULL,
+    Amount DECIMAL(10, 2) NOT NULL,
+    LedgerDate DATE NOT NULL,
+    FOREIGN KEY (HotelID) REFERENCES Hotel(HotelID) ON DELETE CASCADE
+);
+
+
+CREATE TABLE BillMaintenanceLedger (
+    LedgerID INT PRIMARY KEY AUTO_INCREMENT,
+    HotelID INT NOT NULL,
+    ServiceType VARCHAR(255) NOT NULL,
+    Amount DECIMAL(10, 2) NOT NULL,
+    LedgerDate DATE NOT NULL,
+    FOREIGN KEY (HotelID) REFERENCES Hotel(HotelID) ON DELETE CASCADE
+);
+
+
+
+ALTER TABLE Employee ADD COLUMN HotelID INT AFTER DeptID;
+
+-- Set foreign key constraint
+ALTER TABLE Employee
+ADD CONSTRAINT fk_emp_hotel
+FOREIGN KEY (HotelID) REFERENCES Hotel(HotelID)
+ON DELETE CASCADE;
+
 

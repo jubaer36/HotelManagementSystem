@@ -1,264 +1,242 @@
 import React, { useState, useEffect } from "react";
 import Axios from "axios";
+import Navbar from "../../components/Navbar";
 import "./Inventory.css";
 
 const Inventory = () => {
   const [inventory, setInventory] = useState([]);
-  const [transactions, setTransactions] = useState([]);
-  const [newItem, setNewItem] = useState({ name: "" }); // Only item name for adding new item
   const [order, setOrder] = useState({
-    inventoryID: "",
-    quantity: 0,
-    unitPrice: 0, // Added unit price for placing orders
+    itemName: "",
+    quantity: "1",  // Changed to string
+    unitPrice: "0", // Changed to string
   });
-  const [transactionID, setTransactionID] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Fetch inventory and transactions on component mount
+  // Fetch inventory on component mount
   useEffect(() => {
     fetchInventory();
-    fetchTransactions();
   }, []);
 
-  /* --------------------------------------------
-     Fetch Inventory List
-  -------------------------------------------- */
   const fetchInventory = async () => {
     try {
+      setIsLoading(true);
       const response = await Axios.get("http://localhost:3001/inventory");
       setInventory(response.data);
+      setError(null);
     } catch (error) {
       console.error("Error fetching inventory:", error);
-      alert("Failed to fetch inventory. Please try again.");
+      setError("Failed to fetch inventory. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  /* --------------------------------------------
-     Fetch Transactions List
-  -------------------------------------------- */
-  const fetchTransactions = async () => {
-    try {
-      const response = await Axios.get("http://localhost:3001/transactions");
-      setTransactions(response.data);
-    } catch (error) {
-      console.error("Error fetching transactions:", error);
-      alert("Failed to fetch transactions. Please try again.");
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+
+    // For quantity and unitPrice, ensure the input is a valid number
+    if (name === "quantity" || name === "unitPrice") {
+      // Allow empty string or numbers with optional decimal
+      if (value === "" || /^[0-9]*\.?[0-9]*$/.test(value)) {
+        setOrder(prev => ({ ...prev, [name]: value }));
+      }
+    } else {
+      setOrder(prev => ({ ...prev, [name]: value }));
     }
   };
 
-  /* --------------------------------------------
-     Add a New Item
-  -------------------------------------------- */
-  const addItem = async (e) => {
-    e.preventDefault();
-    try {
-      await Axios.post("http://localhost:3001/add-item", {
-        itemName: newItem.name,
-      });
-      fetchInventory(); // Refresh inventory list
-      setNewItem({ name: "" }); // Reset form
-      alert("Item added successfully!");
-    } catch (error) {
-      console.error("Error adding item:", error);
-      alert("Failed to add item. Please try again.");
-    }
-  };
-
-  /* --------------------------------------------
-     Place an Order
-  -------------------------------------------- */
   const orderItem = async (e) => {
     e.preventDefault();
     try {
+      // Convert string inputs to numbers
+      const quantity = parseFloat(order.quantity) || 1;
+      const unitPrice = parseFloat(order.unitPrice) || 0;
+
+      if (quantity <= 0) {
+        alert("Quantity must be greater than 0");
+        return;
+      }
+
+      if (unitPrice < 0) {
+        alert("Unit price cannot be negative");
+        return;
+      }
+
+      let inventoryID;
+
+      // Check if item exists
+      const existingItem = inventory.find(
+          item => item.ItemName.toLowerCase() === order.itemName.toLowerCase()
+      );
+
+      if (existingItem) {
+        inventoryID = existingItem.InventoryID;
+      } else {
+        // Add new item first
+        const addResponse = await Axios.post("http://localhost:3001/add-item", {
+          itemName: order.itemName,
+        });
+        inventoryID = addResponse.data.InventoryID;
+        await fetchInventory();
+      }
+
+      // Place order with converted numbers
       await Axios.post("http://localhost:3001/order-item", {
-        inventoryID: order.inventoryID,
-        quantity: order.quantity,
-        unitPrice: order.unitPrice, // Include unit price in the order
+        inventoryID,
+        quantity,
+        unitPrice,
       });
-      fetchTransactions(); // Refresh transactions list
-      setOrder({ inventoryID: "", quantity: 0, unitPrice: 0 }); // Reset form
+
+      setOrder({ itemName: "", quantity: "1", unitPrice: "0" });
+      await fetchInventory();
       alert("Order placed successfully!");
     } catch (error) {
-      console.error("Error placing order:", error);
-      alert("Failed to place order. Please try again.");
+      console.error("Error processing order:", error);
+      alert("Failed to process order. Please try again.");
     }
   };
 
-  /* --------------------------------------------
-     Mark Order as Received
-  -------------------------------------------- */
-  const markAsReceived = async (e) => {
-    e.preventDefault();
-    try {
-      await Axios.post("http://localhost:3001/receive-order", {
-        transactionID,
-      });
-      fetchTransactions(); // Refresh transactions list
-      fetchInventory(); // Refresh inventory list
-      setTransactionID(""); // Reset form
-      alert("Order marked as received successfully!");
-    } catch (error) {
-      console.error("Error receiving order:", error);
-      alert("Failed to mark order as received. Please try again.");
-    }
+  // Filter inventory based on search term
+  const filteredInventory = inventory.filter(item =>
+      item.ItemName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const formatDate = (dateString) => {
+    const options = {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    };
+    return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
   return (
-      <div className="container">
-        <h1>Inventory Management System</h1>
-
-        {/* Inventory List */}
-        <section className="section">
-          <h2>Inventory List</h2>
-          <table className="table">
-            <thead>
-            <tr>
-              <th>ID</th>
-              <th>Item Name</th>
-              <th>Quantity</th>
-              <th>Last Updated</th>
-            </tr>
-            </thead>
-            <tbody>
-            {inventory.map((item) => (
-                <tr key={item.InventoryID}>
-                  <td>{item.InventoryID}</td>
-                  <td>{item.ItemName}</td>
-                  <td>{item.Quantity}</td>
-                  <td>{new Date(item.LastUpdated).toLocaleString()}</td>
-                </tr>
-            ))}
-            </tbody>
-          </table>
-        </section>
-
-        {/* Add New Item */}
-        <section className="section">
-          <h2>Add New Item</h2>
-          <form onSubmit={addItem} className="form">
-            <div className="form-group">
-              <label>
-                Item Name:
+      <div className="inventory-app">
+        <Navbar />
+        <div className="inventory-container">
+          <header className="inventory-header">
+            <h1>Inventory Management</h1>
+            <div className="header-actions">
+              <button
+                  onClick={fetchInventory}
+                  className="refresh-btn"
+                  disabled={isLoading}
+              >
+                {isLoading ? 'Refreshing...' : 'Refresh Inventory'}
+              </button>
+              <div className="search-box">
                 <input
                     type="text"
-                    value={newItem.name}
-                    onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
-                    required
+                    placeholder="Search items..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                 />
-              </label>
+                <i className="search-icon">🔍</i>
+              </div>
             </div>
-            <button type="submit" className="button">
-              Add Item
-            </button>
-          </form>
-        </section>
+          </header>
 
-        {/* Place Order */}
-        <section className="section">
-          <h2>Place Order</h2>
-          <form onSubmit={orderItem} className="form">
-            <div className="form-group">
-              <label>
-                Inventory ID:
-                <input
-                    type="number"
-                    value={order.inventoryID}
-                    onChange={(e) =>
-                        setOrder({ ...order, inventoryID: e.target.value })
-                    }
-                    required
-                />
-              </label>
-            </div>
-            <div className="form-group">
-              <label>
-                Quantity:
-                <input
-                    type="number"
-                    value={order.quantity}
-                    onChange={(e) =>
-                        setOrder({ ...order, quantity: e.target.value })
-                    }
-                    required
-                />
-              </label>
-            </div>
-            <div className="form-group">
-              <label>
-                Unit Price:
-                <input
-                    type="number"
-                    value={order.unitPrice}
-                    onChange={(e) =>
-                        setOrder({ ...order, unitPrice: parseFloat(e.target.value) })
-                    }
-                    step="0.01"
-                    required
-                />
-              </label>
-            </div>
-            <button type="submit" className="button">
-              Place Order
-            </button>
-          </form>
-        </section>
+          <div className="inventory-content">
+            <section className="inventory-list-section">
+              <div className="section-header">
+                <h2>Current Inventory</h2>
+                <span className="item-count">{filteredInventory.length} items</span>
+              </div>
 
-        {/* Mark Order as Received */}
-        <section className="section">
-          <h2>Mark Order as Received</h2>
-          <form onSubmit={markAsReceived} className="form">
-            <div className="form-group">
-              <label>
-                Transaction ID:
-                <input
-                    type="number"
-                    value={transactionID}
-                    onChange={(e) => setTransactionID(e.target.value)}
-                    required
-                />
-              </label>
-            </div>
-            <button type="submit" className="button">
-              Mark as Received
-            </button>
-          </form>
-        </section>
+              {isLoading ? (
+                  <div className="loading-spinner">Loading inventory...</div>
+              ) : error ? (
+                  <div className="error-message">{error}</div>
+              ) : (
+                  <div className="table-container">
+                    <table className="inventory-table">
+                      <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Item Name</th>
+                        <th>Quantity</th>
+                        <th>Last Updated</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      {filteredInventory.length > 0 ? (
+                          filteredInventory.map((item) => (
+                              <tr key={item.InventoryID}>
+                                <td className="id-cell">{item.InventoryID}</td>
+                                <td className="name-cell">{item.ItemName}</td>
+                                <td className={`quantity-cell ${item.Quantity < 10 ? 'low-stock' : ''}`}>
+                                  {item.Quantity}
+                                </td>
+                                <td className="date-cell">{formatDate(item.LastUpdated)}</td>
+                              </tr>
+                          ))
+                      ) : (
+                          <tr>
+                            <td colSpan="4" className="no-items">
+                              {searchTerm ? 'No matching items found' : 'No items in inventory'}
+                            </td>
+                          </tr>
+                      )}
+                      </tbody>
+                    </table>
+                  </div>
+              )}
+            </section>
 
-        {/* Transactions List */}
-        <section className="section">
-          <h2>Transactions</h2>
-          <table className="table">
-            <thead>
-            <tr>
-              <th>ID</th>
-              <th>Inventory ID</th>
-              <th>Type</th>
-              <th>Qty</th>
-              <th>Unit Price</th>
-              <th>Status</th>
-              <th>Order Date</th>
-              <th>Receive Date</th>
-            </tr>
-            </thead>
-            <tbody>
-            {transactions.map((transaction) => (
-                <tr key={transaction.TransactionID}>
-                  <td>{transaction.TransactionID}</td>
-                  <td>{transaction.InventoryID}</td>
-                  <td>{transaction.TransactionType}</td>
-                  <td>{transaction.Quantity}</td>
-                  <td>${transaction.UnitPrice}</td>
-                  <td>{transaction.Status}</td>
-                  <td>{new Date(transaction.TransactionDate).toLocaleString()}</td>
-                  <td>
-                    {transaction.ReceiveDate
-                        ? new Date(transaction.ReceiveDate).toLocaleString()
-                        : "Pending"}
-                  </td>
-                </tr>
-            ))}
-            </tbody>
-          </table>
-        </section>
+            <section className="order-section">
+              <div className="section-header">
+                <h2>Place New Order</h2>
+              </div>
+              <form onSubmit={orderItem} className="order-form">
+                <div className="form-group">
+                  <label htmlFor="itemName">Item Name</label>
+                  <input
+                      id="itemName"
+                      type="text"
+                      name="itemName"
+                      placeholder="Enter item name"
+                      value={order.itemName}
+                      onChange={handleInputChange}
+                      required
+                  />
+                </div>
+                <div className="form-row">
+                  <div className="form-group">
+                    <label htmlFor="quantity">Quantity</label>
+                    <input
+                        id="quantity"
+                        type="text"
+                        name="quantity"
+                        placeholder="1"
+                        value={order.quantity}
+                        onChange={handleInputChange}
+                        required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="unitPrice">Unit Price ($)</label>
+                    <input
+                        id="unitPrice"
+                        type="text"
+                        name="unitPrice"
+                        placeholder="0.00"
+                        value={order.unitPrice}
+                        onChange={handleInputChange}
+                        required
+                    />
+                  </div>
+                </div>
+                <button type="submit" className="submit-order-btn">
+                  Place Order
+                </button>
+              </form>
+            </section>
+          </div>
+        </div>
       </div>
   );
 };
