@@ -8,29 +8,31 @@ const db = require("../../dbconn");
 
 // Fetch available rooms
 router.post("/available-rooms", (req, res) => {
+  const hotelID = req.body.hotelID;
 
-    const hotelID = req.body.hotelID;
+  const query = `
+      SELECT AR.RoomID, AR.RoomNumber, RC.ClassType, BT.BedType, AR.MaxOccupancy, AR.BasePrice
+      FROM Available_Rooms AR
+      INNER JOIN Room_Class RC ON AR.RoomClassID = RC.RoomClassID
+      INNER JOIN Bed_Type BT ON AR.RoomID = BT.RoomID
+      WHERE AR.HotelID = ?
+      AND AR.RoomID NOT IN (
+          SELECT R.RoomID
+          FROM Room R
+          INNER JOIN Booking B ON R.BookingID = B.BookingID
+          WHERE CURDATE() BETWEEN B.CheckInDate AND B.CheckOutDate
+          AND R.HotelID = ?
+      );
+  `;
 
-    // let query = `SELECT * FROM hotelmanagementsystem.room WHERE status = 'Available' AND HotelID = ?;`;
-    let query = `
-    SELECT R.RoomID, R.RoomNumber, C.ClassType, B.BedType, R.MaxOccupancy, R.BasePrice
-    FROM Room R
-    INNER JOIN Room_Class C ON R.RoomClassID = C.RoomClassID
-    INNER JOIN Bed_Type B ON R.RoomID = B.RoomID
-    LEFT JOIN Booking Bk ON R.BookingID = Bk.BookingID
-    WHERE R.HotelID = ?
-    AND (Bk.BookingID IS NULL OR CURDATE() NOT BETWEEN Bk.CheckInDate AND Bk.CheckOutDate);
-`;
-
-    db.query(query , hotelID, (err, result) => {
-            if (err) {
-                console.error("Error fetching rooms:", err);
-                return res.status(500).send("Error fetching available rooms.");
-            }
-            console.log("Available Rooms:", result);
-            res.send(result);
-        }
-    );
+  db.query(query, [hotelID, hotelID], (err, result) => {
+      if (err) {
+          console.error("Error fetching available rooms:", err);
+          return res.status(500).send("Error fetching available rooms.");
+      }
+      console.log("Available Rooms:", result);
+      res.send(result);
+  });
 });
 
 
@@ -49,53 +51,62 @@ router.post("/filter-rooms", (req, res) => {
   } = req.body;
 
   let query = `
-    SELECT r.RoomID, r.RoomNumber, r.Status, r.MaxOccupancy, r.BasePrice, rc.ClassType, bt.BedType
-    FROM Room r
+    SELECT r.RoomID, r.RoomNumber, r.MaxOccupancy, r.BasePrice, rc.ClassType, bt.BedType
+    FROM Available_Rooms r
     INNER JOIN Room_Class rc ON r.RoomClassID = rc.RoomClassID
     LEFT JOIN Bed_Type bt ON r.RoomID = bt.RoomID
-    LEFT JOIN Booking b ON r.BookingID = b.BookingID
     WHERE 1=1
   `;
 
-  let conditions = [];
-  let params = [];
+  const conditions = [];
+  const params = [];
 
   if (minPrice && minPrice > 0) {
     conditions.push("r.BasePrice >= ?");
     params.push(minPrice);
   }
+
   if (maxPrice && maxPrice > 0) {
     conditions.push("r.BasePrice <= ?");
     params.push(maxPrice);
   }
+
   if (bedType && bedType !== "Any") {
     conditions.push("bt.BedType = ?");
     params.push(bedType);
   }
+
   if (classType && classType !== "Any") {
     conditions.push("rc.ClassType = ?");
     params.push(classType);
   }
+
   if (maxOccupancy && maxOccupancy > 0) {
     conditions.push("r.MaxOccupancy >= ?");
     params.push(maxOccupancy);
   }
+
   if (hotelID && hotelID > 0) {
     conditions.push("r.HotelID = ?");
     params.push(hotelID);
   }
 
-  // ✅ Exclude rooms that are already booked between given dates
+  // ✅ Correct booking conflict filter (CheckIn inclusive, CheckOut exclusive)
   if (checkInDate && checkOutDate) {
     conditions.push(`
-      (
-        b.BookingID IS NULL OR
-        NOT (
-          ? < b.CheckOutDate AND ? > b.CheckInDate
-        )
+      r.RoomNumber NOT IN (
+        SELECT ro.RoomNumber
+        FROM Room ro
+        INNER JOIN Booking b ON ro.BookingID = b.BookingID
+        WHERE
+          ro.HotelID = ?
+          AND (
+            b.CheckInDate < ?
+            AND b.CheckOutDate > ?
+          )
       )
     `);
-    params.push(checkInDate, checkOutDate);
+    params.push(hotelID, checkOutDate, checkInDate);
   }
 
   if (conditions.length > 0) {
@@ -176,18 +187,22 @@ const createBooking = (bookingData) => {
     });
 };
   
-  // Helper function to update room status
-const updateRoomStatus = (bookingID, roomID) => {
-    const sqlUpdateRoom = `
-      UPDATE Room SET Status = 'Occupied', BookingID = ? WHERE RoomID = ?
-    `;
-    return new Promise((resolve, reject) => {
-      db.query(sqlUpdateRoom, [bookingID, roomID], (err, result) => {
-        if (err) return reject(err);
-        resolve();
-      });
+// Helper function to book a room (insert new Room record with BookingID)
+const bookRoom = (bookingID, roomID) => {
+  const sqlInsertRoom = `
+    INSERT INTO Room (RoomNumber, RoomClassID, HotelID, BookingID, MaxOccupancy, BasePrice)
+    SELECT RoomNumber, RoomClassID, HotelID, ?, MaxOccupancy, BasePrice
+    FROM Available_Rooms
+    WHERE RoomID = ?
+  `;
+  return new Promise((resolve, reject) => {
+    db.query(sqlInsertRoom, [bookingID, roomID], (err, result) => {
+      if (err) return reject(err);
+      resolve(result.insertId); // Return the new Room record ID (optional)
     });
+  });
 };
+
   
   // Endpoint to add a guest and book rooms
 router.post("/add-guest", async (req, res) => {
@@ -232,7 +247,7 @@ router.post("/add-guest", async (req, res) => {
       });
       // Process bookings for selected rooms
       for (const roomID of selectedRooms) {
-        await updateRoomStatus(bookingID, roomID);
+        await bookRoom(bookingID, roomID);
       }
   
       res.send("Guest and bookings added successfully.");

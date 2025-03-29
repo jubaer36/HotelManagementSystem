@@ -15,6 +15,7 @@ const CurrentGuests = () =>{
     const [selectedGuest, setSelectedGuest] = useState(null);
     const [showFilterModal, setShowFilterModal] = useState(false);
     const [newCheckoutDate, setNewCheckoutDate] = useState("");
+    const [minCheckOut, setMinCheckOut] = useState("");
 
     const [filters, setFilters] = useState({
         FirstName: "",
@@ -70,7 +71,9 @@ const CurrentGuests = () =>{
     };
 
     const handleExtendVisit = (guest) => {
+        const formattedDate = new Date(guest.CheckOutDate).toISOString().split("T")[0];
         setSelectedGuest(guest);
+        setMinCheckOut(formattedDate);
         setShowPopupEX(true);
     };
 
@@ -218,6 +221,7 @@ const CurrentGuests = () =>{
                         type="date"
                         value={newCheckoutDate}
                         onChange={(e) => setNewCheckoutDate(e.target.value)}
+                        min={minCheckOut}
                     />
                     <div className="popup-actions">
                         <button onClick={handleConfirmExtendVisit}>Confirm</button>
