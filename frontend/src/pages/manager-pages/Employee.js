@@ -17,6 +17,61 @@ const Employee = () => {
     const [departments, setDepartments] = useState([]);
     const [newEmployee, setNewEmployee] = useState(null);
     const [formErrors, setFormErrors] = useState({});
+    const [editingEmployeeId, setEditingEmployeeId] = useState(null);
+    const [originalEmployeeData, setOriginalEmployeeData] = useState(null);
+
+
+    const handleCancelEdit = () => {
+        if (originalEmployeeData) {
+            setEmployees(prev =>
+                prev.map(emp =>
+                    emp.EmpID === originalEmployeeData.EmpID
+                        ? { ...originalEmployeeData }
+                        : emp
+                )
+            );
+        }
+        setEditingEmployeeId(null);
+        setOriginalEmployeeData(null);
+    };
+
+    
+    const handleEditChange = (empID, field, value) => {
+        setEmployees(prev =>
+            prev.map(emp =>
+                emp.EmpID === empID ? { ...emp, [field]: value } : emp
+            )
+        );
+    };
+    
+    const handleUpdate = (employee) => {
+        const updatedData = {
+            empID: employee.EmpID,
+            firstName: employee.FullName.split(" ")[0],
+            lastName: employee.FullName.split(" ")[1] || "",
+            phone: employee.Phone,
+            email: employee.Email,
+            deptName: employee.DeptName,
+            hourlyPay: parseFloat(employee.hourly_pay),
+            role: employee.Role,
+            workingStatus: employee.working_status,
+            hiredDate: new Date(employee.HiredDate).toISOString().split("T")[0],
+            hotelID: hotelID,
+        };
+        // console.log("Updated Data:", updatedData);
+    
+        Axios.post("http://localhost:3001/update-employee", updatedData)
+            .then(() => {
+                alert("Employee updated successfully.");
+                setEditingEmployeeId(null);
+                fetchEmployees();
+            })
+            .catch((err) => {
+                console.error("Update failed:", err);
+                alert("Failed to update employee.");
+            });
+    };
+    
 
     const columns = useMemo(() => [
         {
@@ -78,7 +133,45 @@ const Employee = () => {
             ),
             size: 120,
         },
-    ], []);
+        {
+            header: 'Update',
+            cell: ({ row }) => {
+                const isEditing = row.original.EmpID === editingEmployeeId;
+        
+                return (
+                    isEditing ? (
+                        <div className="action-buttons">
+                            <button
+                                className="save-button"
+                                onClick={() => handleUpdate(row.original)}
+                            >
+                                Save
+                            </button>
+                            <button
+                                className="cancel-button"
+                                onClick={handleCancelEdit}
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    ) : (
+                        <button
+                            className="update-button"
+                            onClick={() => {
+                                setOriginalEmployeeData({ ...row.original });
+                                setEditingEmployeeId(row.original.EmpID);
+                            }}
+                        >
+                            Update
+                        </button>
+                    )
+                );
+            },
+            size: 160,
+        },
+        
+        
+    ], [editingEmployeeId]);
 
     const table = useReactTable({
         data: employees,
@@ -222,19 +315,74 @@ const Employee = () => {
                         ))}
                         </thead>
                         <tbody>
-                        {table.getRowModel().rows.map(row => (
-                            <tr key={row.id}>
-                                {row.getVisibleCells().map(cell => (
-                                    <td key={cell.id}>
-                                        {flexRender(
-                                            cell.column.columnDef.cell,
-                                            cell.getContext()
-                                        )}
-                                    </td>
-                                ))}
-                            </tr>
-                        ))}
-                        </tbody>
+    {table.getRowModel().rows.map(row => {
+        const isEditing = row.original.EmpID === editingEmployeeId;
+
+        return (
+            <tr key={row.id}>
+                {row.getVisibleCells().map(cell => {
+                    const columnId = cell.column.id;
+                    const value = row.original[columnId];
+
+                    return (
+                        <td key={cell.id}>
+                            {isEditing && [
+                                "FullName", "DeptName", "Phone",
+                                "Email", "hourly_pay", "Role",
+                                "HiredDate", "working_status"
+                            ].includes(columnId) ? (
+                                columnId === "DeptName" ? (
+                                    <select
+                                        value={value}
+                                        onChange={(e) =>
+                                            handleEditChange(row.original.EmpID, columnId, e.target.value)
+                                        }
+                                    >
+                                        {departments.map((d) => (
+                                            <option key={d.DeptID} value={d.DeptName}>
+                                                {d.DeptName}
+                                            </option>
+                                        ))}
+                                    </select>
+                                ) : columnId === "Role" ? (
+                                    <input
+                                        type="text"
+                                        value={value}
+                                        onChange={(e) =>
+                                            handleEditChange(row.original.EmpID, columnId, e.target.value)
+                                        }
+                                    />
+                                )
+                                 : columnId === "working_status" ? (
+                                    <select
+                                        value={value}
+                                        onChange={(e) =>
+                                            handleEditChange(row.original.EmpID, columnId, e.target.value)
+                                        }
+                                    >
+                                        <option value="Working">Working</option>
+                                        <option value="Not Working">Inactive</option>
+                                    </select>
+                                ) : (
+                                    <input
+                                        type={columnId === "hourly_pay" ? "number" : columnId === "HiredDate" ? "date" : "text"}
+                                        value={value}
+                                        onChange={(e) =>
+                                            handleEditChange(row.original.EmpID, columnId, e.target.value)
+                                        }
+                                    />
+                                )
+                            ) : (
+                                flexRender(cell.column.columnDef.cell, cell.getContext())
+                            )}
+                        </td>
+                    );
+                })}
+            </tr>
+        );
+    })}
+</tbody>
+
                     </table>
 
                     {/* Pagination Controls */}

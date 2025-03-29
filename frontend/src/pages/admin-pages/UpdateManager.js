@@ -11,6 +11,53 @@ const UpdateManager = () => {
     const [showPopupAdd, setShowPopupAdd] = useState(false);
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [employeeToRemove, setEmployeeToRemove] = useState(null);
+    const [editingManagerId, setEditingManagerId] = useState(null);
+    const [originalManagerData, setOriginalManagerData] = useState(null);
+
+    const handleEditChange = (empID, field, value) => {
+        setEmployees(prev =>
+            prev.map(emp =>
+                emp.EmpID === empID ? { ...emp, [field]: value } : emp
+            )
+        );
+    };
+    
+    const handleCancelEdit = () => {
+        if (originalManagerData) {
+            setEmployees(prev =>
+                prev.map(emp =>
+                    emp.EmpID === originalManagerData.EmpID ? originalManagerData : emp
+                )
+            );
+        }
+        setEditingManagerId(null);
+        setOriginalManagerData(null);
+    };
+    
+    const handleUpdate = (employee) => {
+        const updatedData = {
+            empID: employee.EmpID,
+            firstName: employee.FullName.split(" ")[0],
+            lastName: employee.FullName.split(" ")[1] || "",
+            phone: employee.Phone,
+            email: employee.Email,
+            hourlyPay: parseFloat(employee.hourly_pay),
+            hiredDate: new Date(employee.HiredDate).toISOString().split("T")[0]
+        };
+    
+        Axios.post("http://localhost:3001/update-manager", updatedData)
+            .then(() => {
+                alert("Manager updated successfully.");
+                setEditingManagerId(null);
+                fetchEmployees();
+            })
+            .catch((err) => {
+                console.error("Update failed:", err);
+                alert("Failed to update manager.");
+            });
+    };
+    
+
 
     useEffect(() => {
         fetchEmployees();
@@ -76,28 +123,119 @@ const UpdateManager = () => {
                         <th>Phone</th>
                         <th>Hired Date</th>
                         <th>Remove</th>
+                        <th>Update</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {employees.map((employee) => (
+                {employees.map((employee) => {
+                    const isEditing = employee.EmpID === editingManagerId;
+                
+                    return (
                         <tr key={employee.EmpID}>
-                            <td>{employee.FullName}</td>
-                            <td>{employee.DeptName}</td>
-                            <td>${Number(employee.hourly_pay || 0).toFixed(2)}</td>
-                            <td>{employee.Email}</td>
-                            <td>{employee.Phone}</td>
-                            <td>{new Date(employee.HiredDate).toLocaleDateString()}</td>
                             <td>
+                                {isEditing ? (
+                                    <input
+                                        type="text"
+                                        value={employee.FullName}
+                                        onChange={(e) =>
+                                            handleEditChange(employee.EmpID, "FullName", e.target.value)
+                                        }
+                                    />
+                                ) : (
+                                    employee.FullName
+                                )}
+                            </td>
+                            <td>{employee.DeptName}</td>
+                            <td>
+                                {isEditing ? (
+                                    <input
+                                        type="number"
+                                        value={employee.hourly_pay}
+                                        onChange={(e) =>
+                                            handleEditChange(employee.EmpID, "hourly_pay", e.target.value)
+                                        }
+                                    />
+                                ) : (
+                                    `$${Number(employee.hourly_pay || 0).toFixed(2)}`
+                                )}
+                            </td>
+                            <td>
+                                {isEditing ? (
+                                    <input
+                                        type="email"
+                                        value={employee.Email}
+                                        onChange={(e) =>
+                                            handleEditChange(employee.EmpID, "Email", e.target.value)
+                                        }
+                                    />
+                                ) : (
+                                    employee.Email
+                                )}
+                            </td>
+                            <td>
+                                {isEditing ? (
+                                    <input
+                                        type="tel"
+                                        value={employee.Phone}
+                                        onChange={(e) =>
+                                            handleEditChange(employee.EmpID, "Phone", e.target.value)
+                                        }
+                                    />
+                                ) : (
+                                    employee.Phone
+                                )}
+                            </td>
+                            <td>
+                                {isEditing ? (
+                                    <input
+                                        type="date"
+                                        value={employee.HiredDate.split("T")[0]}
+                                        onChange={(e) =>
+                                            handleEditChange(employee.EmpID, "HiredDate", e.target.value)
+                                        }
+                                    />
+                                ) : (
+                                    new Date(employee.HiredDate).toLocaleDateString()
+                                )}
+                            </td>
+                            <td>
+                            {isEditing ? (
+                                <button className="remove-button" disabled>
+                                    Remove
+                                </button>
+                            ) : (
                                 <button
                                     className="remove-button"
                                     onClick={() => confirmRemoveEmployee(employee)}
                                 >
                                     Remove
                                 </button>
-                            </td>
+                            )}
+                        </td>
+                        <td>
+                            {isEditing ? (
+                                <div className="action-buttons">
+                                    <button className="save-button" onClick={() => handleUpdate(employee)}>Save</button>
+                                    <button className="cancel-button" onClick={handleCancelEdit}>Cancel</button>
+                                </div>
+                            ) : (
+                                <button
+                                    className="update-button"
+                                    onClick={() => {
+                                        setOriginalManagerData({ ...employee });
+                                        setEditingManagerId(employee.EmpID);
+                                    }}
+                                >
+                                    Update
+                                </button>
+                            )}
+                        </td>
+
                         </tr>
-                    ))}
-                    </tbody>
+                    );
+                })}
+                </tbody>
+
                 </table>
             </div>
 

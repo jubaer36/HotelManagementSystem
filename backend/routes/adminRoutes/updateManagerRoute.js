@@ -85,4 +85,31 @@ router.post("/remove-employee", (req, res) => {
 });
 
 
+router.post("/update-manager", (req, res) => {
+    const {
+        empID, firstName, lastName,
+        phone, email, hourlyPay,
+        hiredDate
+    } = req.body;
+
+    const updateQuery = `
+        UPDATE Employee
+        SET FirstName = ?, LastName = ?, Phone = ?, Email = ?,
+            hourly_pay = ?, HiredDate = ?
+        WHERE EmpID = ?
+    `;
+
+    db.query(updateQuery, [
+        firstName, lastName, phone, email,
+        hourlyPay, hiredDate, empID
+    ], (err, result) => {
+        if (err) {
+            console.error("Error updating manager:", err);
+            return res.status(500).send("Error updating manager.");
+        }
+        res.send("Manager updated successfully.");
+    });
+});
+
+
 module.exports = router;

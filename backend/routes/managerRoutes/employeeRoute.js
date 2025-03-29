@@ -112,5 +112,53 @@ router.post("/add-employee", (req, res) => {
 });
 
 
+router.post("/update-employee", (req, res) => {
+    const {
+        empID, firstName, lastName, phone, email,
+        deptName, hotelID, hourlyPay, role, workingStatus, hiredDate
+    } = req.body;
+
+    const findDeptQuery = `
+        SELECT DeptID FROM Department
+        WHERE DeptName = ? AND HotelID = ?
+        LIMIT 1
+    `;
+
+    db.query(findDeptQuery, [deptName, hotelID], (err, deptResult) => {
+        if (err) {
+            console.error("Error fetching department ID:", err);
+            return res.status(500).send("Error finding department.");
+        }
+
+        if (deptResult.length === 0) {
+            return res.status(404).send("Department not found.");
+        }
+
+        const deptID = deptResult[0].DeptID;
+
+        const updateQuery = `
+            UPDATE Employee
+            SET FirstName = ?, LastName = ?, Phone = ?, Email = ?,
+                hourly_pay = ?, Role = ?, working_status = ?, HiredDate = ?, DeptID = ?
+            WHERE EmpID = ?
+        `;
+
+        db.query(updateQuery, [
+            firstName, lastName, phone, email,
+            hourlyPay, role, workingStatus, hiredDate,
+            deptID, empID
+        ], (err, result) => {
+            if (err) {
+                console.error("Error updating employee:", err);
+                return res.status(500).send("Error updating employee.");
+            }
+
+            res.send("Employee updated successfully.");
+        });
+    });
+});
+
+
+
 
 module.exports = router;
