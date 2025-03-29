@@ -66,6 +66,18 @@ const Employee = () => {
             ),
             size: 120,
         },
+        {
+            header: 'Remove',
+            cell: ({ row }) => (
+                <button
+                    className="remove-button"
+                    onClick={() => confirmRemoveEmployee(row.original)}
+                >
+                    Remove  
+                </button>
+            ),
+            size: 120,
+        },
     ], []);
 
     const table = useReactTable({
@@ -245,6 +257,19 @@ const Employee = () => {
                         </button>
                     </div>
                 </div>
+
+                {showConfirmation && employeeToRemove && (
+                    <div className="confirmation-popup">
+                        <div className="confirmation-content">
+                            <p>Are you sure you want to remove {employeeToRemove.FullName}?</p>
+                            <div className="confirmation-buttons">
+                                <button className="confirm-button" onClick={removeEmployee}>Yes</button>
+                                <button className="cancel-button" onClick={() => setShowConfirmation(false)}>No</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
 
                 {/* Add Employee Form */}
                 {newEmployee && (

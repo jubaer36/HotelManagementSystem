@@ -207,10 +207,10 @@ tr:hover {
     transition: all 0.2s;
 }
 
-.cancel-button:hover {
+/* .cancel-button:hover {
     border-color: #cbd5e1;
     background-color: #f8fafc;
-}
+} */
 
 @keyframes slideIn {
     from {
@@ -221,4 +221,43 @@ tr:hover {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+.confirmation-popup {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 999;
+}
+
+.confirmation-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.confirmation-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.confirm-button {
+    background-color: red;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    cursor: pointer;
+}
+
+.cancel-button {
+    background-color: blue;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    cursor: pointer;
 }
