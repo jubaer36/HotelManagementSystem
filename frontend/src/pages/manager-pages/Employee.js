@@ -20,6 +20,36 @@ const Employee = () => {
     const [editingEmployeeId, setEditingEmployeeId] = useState(null);
     const [originalEmployeeData, setOriginalEmployeeData] = useState(null);
 
+    const [showFilterModal, setShowFilterModal] = useState(false);
+    const [filters, setFilters] = useState({
+        FullName: '',
+        Phone: '',
+        Email: '',
+        Role: '',
+        Status: ''
+    });
+
+    const applyFilters = () => {
+        Axios.post("http://localhost:3001/filter-employees", {
+            hotelID,
+            ...filters
+        })
+        .then((res) => {
+            const data = res.data.map(emp => ({
+                ...emp,
+                FullName: `${emp.FirstName} ${emp.LastName}`
+            }));
+            setEmployees(data);
+            setShowFilterModal(false);
+        })
+        .catch((err) => {
+            console.error("Filter failed:", err);
+            alert("Error filtering employees.");
+        });
+    };
+    
+
+
 
     const handleCancelEdit = () => {
         if (originalEmployeeData) {
@@ -291,12 +321,12 @@ const Employee = () => {
         <div className="employee-container">
             <Navbar />
             <div className="content-wrapper">
-                <div className="header-section">
                     <h1>Employee Table</h1>
-                    <button className="add-button" onClick={handleAddEmployee}>
-                        + Add New Employee
-                    </button>
-                </div>
+                <div className="header-section">
+                <button className="add-button" onClick={handleAddEmployee}>+ Add New Employee</button>
+                <button className="filter-button" onClick={() => setShowFilterModal(true)}>Filter</button>
+            </div>
+
 
                 <div className="table-container">
                     <table>
@@ -417,6 +447,36 @@ const Employee = () => {
                         </div>
                     </div>
                 )}
+
+{showFilterModal && (
+    <div className="filter-modal">
+        <h3>Filter Employees</h3>
+        <label>Full Name:</label>
+        <input type="text" value={filters.FullName} onChange={(e) => setFilters({ ...filters, FullName: e.target.value })} />
+
+        <label>Phone:</label>
+        <input type="text" value={filters.Phone} onChange={(e) => setFilters({ ...filters, Phone: e.target.value })} />
+
+        <label>Email:</label>
+        <input type="text" value={filters.Email} onChange={(e) => setFilters({ ...filters, Email: e.target.value })} />
+
+        <label>Role:</label>
+        <input type="text" value={filters.Role} onChange={(e) => setFilters({ ...filters, Role: e.target.value })} />
+
+        <label>Status:</label>
+        <select value={filters.Status} onChange={(e) => setFilters({ ...filters, Status: e.target.value })}>
+            <option value="">All</option>
+            <option value="Working">Working</option>
+            <option value="Not Working">Inactive</option>
+        </select>
+
+        <div className="filter-actions">
+            <button onClick={applyFilters}>Apply</button>
+            <button onClick={() => setShowFilterModal(false)}>Cancel</button>
+        </div>
+    </div>
+)}
+
 
 
                 {/* Add Employee Form */}

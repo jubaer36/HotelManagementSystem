@@ -13,6 +13,31 @@ const UpdateManager = () => {
     const [employeeToRemove, setEmployeeToRemove] = useState(null);
     const [editingManagerId, setEditingManagerId] = useState(null);
     const [originalManagerData, setOriginalManagerData] = useState(null);
+    const [filters, setFilters] = useState({
+        FullName: "",
+        Email: "",
+        Phone: "",
+    });
+    const [showFilterModal, setShowFilterModal] = useState(false);
+
+    const handleFilterChange = (e) => {
+        const { name, value } = e.target;
+        setFilters((prev) => ({ ...prev, [name]: value }));
+    };
+    
+    const applyFilters = () => {
+        Axios.post("http://localhost:3001/filter-managers", filters)
+            .then((response) => {
+                setEmployees(response.data);
+                setShowFilterModal(false);
+            })
+            .catch((error) => {
+                console.error("Error filtering managers:", error);
+                alert("Failed to apply filters.");
+            });
+    };
+    
+    
 
     const handleEditChange = (empID, field, value) => {
         setEmployees(prev =>
@@ -110,6 +135,10 @@ const UpdateManager = () => {
                 <button className="add-button" onClick={openEmpPopUpAdd}>
                     + Add New Manager
                 </button>
+                <button className="filter-button" onClick={() => setShowFilterModal(true)}>
+            Filter
+                </button>
+
             </div>
 
             <div className="table-container">
@@ -238,6 +267,38 @@ const UpdateManager = () => {
 
                 </table>
             </div>
+
+            {showFilterModal && (
+    <div className="filter-modal">
+        <h3>Filter Managers</h3>
+        <label>Full Name:</label>
+        <input
+            type="text"
+            name="FullName"
+            value={filters.FullName}
+            onChange={handleFilterChange}
+        />
+        <label>Email:</label>
+        <input
+            type="text"
+            name="Email"
+            value={filters.Email}
+            onChange={handleFilterChange}
+        />
+        <label>Phone:</label>
+        <input
+            type="text"
+            name="Phone"
+            value={filters.Phone}
+            onChange={handleFilterChange}
+        />
+        <div className="filter-actions">
+            <button onClick={applyFilters}>Apply</button>
+            <button onClick={() => setShowFilterModal(false)}>Cancel</button>
+        </div>
+    </div>
+)}
+
 
             {showPopupAdd && (
                 <AddEmpPopUp onClose={() => setShowPopupAdd(false)} />

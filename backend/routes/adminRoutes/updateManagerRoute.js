@@ -110,6 +110,39 @@ router.post("/update-manager", (req, res) => {
         res.send("Manager updated successfully.");
     });
 });
+router.post("/filter-managers", (req, res) => {
+    const { FullName, Email, Phone } = req.body;
+
+    let query = `
+        SELECT E.EmpID, CONCAT(E.FirstName, ' ', E.LastName) AS FullName,
+               D.DeptName, E.Email, E.Phone, E.hourly_pay, E.HiredDate
+        FROM Employee E
+        JOIN Department D ON E.DeptID = D.DeptID
+        WHERE E.Role = 'Manager' AND E.FirstName <> 'System'
+    `;
+    const params = [];
+
+    if (FullName) {
+        query += " AND CONCAT(E.FirstName, ' ', E.LastName) LIKE ?";
+        params.push(`%${FullName}%`);
+    }
+    if (Email) {
+        query += " AND E.Email LIKE ?";
+        params.push(`%${Email}%`);
+    }
+    if (Phone) {
+        query += " AND E.Phone LIKE ?";
+        params.push(`%${Phone}%`);
+    }
+
+    db.query(query, params, (err, results) => {
+        if (err) {
+            console.error("Error filtering managers:", err);
+            return res.status(500).send("Error filtering managers");
+        }
+        res.send(results);
+    });
+});
 
 
 module.exports = router;

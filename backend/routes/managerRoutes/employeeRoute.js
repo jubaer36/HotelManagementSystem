@@ -159,6 +159,46 @@ router.post("/update-employee", (req, res) => {
 });
 
 
+router.post("/filter-employees", (req, res) => {
+    const { hotelID, FullName, Phone, Email, Role, Status } = req.body;
+
+    let query = `
+        SELECT E.*, D.DeptName
+        FROM Employee E
+        JOIN Department D ON E.DeptID = D.DeptID
+        WHERE D.HotelID = ? AND E.Role <> 'manager' AND E.FirstName <> 'System'
+    `;
+    let params = [hotelID];
+
+    if (FullName) {
+        query += " AND CONCAT(E.FirstName, ' ', E.LastName) LIKE ?";
+        params.push(`%${FullName}%`);
+    }
+    if (Phone) {
+        query += " AND E.Phone LIKE ?";
+        params.push(`%${Phone}%`);
+    }
+    if (Email) {
+        query += " AND E.Email LIKE ?";
+        params.push(`%${Email}%`);
+    }
+    if (Role) {
+        query += " AND E.Role LIKE ?";
+        params.push(`%${Role}%`);
+    }
+    if (Status) {
+        query += " AND E.working_status = ?";
+        params.push(Status);
+    }
+
+    db.query(query, params, (err, results) => {
+        if (err) {
+            console.error("Error filtering employees:", err);
+            return res.status(500).send("Error filtering employees.");
+        }
+        res.send(results);
+    });
+});
 
 
 module.exports = router;
