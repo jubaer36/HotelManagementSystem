@@ -1,0 +1,45 @@
+.financial-container {
+    padding: 1rem;
+    font-family: Arial, sans-serif;
+}
+
+.date-filter-bar {
+    display: flex;
+    gap: 1rem;
+    margin: 1rem 0;
+    justify-content: flex-start;
+}
+
+.summary-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.summary-card {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 1rem;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.revenue-card {
+    border-left: 5px solid #4f46e5;
+}
+.expense-card {
+    border-left: 5px solid #f97316;
+}
+.total-expense-card {
+    border-left: 5px solid #9ca3af;
+}
+.profit-card {
+    border-left: 5px solid #10b981;
+}
+.loss-card {
+    border-left: 5px solid #ef4444;
+}
+.breakeven-card {
+    border-left: 5px solid #facc15;
+}

@@ -29,6 +29,7 @@
     transition: background-color 0.3s;
 }
 
+
 .add-button:hover {
     background-color: #2563eb;
 }
@@ -207,10 +208,10 @@ tr:hover {
     transition: all 0.2s;
 }
 
-.cancel-button:hover {
+/* .cancel-button:hover {
     border-color: #cbd5e1;
     background-color: #f8fafc;
-}
+} */
 
 @keyframes slideIn {
     from {
@@ -222,3 +223,132 @@ tr:hover {
         transform: translateY(0);
     }
 }
+
+.confirmation-popup {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 999;
+}
+
+.confirmation-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.confirmation-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.confirm-button {
+    background-color: red;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    cursor: pointer;
+}
+
+.cancel-button {
+    background-color: blue;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    cursor: pointer;
+}
+
+
+.update-button {
+    background-color: #4caf50;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.save-button {
+    background-color: #2196f3;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+input[type="text"], input[type="number"], input[type="date"], select {
+    padding: 4px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.cancel-button {
+    background-color: #f44336;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+
+
+.filter-modal {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    z-index: 1000;
+    width: 300px;
+}
+
+.filter-modal h3 {
+    margin-bottom: 15px;
+}
+
+.filter-modal label {
+    display: block;
+    margin-top: 10px;
+}
+
+.filter-modal input, .filter-modal select {
+    width: 100%;
+    padding: 6px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.filter-actions {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.filter-button {
+    margin-left: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
