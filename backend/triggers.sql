@@ -60,11 +60,34 @@ BEGIN
         -- Remove the user from the Users table based on FirstName + LastName
         DELETE FROM Users 
         WHERE Username = CONCAT(OLD.FirstName, OLD.LastName);
-        
     END IF;
 END;
 
 //
 
+DELIMITER ;
+
+
+
+DELIMITER //
+CREATE TRIGGER after_employee_update
+AFTER UPDATE ON Employee
+FOR EACH ROW
+BEGIN
+    DECLARE hotel_id INT;
+    DECLARE username VARCHAR(255);
+
+    IF NEW.Role IN ('manager', 'receptionist') AND NEW.working_status != 'Not Working' THEN
+        SELECT HotelID INTO hotel_id 
+        FROM Department 
+        WHERE DeptID = NEW.DeptID;
+        
+        SET username = CONCAT(NEW.FirstName, NEW.LastName);
+        
+        INSERT INTO Users (Username, Password, HotelID, Role)
+        VALUES (username, '$2b$10$q9Oa2VY17WMwMkFjtej8ve7Ur/bgOpoLelpY2t5IG9z3KQ6CRICl2', hotel_id, NEW.Role);
+    END IF;
+END;
+//
 DELIMITER ;
 

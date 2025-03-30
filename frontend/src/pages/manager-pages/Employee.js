@@ -67,12 +67,32 @@ const Employee = () => {
 
     
     const handleEditChange = (empID, field, value) => {
+        if (field === "Role" && value.toLowerCase() === "manager") {
+
+            alert("You are not allowed to update the role to Manager."); // Replace with toast if needed
+            setEmployees(prev =>
+            prev.map(emp =>
+                emp.EmpID === empID
+                    ? { ...emp, [field]: originalEmployeeData[field] }
+                    : emp
+            )
+        );
+        return;
+        }
+
+        if(field === "Role")
+        {
+            value = value.toLowerCase();
+        }
+    
         setEmployees(prev =>
             prev.map(emp =>
                 emp.EmpID === empID ? { ...emp, [field]: value } : emp
             )
         );
     };
+
+    
     
     const handleUpdate = (employee) => {
         const updatedData = {
