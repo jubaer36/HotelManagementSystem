@@ -1,57 +1,45 @@
-/* Centering the entire dashboard */
+.dashboard-wrapper {
+  min-height: 100vh;
+  background: #f8fafc;
+  padding-bottom: 2rem;
+}
+
 .dashboard-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background-color: #f4f4f4;
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.dashboard-title {
+  color: #1e293b;
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4rem;
+}
+
+@media (max-width: 1024px) {
+  .grid-container {
+      grid-template-columns: 1fr;
   }
-  
-  /* Styling for the heading */
-  h1 {
-    font-size: 2rem;
-    margin-bottom: 30px;
-    color: #333;
+
+  .dashboard-title {
+      font-size: 2rem;
   }
-  
-  /* Button container to stack buttons vertically */
-  .dashboard-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+}
+
+@media (max-width: 768px) {
+  .dashboard-container {
+      padding: 1.5rem;
   }
-  
-  /* Common styles for all buttons */
-  .dashboard-button {
-    padding: 15px 40px;
-    font-size: 1.2rem;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: 0.3s;
-    width: 200px;
-    text-align: center;
+
+  .dashboard-title {
+      font-size: 1.75rem;
   }
-  
-  /* Unique colors for each button */
-  .dashboard-button:nth-child(1) {
-    background-color: #3498db;
-    color: white;
-  }
-  
-  .dashboard-button:nth-child(2) {
-    background-color: #e67e22;
-    color: white;
-  }
-  
-  .dashboard-button:nth-child(3) {
-    background-color: #27ae60;
-    color: white;
-  }
-  
-  /* Hover effect */
-  .dashboard-button:hover {
-    opacity: 0.8;
-  }
-  
+}
