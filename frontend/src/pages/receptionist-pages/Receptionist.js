@@ -18,7 +18,9 @@ const Receptionist = () => {
   const [dob, setDob] = useState("");
   const [selectedRooms, setSelectedRooms] = useState([]); // Room IDs
   const [availableRooms, setAvailableRooms] = useState([]);
-  const [showRooms, setShowRooms] = useState(false);
+  const [showRooms, setShowRooms] = useState(true);
+  const [showGuestAndBooking, setShowGuestAndBooking] = useState(false);
+
   const [showFilterModal, setShowFilterModal] = useState(false);
 
   const [bookingDetails, setBookingDetails] = useState({
@@ -50,6 +52,16 @@ const Receptionist = () => {
     fontSize: "14px",
     marginBottom: "10px",
   };
+
+  const handleProceed = () => {
+    if (selectedRooms.length === 0) {
+      alert("Please select at least one room.");
+      return;
+    }
+    setShowRooms(false); // Hide room table
+    setShowGuestAndBooking(true);
+  };
+  
   
 
   useEffect(() => {
@@ -148,6 +160,7 @@ const Receptionist = () => {
           numAdults: 1,
           numChildren: 0,
         });
+        window.location.reload();
       })
       .catch((error) => {
         console.error("Error confirming booking:", error);
@@ -163,7 +176,7 @@ const Receptionist = () => {
         
 
         <div style={{ marginTop: "20px" }}>
-          <button
+          {/* <button
             onClick={() => {
               setShowRooms(!showRooms);
               setShowFilterModal(false);
@@ -179,8 +192,8 @@ const Receptionist = () => {
             }}
           >
             {showRooms ? "Hide Available Rooms" : "Show Available Rooms"}
-          </button>
-          <button
+          </button> */}
+          {/* <button
             onClick={() => {
               setShowFilterModal(!showFilterModal);
               setShowRooms(true);
@@ -195,7 +208,41 @@ const Receptionist = () => {
             }}
           >
             {showFilterModal ? "Close Search" : "Search"}
-          </button>
+          </button> */}
+<div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", marginBottom: "20px" }}>
+  {!showGuestAndBooking && selectedRooms.length > 0 && (
+    <button
+      onClick={handleProceed}
+      style={{
+        marginRight: "10px",
+        padding: "10px 15px",
+        backgroundColor: "#4CAF50",
+        color: "white",
+        border: "none",
+        borderRadius: "4px",
+        cursor: "pointer",
+      }}
+    >
+      Proceed
+    </button>
+  )}
+  <button
+    onClick={() => setShowFilterModal(!showFilterModal)}
+    style={{
+      padding: "10px 15px",
+      backgroundColor: "#2196F3",
+      color: "white",
+      border: "none",
+      borderRadius: "4px",
+      cursor: "pointer",
+      marginRight: "10px",
+    }}
+  >
+    Search
+  </button>
+</div>
+
+
         </div>
       </div>
 
@@ -248,7 +295,7 @@ const Receptionist = () => {
         </div>
       )}
 
-{selectedRooms.length > 0 && (
+{showGuestAndBooking && (
   <div
     style={{
       display: "flex",
@@ -414,23 +461,45 @@ const Receptionist = () => {
         />
       </div>
 
-      <div style={{ textAlign: "center" }}>
-        <button
-          onClick={handleConfirmBooking}
-          style={{
-            backgroundColor: "#4CAF50",
-            color: "white",
-            padding: "12px 20px",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-            fontSize: "16px",
-            width: "100%",
-          }}
-        >
-          Confirm Booking
-        </button>
-      </div>
+      <div style={{ display: "flex", gap: "10px", marginTop: "20px" }}>
+  <button
+    onClick={handleConfirmBooking}
+    style={{
+      backgroundColor: "#4CAF50",
+      color: "white",
+      padding: "12px 20px",
+      border: "none",
+      borderRadius: "5px",
+      cursor: "pointer",
+      fontSize: "16px",
+      width: "50%",
+    }}
+  >
+    Confirm Booking
+  </button>
+
+  <button
+  onClick={() => {
+    setSelectedRooms([]);
+    setShowRooms(true);
+    setShowGuestAndBooking(false);
+  }}
+  style={{
+    backgroundColor: "#f44336",
+    color: "white",
+    padding: "12px 20px",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
+    fontSize: "16px",
+    width: "50%",
+  }}
+>
+  Cancel
+</button>
+
+</div>
+
     </div>
   </div>
 )}

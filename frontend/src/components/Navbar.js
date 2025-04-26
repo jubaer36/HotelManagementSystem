@@ -27,6 +27,12 @@ const Navbar = () => {
                 return 'Manager List';
             case '/admin-dashboard':
                 return 'Admin Dashboard';
+            case '/receptionist':
+                return 'Booking'
+            case '/checkout':
+                return 'Guests'
+            case '/real-checkout':
+                return 'Billing'
             default:
                 return 'Dashboard';
         }
@@ -44,8 +50,8 @@ const Navbar = () => {
                     </div>
                 </div>
                 <div className="nav-links">
-                    <button onClick={() => navigate('/profile')}>Profile</button>
-                    <button onClick={() => navigate('/settings')}>Settings</button>
+                    <button onClick={() => navigate('/profile')}>Reset Password</button>
+                    {/* <button onClick={() => navigate('/settings')}>Settings</button> */}
                     <button onClick={() => navigate('/logout')}>Logout</button>
                 </div>
             </div>

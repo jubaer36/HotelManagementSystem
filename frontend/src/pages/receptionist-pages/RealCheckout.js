@@ -204,9 +204,9 @@ const CurrentGuests = () =>{
                         <p>
                         <strong>Date of Birth:</strong> {new Date(guest.DateOfBirth).toISOString().split("T")[0]}                        </p>
                         <div className="guest-actions">
-                            <button className="extend-visit-button" onClick={() => handleExtendVisit(guest)}>
+                            {/* <button className="extend-visit-button" onClick={() => handleExtendVisit(guest)}>
                                 Extend Visit
-                            </button>
+                            </button> */}
                             <button
                                 className="billing"
                                 onClick={() => openBillingPopup(guest)}

@@ -12,6 +12,7 @@ const AdminHotel = require("./routes/adminRoutes/adminHotelRoutes.js");
 const manRoomRoute = require("./routes/managerRoutes/roomsRoute");
 const inventoryRoutes = require("./routes/managerRoutes/inventoryRoutes.js");
 const expenseRoutes = require("./routes/adminRoutes/expenseRoutes.js")
+const resetPasswordRoute = require("./routes/Public/resetPasswordRoute.js");
 const authRoutes = require("./auth.js");
 const app = express();
 
@@ -32,6 +33,8 @@ app.use(ManexpensesRoute);
 app.use(AdminHotel);
 app.use(manRoomRoute);
 app.use(expenseRoutes);
+
+app.use(resetPasswordRoute);
 
 
 app.listen(3001, () => {
