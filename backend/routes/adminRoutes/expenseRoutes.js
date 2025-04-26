@@ -1,169 +1,147 @@
-// routes/financial.js
 const express = require("express");
 const router = express.Router();
 const db = require("../../dbconn");
 
+// Get all hotels
 router.get('/get-hotels', async (req, res) => {
     try {
-        const [results] = await db.query('SELECT * FROM Hotel');
+        const [results] = await db.promise().query('SELECT * FROM Hotel');
         res.status(200).json(results);
     } catch (err) {
-        console.error(err);
+        console.error('Get Hotels Error:', err);
         res.status(500).json({ error: 'Failed to fetch hotels' });
     }
 });
 
-// Get financial report
-// router.get('/financial-report/:hotelId', async (req, res) => {
-//     const { hotelId } = req.params;
-//
-//     try {
-//         const [revenueResult] = await db.promise().query(
-//             'CALL GenerateFullFinancialReport(?)',
-//             [hotelId]
-//         );
-//
-//         // revenueResult = [revenues, expenseSummary, netSummary]
-//         const data = {
-//             revenue: revenueResult[0],        // First SELECT result: revenue summary
-//             expenses: revenueResult[1],       // Second SELECT result: expenses with ROLLUP
-//             summary: revenueResult[2][0]      // Third SELECT result: net profit/loss
-//         };
-//
-//         res.status(200).json(data);
-//     } catch (err) {
-//         console.error('SQL Error:', err);
-//         res.status(500).json({
-//             error: 'Failed to generate financial report',
-//             details: err.message
-//         });
-//         }
-// });
-
-
-
+// Get Inventory Cost by Month
 router.get('/inventory-summary/:hotelId', async (req, res) => {
     const { hotelId } = req.params;
     const { start, end } = req.query;
-
     try {
         const [results] = await db.promise().query(
-            'CALL inventory_summary(?, ?, ?)',
+            `SELECT 
+                DATE_FORMAT(TransactionDate, '%Y-%m') AS InventoryMonth,
+                SUM(Quantity * UnitPrice) AS TotalInventoryCost
+             FROM InventoryTransactions
+             WHERE HotelID = ? AND TransactionDate BETWEEN ? AND ?
+             GROUP BY InventoryMonth
+             ORDER BY InventoryMonth`,
             [hotelId, start, end]
         );
-
-        // Separate monthly data and grand total
-        const chartData = results[0].map(row => ({
-            InventoryMonth: row.InventoryMonth || 'TOTAL',
-            TotalInventoryCost: row.TotalInventoryCost
-        }));
-
-        res.json(chartData);
+        res.json(results);
     } catch (err) {
         console.error('Inventory Summary Error:', err);
         res.status(500).json({ error: 'Failed to fetch inventory summary' });
     }
 });
+
+// Get Maintenance Cost by Month
 router.get('/maintenance-summary/:hotelId', async (req, res) => {
     const { hotelId } = req.params;
     const { start, end } = req.query;
-
     try {
         const [results] = await db.promise().query(
-            'CALL maintenance_summary(?, ?, ?)',
+            `SELECT 
+                DATE_FORMAT(LedgerDate, '%Y-%m') AS MaintenanceMonth,
+                SUM(Amount) AS TotalMaintenanceCost
+             FROM BillMaintenanceLedger
+             WHERE HotelID = ? AND LedgerDate BETWEEN ? AND ?
+             GROUP BY MaintenanceMonth
+             ORDER BY MaintenanceMonth`,
             [hotelId, start, end]
         );
-
-        const chartData = results[0].map(row => ({
-            MaintenanceMonth: row.MaintenanceMonth || 'TOTAL',
-            TotalMaintenanceCost: row.TotalMaintenanceCost
-        }));
-
-        res.json(chartData);
+        res.json(results);
     } catch (err) {
         console.error('Maintenance Summary Error:', err);
         res.status(500).json({ error: 'Failed to fetch maintenance summary' });
     }
 });
+
+// Get Salary by Department
 router.get('/salary-summary/:hotelId', async (req, res) => {
     const { hotelId } = req.params;
-
     try {
         const [results] = await db.promise().query(
-            'CALL department_salary_summary(?)',
+            `SELECT 
+                DeptName,
+                SUM(Salary) AS TotalDeptSalary
+             FROM Employee e
+             JOIN Department d ON e.DeptID = d.DeptID
+             WHERE d.HotelID = ?
+             GROUP BY DeptName
+             ORDER BY DeptName`,
             [hotelId]
         );
-
-        const formatted = results[0].map(row => ({
-            DeptName: row.DeptName || 'TOTAL',
-            TotalDeptSalary: row.TotalDeptSalary
-        }));
-
-        res.status(200).json(formatted);
+        res.json(results);
     } catch (err) {
         console.error('Salary Summary Error:', err);
         res.status(500).json({ error: 'Failed to fetch salary summary' });
     }
 });
+
+// Get Monthly Revenue from Transactions
 router.get('/transaction-summary/:hotelId', async (req, res) => {
     const { hotelId } = req.params;
     const { start, end } = req.query;
-
     try {
         const [results] = await db.promise().query(
-            'CALL transaction_revenue_summary(?, ?, ?)',
+            `SELECT 
+                DATE_FORMAT(t.PaymentDate, '%Y-%m') AS RevenueMonth,
+                SUM(t.AmountPaid) AS TotalRevenue
+             FROM Transactions t
+             JOIN Booking b ON b.BookingID = t.BookingID
+             WHERE b.HotelID = ? AND t.PaymentDate BETWEEN ? AND ?
+             GROUP BY RevenueMonth
+             ORDER BY RevenueMonth`,
             [hotelId, start, end]
         );
-
-        const formatted = results[0].map(row => ({
-            RevenueMonth: row.RevenueMonth || 'TOTAL',
-            TotalRevenue: row.TotalRevenue
-        }));
-
-        res.status(200).json(formatted);
+        res.json(results);
     } catch (err) {
-        console.error('Transaction Summary Error:', err);
+        console.error('Transaction Revenue Error:', err);
         res.status(500).json({ error: 'Failed to fetch transaction revenue' });
     }
 });
 
+// Financial Summary for Totals
 router.get('/financial-summary/:hotelId', async (req, res) => {
     const { hotelId } = req.params;
     const { start, end } = req.query;
-
     try {
         const [[{ inventory }]] = await db.promise().query(
-            'SELECT inventory_total(?, ?, ?) AS inventory',
+            `SELECT IFNULL(SUM(Quantity * UnitPrice), 0) AS inventory
+             FROM InventoryTransactions
+             WHERE HotelID = ? AND TransactionDate BETWEEN ? AND ?`,
             [hotelId, start, end]
         );
 
         const [[{ maintenance }]] = await db.promise().query(
-            'SELECT maintenance_total(?, ?, ?) AS maintenance',
+            `SELECT IFNULL(SUM(Amount), 0) AS maintenance
+             FROM BillMaintenanceLedger
+             WHERE HotelID = ? AND LedgerDate BETWEEN ? AND ?`,
             [hotelId, start, end]
         );
 
         const [[{ salaries }]] = await db.promise().query(
-            'SELECT salary_total(?) AS salaries',
+            `SELECT IFNULL(SUM(Salary), 0) AS salaries
+             FROM Employee e
+             JOIN Department d ON e.DeptID = d.DeptID
+             WHERE d.HotelID = ?`,
             [hotelId]
         );
 
         const [[{ revenue }]] = await db.promise().query(
-            'SELECT revenue_total(?, ?, ?) AS revenue',
+            `SELECT IFNULL(SUM(t.AmountPaid), 0) AS revenue
+             FROM Transactions t
+             JOIN Booking b ON b.BookingID = t.BookingID
+             WHERE b.HotelID = ? AND t.PaymentDate BETWEEN ? AND ?`,
             [hotelId, start, end]
         );
 
-        res.status(200).json({ inventory, maintenance, salaries, revenue });
+        res.json({ inventory, maintenance, salaries, revenue });
     } catch (err) {
         console.error('Summary function error:', err);
-        res.status(500).json({ error: 'Failed to load summary totals' });
+        res.status(500).json({ error: 'Failed to load financial summary' });
     }
 });
-
-
-
-
-
-
-
 
 module.exports = router;
