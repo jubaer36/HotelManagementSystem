@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Axios from "axios";
 import "./Checkout.css";
+import Navbar from "../../components/Navbar.js";
 
 
 const CurrentGuests = () => {
@@ -133,6 +134,8 @@ const CurrentGuests = () => {
     }
 
     return (
+        <>
+        <Navbar/>
         <div className="current-guests-container">
             <button className="filter-guests-button" onClick={() => setShowFilterModal(true)}>
                 Filter Guests
@@ -260,6 +263,7 @@ const CurrentGuests = () => {
                 </div>
             )}
         </div>
+        </>
     );
 };
 
