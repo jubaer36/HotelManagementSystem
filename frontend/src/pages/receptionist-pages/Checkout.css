@@ -1,155 +1,193 @@
 .current-guests-container {
-    font-family: Arial, sans-serif;
-    padding: 20px;
-    background-color: #f7f7f7;
+    padding: 2rem;
+    background-color: #f8fafc;
+    min-height: 100vh;
 }
 
-.filter-guests-button {
-    padding: 10px 15px;
-    background-color: #3182ce;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-bottom: 20px;
+.current-guests-header {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    justify-content: center;
 }
 
+.filter-guests-button,
 .show-current-guest-button {
-
-    padding: 10px 15px;
-    background-color: #00c13d;
-    color: black;
+    background-color: #3B82F6;
+    color: white;
+    padding: 0.8rem 1.2rem;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
-    margin-bottom: 20px;
-    margin-left: 5px;
-
+    transition: background-color 0.3s ease;
 }
 
-.filter-guests-button:hover {
-    background-color: #2b6cb0;
-}
-
+.filter-guests-button:hover,
 .show-current-guest-button:hover {
-    background-color: #008547;
-
+    background-color: #2563eb;
 }
 
 .guest-cards {
     display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
-.guest-card {
-    background: white;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 16px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 300px;
+/* New card-row layout */
+.guest-card-row {
+    display: flex;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    align-items: center;
 }
 
-.guest-card h3 {
-    margin: 0;
-    font-size: 1.25rem;
-    color: #333;
+.guest-image-container {
+    width: 250px;
+    height: 200px;
+    background-color: #f1f5f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
 }
 
-.guest-card p {
-    margin: 5px 0;
-    font-size: 0.9rem;
-    color: #666;
+.guest-room-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.guest-no-image {
+    font-size: 1rem;
+    color: #94a3b8;
+}
+
+.guest-info-container {
+    padding: 1.5rem;
+    flex: 1;
+}
+
+.guest-info-container h3 {
+    margin-top: 0;
+    color: #1e293b;
+}
+
+.guest-info-container h4 {
+    margin: 0.5rem 0;
+    color: #334155;
+}
+
+.guest-info-container p {
+    margin: 0.3rem 0;
+    color: #475569;
 }
 
 .guest-actions {
-    margin-top: 15px;
-    display: flex;
-    justify-content: space-between;
+    margin-top: 1rem;
 }
 
-.extend-visit-button,
 .features-button {
-    padding: 8px 10px;
+    background-color: #4ade80;
+    color: white;
+    padding: 0.6rem 1rem;
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 0.9rem;
-}
-
-.extend-visit-button {
-    background-color: #f6ad55;
-    color: white;
-}
-
-.extend-visit-button:hover {
-    background-color: #dd6b20;
-}
-
-.features-button {
-    background-color: #e53e3e;
-    color: white;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
 }
 
 .features-button:hover {
-    background-color: #c53030;
+    background-color: #22c55e;
 }
 
-.popup,
+/* Filter Modal Styling */
 .filter-modal {
     position: fixed;
-    top: 50%;
+    top: 15%;
     left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transform: translateX(-50%);
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    width: 300px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     z-index: 1000;
 }
 
-.popup h2,
 .filter-modal h2 {
-    margin-bottom: 15px;
-    font-size: 1.5rem;
+    margin-bottom: 20px;
 }
 
-.popup-actions,
+.filter-modal label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.filter-modal input, .filter-modal select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
 .filter-actions {
-    margin-top: 20px;
     display: flex;
-    justify-content: flex-end;
-    gap: 10px;
+    justify-content: space-between;
+    margin-top: 20px;
 }
 
-.popup-actions button,
 .filter-actions button {
-    padding: 8px 12px;
+    background-color: #3B82F6;
+    color: white;
+    padding: 8px 16px;
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.filter-actions button:hover {
+    background-color: #2563eb;
+}
+.guest-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.details-toggle-button {
+    background-color: #3B82F6;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
     cursor: pointer;
     font-size: 0.9rem;
+    transition: background-color 0.3s ease;
 }
 
-.popup-actions button:first-child,
-.filter-actions button:first-child {
-    background-color: #3182ce;
-    color: white;
+.details-toggle-button:hover {
+    background-color: #2563eb;
 }
 
-.popup-actions button:first-child:hover,
-.filter-actions button:first-child:hover {
-    background-color: #2b6cb0;
+.guest-expanded-info {
+    margin-top: 1rem;
+    animation: fadeIn 0.3s ease;
 }
 
-.popup-actions button:last-child,
-.filter-actions button:last-child {
-    background-color: #e53e3e;
-    color: white;
-}
-
-.popup-actions button:last-child:hover,
-.filter-actions button:last-child:hover {
-    background-color: #c53030;
+/* Simple fade in animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
