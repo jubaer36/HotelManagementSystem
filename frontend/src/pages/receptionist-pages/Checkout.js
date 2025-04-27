@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Axios from "axios";
 import "./Checkout.css";
+import Navbar from "../../components/Navbar.js";
 
 
 const CurrentGuests = () => {
@@ -37,7 +38,12 @@ const CurrentGuests = () => {
             hotelID : dummyHID,
         })
             .then((response) => {
-                setGuests(response.data);
+                const sortedGuests = response.data.sort((a, b) => {
+                    const roomA = a.RoomNumber.toString().toLowerCase();
+                    const roomB = b.RoomNumber.toString().toLowerCase();
+                    return roomA.localeCompare(roomB, undefined, { numeric: true });
+                });
+                setGuests(sortedGuests);
                 setLoading(false);
             })
             .catch((error) => {
@@ -66,7 +72,12 @@ const CurrentGuests = () => {
             hotelID: dummyHID,
         })
             .then((response) => {
-                setGuests(response.data);
+                const sortedGuests = response.data.sort((a, b) => {
+                    const roomA = a.RoomNumber.toString().toLowerCase();
+                    const roomB = b.RoomNumber.toString().toLowerCase();
+                    return roomA.localeCompare(roomB, undefined, { numeric: true });
+                });
+                setGuests(sortedGuests);
                 setShowFilterModal(false); // Close the modal after applying filters
             })
             .catch((error) => {
@@ -133,6 +144,8 @@ const CurrentGuests = () => {
     }
 
     return (
+        <>
+        <Navbar/>
         <div className="current-guests-container">
             <button className="filter-guests-button" onClick={() => setShowFilterModal(true)}>
                 Filter Guests
@@ -144,17 +157,18 @@ const CurrentGuests = () => {
                 {guests.map((guest, index) => (
                     <div className="guest-card" key={index}>
                         <h3>
-                            {guest.FirstName} {guest.LastName}
+                            <strong>Room:</strong> {guest.RoomNumber}
                         </h3>
+                        <h4>
+                            {guest.FirstName} {guest.LastName}
+                        </h4>
                         <p>
                             <strong>Email:</strong> {guest.EmailAddress}
                         </p>
                         <p>
                             <strong>Phone:</strong> {guest.PhoneNumber}
                         </p>
-                        <p>
-                            <strong>Room Number:</strong> {guest.RoomNumber}
-                        </p>
+
                         <p>
                             <strong>Check-In Date:</strong> {guest.CheckInDate}
                         </p>
@@ -260,6 +274,7 @@ const CurrentGuests = () => {
                 </div>
             )}
         </div>
+        </>
     );
 };
 

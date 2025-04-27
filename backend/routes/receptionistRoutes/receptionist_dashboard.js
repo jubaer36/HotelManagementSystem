@@ -16,8 +16,8 @@ router.post("/available-rooms", (req, res) => {
       INNER JOIN Room_Class RC ON AR.RoomClassID = RC.RoomClassID
       INNER JOIN Bed_Type BT ON AR.RoomID = BT.RoomID
       WHERE AR.HotelID = ?
-      AND AR.RoomID NOT IN (
-          SELECT R.RoomID
+      AND AR.RoomNumber NOT IN (
+          SELECT R.RoomNumber
           FROM Room R
           INNER JOIN Booking B ON R.BookingID = B.BookingID
           WHERE CURDATE() BETWEEN B.CheckInDate AND B.CheckOutDate

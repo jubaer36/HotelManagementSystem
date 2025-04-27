@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Axios from "axios";
 import "./feature.css";
 import { useLocation } from "react-router-dom";
+import Navbar from "../../components/Navbar.js";
 
 const Features = () => {
     const location = useLocation();
@@ -74,6 +75,8 @@ const Features = () => {
     }
 
     return (
+        <>
+        <Navbar/>
         <div className="features-container">
             <h1>Room Features</h1>
             {/* <p>Features for Room ID: {roomID}</p> */}
@@ -125,6 +128,7 @@ const Features = () => {
                 </div>
             )}
         </div>
+        </>
     );
 };
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import Navbar from "../../components/Navbar";
 
 import Axios from "axios";
 
@@ -17,7 +18,9 @@ const Receptionist = () => {
   const [dob, setDob] = useState("");
   const [selectedRooms, setSelectedRooms] = useState([]); // Room IDs
   const [availableRooms, setAvailableRooms] = useState([]);
-  const [showRooms, setShowRooms] = useState(false);
+  const [showRooms, setShowRooms] = useState(true);
+  const [showGuestAndBooking, setShowGuestAndBooking] = useState(false);
+
   const [showFilterModal, setShowFilterModal] = useState(false);
 
   const [bookingDetails, setBookingDetails] = useState({
@@ -41,6 +44,25 @@ const Receptionist = () => {
     checkInDate: formatDate(today),     // ✅ today's date
     checkOutDate: formatDate(today), // ✅ tomorrow's date
   });
+  const inputStyle = {
+    width: "100%",
+    padding: "10px",
+    border: "1px solid #ccc",
+    borderRadius: "5px",
+    fontSize: "14px",
+    marginBottom: "10px",
+  };
+
+  const handleProceed = () => {
+    if (selectedRooms.length === 0) {
+      alert("Please select at least one room.");
+      return;
+    }
+    setShowRooms(false); // Hide room table
+    setShowGuestAndBooking(true);
+  };
+  
+  
 
   useEffect(() => {
     if (showRooms) {
@@ -138,6 +160,7 @@ const Receptionist = () => {
           numAdults: 1,
           numChildren: 0,
         });
+        window.location.reload();
       })
       .catch((error) => {
         console.error("Error confirming booking:", error);
@@ -146,67 +169,14 @@ const Receptionist = () => {
   };
 
   return (
+    <>
+    <Navbar/>
     <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
       <div style={{ marginBottom: "20px" }}>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "15px" }}>
-          <div>
-            <label style={{ display: "block", fontWeight: "bold", marginBottom: "5px" }}>First Name:</label>
-            <input
-              type="text"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              style={{ padding: "10px", width: "200px", border: "1px solid #ccc", borderRadius: "4px" }}
-            />
-          </div>
-          <div>
-            <label style={{ display: "block", fontWeight: "bold", marginBottom: "5px" }}>Last Name:</label>
-            <input
-              type="text"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              style={{ padding: "10px", width: "200px", border: "1px solid #ccc", borderRadius: "4px" }}
-            />
-          </div>
-          <div>
-            <label style={{ display: "block", fontWeight: "bold", marginBottom: "5px" }}>Email:</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              style={{ padding: "10px", width: "250px", border: "1px solid #ccc", borderRadius: "4px" }}
-            />
-          </div>
-          <div>
-            <label style={{ display: "block", fontWeight: "bold", marginBottom: "5px" }}>Phone:</label>
-            <input
-              type="text"
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
-              style={{ padding: "10px", width: "200px", border: "1px solid #ccc", borderRadius: "4px" }}
-            />
-          </div>
-          <div>
-            <label style={{ display: "block", fontWeight: "bold", marginBottom: "5px" }}>Date of Birth:</label>
-            <input
-              type="date"
-              value={dob}
-              onChange={(e) => setDob(e.target.value)}
-              style={{ padding: "10px", width: "200px", border: "1px solid #ccc", borderRadius: "4px" }}
-            />
-          </div>
-          <div>
-            <label style={{ display: "block", fontWeight: "bold", marginBottom: "5px" }}>NID:</label>
-            <input
-              type="text"
-              value={nid}
-              onChange={(e) => setNid(e.target.value)}
-              style={{ padding: "10px", width: "200px", border: "1px solid #ccc", borderRadius: "4px" }}
-            />
-          </div>
-        </div>
+        
 
         <div style={{ marginTop: "20px" }}>
-          <button
+          {/* <button
             onClick={() => {
               setShowRooms(!showRooms);
               setShowFilterModal(false);
@@ -222,8 +192,8 @@ const Receptionist = () => {
             }}
           >
             {showRooms ? "Hide Available Rooms" : "Show Available Rooms"}
-          </button>
-          <button
+          </button> */}
+          {/* <button
             onClick={() => {
               setShowFilterModal(!showFilterModal);
               setShowRooms(true);
@@ -238,7 +208,41 @@ const Receptionist = () => {
             }}
           >
             {showFilterModal ? "Close Search" : "Search"}
-          </button>
+          </button> */}
+<div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", marginBottom: "20px" }}>
+  {!showGuestAndBooking && selectedRooms.length > 0 && (
+    <button
+      onClick={handleProceed}
+      style={{
+        marginRight: "10px",
+        padding: "10px 15px",
+        backgroundColor: "#4CAF50",
+        color: "white",
+        border: "none",
+        borderRadius: "4px",
+        cursor: "pointer",
+      }}
+    >
+      Proceed
+    </button>
+  )}
+  <button
+    onClick={() => setShowFilterModal(!showFilterModal)}
+    style={{
+      padding: "10px 15px",
+      backgroundColor: "#2196F3",
+      color: "white",
+      border: "none",
+      borderRadius: "4px",
+      cursor: "pointer",
+      marginRight: "10px",
+    }}
+  >
+    Search
+  </button>
+</div>
+
+
         </div>
       </div>
 
@@ -291,141 +295,215 @@ const Receptionist = () => {
         </div>
       )}
 
-      {selectedRooms.length > 0 && (
-        <div
-          style={{
-            backgroundColor: "#ffffff",
-            padding: "30px",
-            boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.2)",
-            borderRadius: "10px",
-            width: "500px",
-            maxWidth: "90%",
-            fontFamily: "'Arial', sans-serif",
-            margin: "20px auto",
-          }}
-        >
-          <h2 style={{ textAlign: "center", marginBottom: "20px" }}>Booking Details</h2>
+{showGuestAndBooking && (
+  <div
+    style={{
+      display: "flex",
+      flexWrap: "wrap",
+      justifyContent: "center",
+      alignItems: "flex-start", // ⭐ added
+      gap: "20px",
+      marginTop: "30px",
+    }}
+  >
+    {/* Guest Details Section */}
+    <div
+      style={{
+        backgroundColor: "#ffffff",
+        padding: "30px",
+        boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.2)",
+        borderRadius: "10px",
+        width: "500px",
+        maxWidth: "90%",
+        fontFamily: "'Arial', sans-serif",
+      }}
+    >
+      <h2 style={{ textAlign: "center", marginBottom: "20px" }}>Guest Details</h2>
 
-          <div style={{ marginBottom: "15px" }}>
-            <label style={{ fontSize: "14px", fontWeight: "600", marginBottom: "5px" }}>
-              Check-In Date:
-            </label>
-            <input
-              type="date"
-              name="checkInDate"
-              value={bookingDetails.checkInDate}
-              onChange={handleBookingInputChange}
-              style={{
-                width: "100%",
-                padding: "10px",
-                border: "1px solid #ccc",
-                borderRadius: "5px",
-                fontSize: "14px",
-                marginBottom: "10px",
-              }}
-            />
-          </div>
+      <div style={{ marginBottom: "15px" }}>
+        <label>First Name:</label>
+        <input
+          type="text"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+          style={inputStyle}
+        />
+      </div>
 
-          <div style={{ marginBottom: "15px" }}>
-            <label style={{ fontSize: "14px", fontWeight: "600", marginBottom: "5px" }}>
-              Check-Out Date:
-            </label>
-            <input
-              type="date"
-              name="checkOutDate"
-              value={bookingDetails.checkOutDate}
-              onChange={handleBookingInputChange}
-              style={{
-                width: "100%",
-                padding: "10px",
-                border: "1px solid #ccc",
-                borderRadius: "5px",
-                fontSize: "14px",
-                marginBottom: "10px",
-              }}
-            />
-          </div>
+      <div style={{ marginBottom: "15px" }}>
+        <label>Last Name:</label>
+        <input
+          type="text"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+          style={inputStyle}
+        />
+      </div>
 
-          <div style={{ marginBottom: "15px" }}>
-            <label style={{ fontSize: "14px", fontWeight: "600", marginBottom: "5px" }}>
-              Number of Adults:
-            </label>
-            <input
-              type="number"
-              name="numAdults"
-              value={bookingDetails.numAdults}
-              onChange={handleBookingInputChange}
-              style={{
-                width: "100%",
-                padding: "10px",
-                border: "1px solid #ccc",
-                borderRadius: "5px",
-                fontSize: "14px",
-                marginBottom: "10px",
-              }}
-            />
-          </div>
+      <div style={{ marginBottom: "15px" }}>
+        <label>Email:</label>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          style={inputStyle}
+        />
+      </div>
 
-          <div style={{ marginBottom: "15px" }}>
-            <label style={{ fontSize: "14px", fontWeight: "600", marginBottom: "5px" }}>
-              Number of Children:
-            </label>
-            <input
-              type="number"
-              name="numChildren"
-              value={bookingDetails.numChildren}
-              onChange={handleBookingInputChange}
-              style={{
-                width: "100%",
-                padding: "10px",
-                border: "1px solid #ccc",
-                borderRadius: "5px",
-                fontSize: "14px",
-                marginBottom: "20px",
-              }}
-            />
-          </div>
+      <div style={{ marginBottom: "15px" }}>
+        <label>Phone:</label>
+        <input
+          type="text"
+          value={phoneNumber}
+          onChange={(e) => setPhoneNumber(e.target.value)}
+          style={inputStyle}
+        />
+      </div>
 
+      <div style={{ marginBottom: "15px" }}>
+        <label>Date of Birth:</label>
+        <input
+          type="date"
+          value={dob}
+          onChange={(e) => setDob(e.target.value)}
+          style={inputStyle}
+        />
+      </div>
 
-          <div style={{ marginBottom: "15px" }}>
-            <label style={{ fontSize: "14px", fontWeight: "600", marginBottom: "5px" }}>
-              Deposite
-            </label>
-            <input
-              type="number"
-              name="deposite"
-              value={bookingDetails.deposite}
-              onChange={handleBookingInputChange}
-              style={{
-                width: "100%",
-                padding: "10px",
-                border: "1px solid #ccc",
-                borderRadius: "5px",
-                fontSize: "14px",
-                marginBottom: "20px",
-              }}
-            />
-          </div>
+      <div style={{ marginBottom: "15px" }}>
+        <label>NID:</label>
+        <input
+          type="text"
+          value={nid}
+          onChange={(e) => setNid(e.target.value)}
+          style={inputStyle}
+        />
+      </div>
+    </div>
 
-          <div style={{ textAlign: "center" }}>
-            <button
-              onClick={handleConfirmBooking}
-              style={{
-                backgroundColor: "#4CAF50",
-                color: "white",
-                padding: "12px 20px",
-                border: "none",
-                borderRadius: "5px",
-                cursor: "pointer",
-                fontSize: "16px",
-                width: "100%",
-              }}
-            >
-              Confirm Booking
-            </button>
-          </div>
-        </div>
-      )}
+    {/* Booking Details Section */}
+    <div
+      style={{
+        backgroundColor: "#ffffff",
+        padding: "30px",
+        boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.2)",
+        borderRadius: "10px",
+        width: "500px",
+        maxWidth: "90%",
+        fontFamily: "'Arial', sans-serif",
+        // ⭐ Removed the wrong margin you had ("20px auto")
+      }}
+    >
+      <h2 style={{ textAlign: "center", marginBottom: "20px" }}>Booking Details</h2>
+
+      <div style={{ marginBottom: "15px" }}>
+        <label style={{ fontSize: "14px", fontWeight: "600", marginBottom: "5px" }}>
+          Check-In Date:
+        </label>
+        <input
+          type="date"
+          name="checkInDate"
+          value={bookingDetails.checkInDate}
+          onChange={handleBookingInputChange}
+          style={inputStyle}
+        />
+      </div>
+
+      <div style={{ marginBottom: "15px" }}>
+        <label style={{ fontSize: "14px", fontWeight: "600", marginBottom: "5px" }}>
+          Check-Out Date:
+        </label>
+        <input
+          type="date"
+          name="checkOutDate"
+          value={bookingDetails.checkOutDate}
+          onChange={handleBookingInputChange}
+          style={inputStyle}
+        />
+      </div>
+
+      <div style={{ marginBottom: "15px" }}>
+        <label style={{ fontSize: "14px", fontWeight: "600", marginBottom: "5px" }}>
+          Number of Adults:
+        </label>
+        <input
+          type="number"
+          name="numAdults"
+          value={bookingDetails.numAdults}
+          onChange={handleBookingInputChange}
+          style={inputStyle}
+        />
+      </div>
+
+      <div style={{ marginBottom: "15px" }}>
+        <label style={{ fontSize: "14px", fontWeight: "600", marginBottom: "5px" }}>
+          Number of Children:
+        </label>
+        <input
+          type="number"
+          name="numChildren"
+          value={bookingDetails.numChildren}
+          onChange={handleBookingInputChange}
+          style={inputStyle}
+        />
+      </div>
+
+      <div style={{ marginBottom: "15px" }}>
+        <label style={{ fontSize: "14px", fontWeight: "600", marginBottom: "5px" }}>
+          Deposite:
+        </label>
+        <input
+          type="number"
+          name="deposite"
+          value={bookingDetails.deposite}
+          onChange={handleBookingInputChange}
+          style={inputStyle}
+        />
+      </div>
+
+      <div style={{ display: "flex", gap: "10px", marginTop: "20px" }}>
+  <button
+    onClick={handleConfirmBooking}
+    style={{
+      backgroundColor: "#4CAF50",
+      color: "white",
+      padding: "12px 20px",
+      border: "none",
+      borderRadius: "5px",
+      cursor: "pointer",
+      fontSize: "16px",
+      width: "50%",
+    }}
+  >
+    Confirm Booking
+  </button>
+
+  <button
+  onClick={() => {
+    setSelectedRooms([]);
+    setShowRooms(true);
+    setShowGuestAndBooking(false);
+  }}
+  style={{
+    backgroundColor: "#f44336",
+    color: "white",
+    padding: "12px 20px",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
+    fontSize: "16px",
+    width: "50%",
+  }}
+>
+  Cancel
+</button>
+
+</div>
+
+    </div>
+  </div>
+)}
+
 
 
       {showFilterModal && (
@@ -635,46 +713,8 @@ const Receptionist = () => {
         </div>
       )}
 
-
-      {/* <div style={{ marginTop: "20px" }}>
-        <h2>Manual Checkout</h2>
-        <button
-          onClick={() => navigate("/checkout")}
-          style={{
-            padding: "10px 15px",
-            backgroundColor: "#FF9800",
-            color: "white",
-            border: "none",
-            borderRadius: "4px",
-            cursor: "pointer",
-          }}
-        >
-          Checkout
-        </button>
-        <button
-          onClick={() => navigate("/inventory")}
-          style={{
-            padding: "10px 15px",
-          onClick={() => navigate("/real-checkout")}
-          style={{
-            padding: "10px 15px",
-            marginLeft: "5px",
-            backgroundColor: "#FF9800",
-            color: "white",
-            border: "none",
-            borderRadius: "4px",
-            cursor: "pointer",
-          }}
-        >
-          Inventory
-        </button>
-
-
-      </div>
-         Real Checkout
-        </button>
-      </div> */}
     </div>
+    </>
 
   );
 };

@@ -1,5 +1,6 @@
 .features-container {
     padding: 20px;
+    position: relative; /* ⭐ Add this */
 }
 
 .features-cards {

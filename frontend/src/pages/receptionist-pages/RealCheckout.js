@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import Axios from "axios";
 import "./RealCheckout.css"
 import BillingPopup from "../../components/BillingPopup";
+import Navbar from "../../components/Navbar.js";
+
 
 const CurrentGuests = () =>{
 
@@ -111,6 +113,8 @@ const CurrentGuests = () =>{
 
     if (guests.length === 0) {
         return(
+            <>
+            <Navbar/>
             <div className="current-guests-container">
             <button className="filter-guests-button" onClick={()=> setShowFilterModal(true)}>
                 Filter Guests
@@ -162,7 +166,7 @@ const CurrentGuests = () =>{
                             value={(filters.DateOfBirth)}
                             onChange={handleFilterChange}
                         />
-                        <div className="filter-acitons">
+                        <div className="filter-actions">
                             <button onClick={applyFilters}>Apply</button>
                             <button onClick={()=>setShowFilterModal(false)}>Cancel</button>
                         </div>
@@ -170,10 +174,13 @@ const CurrentGuests = () =>{
                 )
             }
             </div>
+            </>
         ) 
     }
 
     return(
+        <>
+        <Navbar/>
         <div className="current-guests-container">
             <button className="filter-guests-button" onClick={()=> setShowFilterModal(true)}>
                 Filter Guests
@@ -197,9 +204,9 @@ const CurrentGuests = () =>{
                         <p>
                         <strong>Date of Birth:</strong> {new Date(guest.DateOfBirth).toISOString().split("T")[0]}                        </p>
                         <div className="guest-actions">
-                            <button className="extend-visit-button" onClick={() => handleExtendVisit(guest)}>
+                            {/* <button className="extend-visit-button" onClick={() => handleExtendVisit(guest)}>
                                 Extend Visit
-                            </button>
+                            </button> */}
                             <button
                                 className="billing"
                                 onClick={() => openBillingPopup(guest)}
@@ -276,7 +283,7 @@ const CurrentGuests = () =>{
                             value={(filters.DateOfBirth)}
                             onChange={handleFilterChange}
                         />
-                        <div className="filter-acitons">
+                        <div className="filter-actions">
                             <button onClick={applyFilters}>Apply</button>
                             <button onClick={()=>setShowFilterModal(false)}>Cancel</button>
                         </div>
@@ -288,6 +295,7 @@ const CurrentGuests = () =>{
         <BillingPopup guest={selectedGuest} onClose={closeBillingPopup} />
         )}
         </div>
+        </>
     );
 };
 
