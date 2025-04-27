@@ -1,0 +1,202 @@
+/* Container */
+/* Container with Background Image */
+.receptionist-container {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    
+    /* 🔥 Background image added */
+    min-height: 100vh;
+    background-image: url('../../../images/pool_hat.jpg'); /* 🔥 Put your image path here */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    
+
+  }
+  
+  /* Everything else same */
+  
+  .button-group {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 10px;
+  }
+  
+  /* ... rest of CSS same as before ... */
+  
+  
+  /* Buttons */
+  .proceed-button,
+  .search-button {
+    padding: 10px 15px;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .proceed-button {
+    background-color: #4caf50;
+  }
+  
+  .search-button {
+    background-color: #2196f3;
+  }
+  
+  /* Room Section */
+  .rooms-section {
+    margin-top: 20px;
+  }
+  
+  .rooms-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  
+  .rooms-table th,
+  .rooms-table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .rooms-table thead {
+    background-color: #f2f2f2;
+  }
+  
+  /* Selected Room Row */
+  .selected-room {
+    background-color: lightgreen;
+  }
+  
+  /* Select Button in table */
+  .select-button,
+  .select-button-selected {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+  }
+  
+  .select-button {
+    background-color: #e0e0e0;
+    color: black;
+  }
+  
+  .select-button-selected {
+    background-color: green;
+    color: white;
+  }
+  
+  /* Guest and Booking Details Section */
+  .details-section {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+    margin-top: 30px;
+  }
+  
+  /* Card Style for Guest and Booking */
+  .guest-details-card,
+  .booking-details-card {
+    background-color: #ffffff;
+    padding: 30px;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    width: 500px;
+    max-width: 90%;
+  }
+  
+  /* Inputs Group inside Card */
+  .input-group {
+    margin-bottom: 15px;
+  }
+  
+  .input-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+  
+  .input-group input,
+  .input-group select {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  /* Confirm and Cancel Buttons */
+  .confirm-cancel-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  .confirm-button,
+  .cancel-button {
+    padding: 12px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 50%;
+    color: white;
+  }
+  
+  .confirm-button {
+    background-color: #4caf50;
+  }
+  
+  .cancel-button {
+    background-color: #f44336;
+  }
+  
+  /* Modal for Filters */
+  .filter-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ffffff;
+    padding: 30px;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    width: 400px;
+    max-width: 90%;
+    z-index: 1000;
+  }
+  
+  .filter-modal h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  /* Modal Buttons */
+  .modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  .modal-buttons .confirm-button,
+  .modal-buttons .cancel-button {
+    padding: 10px 20px;
+    font-size: 14px;
+    width: auto;
+  }
+  
+  /* Utility Class for Centering */
+  .center-text {
+    text-align: center;
+  }
+  

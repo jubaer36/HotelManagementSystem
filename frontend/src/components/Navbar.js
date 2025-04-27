@@ -1,12 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './Navbar.css';
+import Axios from 'axios';
 
 const Navbar = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    // Get current page title based on route
+    const [showResetPopup, setShowResetPopup] = useState(false);
+    const [oldPassword, setOldPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+
+    const handleLogout = () => {
+        localStorage.clear(); // Clears all localStorage items (userID, token, etc.)
+        navigate('/login');    // Redirect to login page
+    };
+    
+
     const getPageTitle = () => {
         switch(location.pathname) {
             case '/employee-info':
@@ -28,17 +38,43 @@ const Navbar = () => {
             case '/admin-dashboard':
                 return 'Admin Dashboard';
             case '/receptionist':
-                return 'Booking'
+                return 'Booking';
             case '/checkout':
-                return 'Guests'
+                return 'Guests';
             case '/real-checkout':
-                return 'Billing'
+                return 'Billing';
             default:
                 return 'Dashboard';
         }
     };
 
+    const handlePasswordReset = () => {
+        const userID = localStorage.getItem('userID'); // Assuming userID is stored locally after login
+
+        if (!oldPassword || !newPassword) {
+            alert("Please fill in both fields.");
+            return;
+        }
+
+        Axios.post('http://localhost:3001/reset-password', {
+            userID,
+            oldPassword,
+            newPassword,
+        })
+        .then(response => {
+            alert(response.data.message);
+            setShowResetPopup(false);
+            setOldPassword('');
+            setNewPassword('');
+        })
+        .catch(error => {
+            console.error("Password reset error:", error);
+            alert("Failed to reset password. Please check your old password.");
+        });
+    };
+
     return (
+        <>
         <nav className="navbar">
             <div className="navbar-container">
                 <div className="nav-left">
@@ -50,12 +86,36 @@ const Navbar = () => {
                     </div>
                 </div>
                 <div className="nav-links">
-                    <button onClick={() => navigate('/profile')}>Reset Password</button>
-                    {/* <button onClick={() => navigate('/settings')}>Settings</button> */}
-                    <button onClick={() => navigate('/logout')}>Logout</button>
+                    <button onClick={() => setShowResetPopup(true)}>Reset Password</button>
+                    <button onClick={handleLogout}>Logout</button>
                 </div>
             </div>
         </nav>
+
+        {showResetPopup && (
+            <div className="reset-password-popup">
+                <div className="reset-password-content">
+                    <h3>Reset Password</h3>
+                    <input
+                        type="password"
+                        placeholder="Old Password"
+                        value={oldPassword}
+                        onChange={(e) => setOldPassword(e.target.value)}
+                    />
+                    <input
+                        type="password"
+                        placeholder="New Password"
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                    />
+                    <div className="reset-password-actions">
+                        <button className="confirmm-button" onClick={handlePasswordReset}>Confirm</button>
+                        <button className="cancell-button" onClick={() => setShowResetPopup(false)}>Cancel</button>
+                    </div>
+                </div>
+            </div>
+        )}
+        </>
     );
 };
 

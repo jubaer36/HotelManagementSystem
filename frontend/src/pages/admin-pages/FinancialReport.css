@@ -3,6 +3,7 @@
     flex-direction: column; /* Stack navbar + content vertically */
     min-height: 100vh;
     background-color: #f8fafc;
+    
 }
 
 .financial-content {

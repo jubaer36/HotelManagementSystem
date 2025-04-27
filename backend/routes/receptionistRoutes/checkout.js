@@ -18,7 +18,8 @@ router.post("/current-guests", (req, res) => {
       b.NumAdults,
       b.NumChildren,
       r.RoomNumber,
-      r.RoomID
+      r.RoomID,
+      r.RoomImage
     FROM Guest g
     INNER JOIN Booking b ON g.GuestID = b.GuestID
     INNER JOIN Room r ON b.BookingID = r.BookingID
@@ -34,54 +35,17 @@ router.post("/current-guests", (req, res) => {
         results = results.map(guest => {
           guest.CheckInDate = adjustDate(guest.CheckInDate);
           guest.CheckOutDate = adjustDate(guest.CheckOutDate);
+          if (guest.RoomImage) {
+              guest.RoomImage = Buffer.from(guest.RoomImage).toString('base64');
+          }
           return guest;
       });
-  
       res.send(results);
       }
     });
 });
   
-  
-  
-router.post("/extend-visit", (req, res) => {
-    const { guestID, newCheckoutDate } = req.body;
-    if (!guestID || !newCheckoutDate) {
-        return res.status(400).send("GuestID and newCheckoutDate are required.");
-    }
-  
-    // Query to find the BookingID associated with the GuestID
-    const fetchBookingQuery = `SELECT BookingID FROM Booking WHERE GuestID = ?`;
-  
-    db.query(fetchBookingQuery, [guestID], (err, results) => {
-        if (err) {
-            console.error("Error fetching BookingID:", err);
-            return res.status(500).send("Error fetching BookingID.");
-        }
-  
-        if (results.length === 0) {
-            return res.status(404).send("No booking found for this GuestID.");
-        }
-  
-        const bookingID = results[0].BookingID;
-  
-        // Update the CheckOutDate for the booking
-        const updateCheckoutQuery = `
-            UPDATE Booking 
-            SET CheckOutDate = ? 
-            WHERE BookingID = ?;
-        `;
-  
-        db.query(updateCheckoutQuery, [newCheckoutDate, bookingID], (err) => {
-            if (err) {
-                console.error("Error extending visit:", err);
-                return res.status(500).send("Error extending visit.");
-            }
-            res.send("Checkout date updated successfully.");
-        });
-    });
-});
-  
+
 
   
 router.post("/filter-guests", (req, res) => {
@@ -108,7 +72,8 @@ router.post("/filter-guests", (req, res) => {
         b.NumAdults,
         b.NumChildren,
         r.RoomNumber,
-        r.RoomID
+        r.RoomID,
+        r.RoomImage
       FROM Guest g
       INNER JOIN Booking b ON g.GuestID = b.GuestID
       INNER JOIN Room r ON b.BookingID = r.BookingID
@@ -159,6 +124,9 @@ router.post("/filter-guests", (req, res) => {
         results = results.map(guest => {
           guest.CheckInDate = adjustDate(guest.CheckInDate);
           guest.CheckOutDate = adjustDate(guest.CheckOutDate);
+          if (guest.RoomImage) {
+              guest.RoomImage = Buffer.from(guest.RoomImage).toString('base64');
+          }
           return guest;
       });
   

@@ -1,45 +1,85 @@
-.dashboard-wrapper {
+.receptionist-dashboard-wrapper {
   min-height: 100vh;
-  background: #f8fafc;
-  padding-bottom: 2rem;
+  background: url('../../../images/pool_hat.jpg');
+  background-size: cover;       /* 🌟 Fit nicely without stretching */
+  background-position: center;  /* 🌟 Center the background */
+  background-repeat: no-repeat; /* 🌟 Don't repeat */
+  background-attachment: fixed; /* 🌟 Optional: adds a nice parallax effect */
 }
 
-.dashboard-container {
+.receptionist-dashboard-container {
   padding: 2rem;
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
+  
 }
 
-.dashboard-title {
-  color: #1e293b;
-  font-size: 2.5rem;
-  margin-bottom: 2rem;
-  font-weight: 600;
-  text-align: center;
-}
-
-.grid-container {
+.receptionist-grid-container {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr); /* Always show 2 columns */
   gap: 4rem;
 }
 
-@media (max-width: 1024px) {
-  .grid-container {
-      grid-template-columns: 1fr;
+/* Card styles (same as Admin) */
+.dashboard-card {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  min-height: 200px;
+  position: relative;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+.dashboard-card h3 {
+  color: #1e293b;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.dashboard-card p {
+  color: #64748b;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 2rem;
+}
+
+.nav-button {
+  background: #3B82F6;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+  position: absolute;
+  bottom: 1.5rem;
+}
+
+.nav-button:hover {
+  background: #2563eb;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .receptionist-dashboard-container {
+    padding: 1.5rem;
   }
 
-  .dashboard-title {
-      font-size: 2rem;
+  .receptionist-grid-container {
+    grid-template-columns: 1fr; /* 1 column on mobile */
   }
 }
 
-@media (max-width: 768px) {
-  .dashboard-container {
-      padding: 1.5rem;
-  }
-
-  .dashboard-title {
-      font-size: 1.75rem;
+@media (min-width: 1200px) {
+  .dashboard-card {
+    max-width: 500px;
   }
 }
