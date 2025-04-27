@@ -376,7 +376,7 @@ const Receptionist = () => {
         {/* Filter Modal */}
         {showFilterModal && (
           <div className="filter-modal">
-            <h2>Filter Rooms</h2>
+            <p>Filter Rooms</p>
   
             <div className="input-group">
               <label>Min Price:</label>
