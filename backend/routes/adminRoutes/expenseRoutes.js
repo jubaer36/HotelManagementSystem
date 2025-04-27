@@ -80,7 +80,7 @@ router.get('/salary-summary/:hotelId', async (req, res) => {
 });
 
 // Get Monthly Revenue from Transactions
-router.get('/transaction-summary/:hotelId', async (req, res) => {
+router.get('/transaction-summary-admin/:hotelId', async (req, res) => {
     const { hotelId } = req.params;
     const { start, end } = req.query;
     try {

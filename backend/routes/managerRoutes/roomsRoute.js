@@ -5,22 +5,22 @@ const multer = require('multer');
 
 const upload = multer({ storage: multer.memoryStorage() });
 
+
 // ✅ Get Available Rooms
 router.get("/get-available-rooms/:hotelID", async (req, res) => {
     const hotelID = req.params.hotelID;
 
     const sql = `
-        SELECT Room.RoomID, Room.RoomNumber, Room.BasePrice, Room.MaxOccupancy, 
-               Room_Class.ClassType, Room.RoomImage
-        FROM Room 
-        JOIN Room_Class ON Room.RoomClassID = Room_Class.RoomClassID
-        WHERE Room.HotelID = ?
+        SELECT available_rooms.RoomID, available_rooms.RoomNumber, available_rooms.BasePrice,
+               available_rooms.MaxOccupancy, Room_Class.ClassType, available_rooms.RoomImage
+        FROM available_rooms
+                 JOIN Room_Class ON available_rooms.RoomClassID = Room_Class.RoomClassID
+        WHERE available_rooms.HotelID = ?
     `;
 
     try {
         const [rows] = await db.promise().query(sql, [hotelID]);
 
-        // Convert RoomImage blob to Base64
         const rooms = rows.map(room => ({
             ...room,
             RoomImage: room.RoomImage ? room.RoomImage.toString('base64') : null
@@ -32,6 +32,7 @@ router.get("/get-available-rooms/:hotelID", async (req, res) => {
         res.status(500).send("Error fetching available rooms");
     }
 });
+
 
 // ✅ Get Room Classes
 router.get("/get-room-classes", (req, res) => {
@@ -47,14 +48,15 @@ router.get("/get-room-classes", (req, res) => {
     });
 });
 
+
 // ✅ Update Room
 router.put("/update-room/:roomID", (req, res) => {
     const { classTypeID, basePrice, maxOccupancy } = req.body;
     const roomID = req.params.roomID;
 
     const sql = `
-        UPDATE Room 
-        SET RoomClassID = ?, BasePrice = ?, MaxOccupancy = ? 
+        UPDATE available_rooms
+        SET RoomClassID = ?, BasePrice = ?, MaxOccupancy = ?
         WHERE RoomID = ?
     `;
 
@@ -68,7 +70,8 @@ router.put("/update-room/:roomID", (req, res) => {
     });
 });
 
-// ✅ Add New Room
+
+// ✅ Add New Room (NO bookingID anymore)
 router.post('/add-room', upload.single('roomImage'), async (req, res) => {
     const { hotelID, roomNumber, roomClassID, maxOccupancy, basePrice } = req.body;
     const roomImage = req.file ? req.file.buffer : null;
@@ -78,12 +81,10 @@ router.post('/add-room', upload.single('roomImage'), async (req, res) => {
             return res.status(400).json({ error: "Missing required fields" });
         }
 
-        const bookingID = 1; // Temporary bookingID
-
         await db.promise().query(
-            `INSERT INTO Room (RoomNumber, RoomClassID, HotelID, BookingID, MaxOccupancy, BasePrice, RoomImage)
-             VALUES (?, ?, ?, ?, ?, ?, ?)`,
-            [roomNumber, roomClassID, hotelID, bookingID, maxOccupancy, basePrice, roomImage]
+            `INSERT INTO available_rooms (RoomNumber, RoomClassID, HotelID, MaxOccupancy, BasePrice, RoomImage)
+             VALUES (?, ?, ?, ?, ?, ?)`,
+            [roomNumber, roomClassID, hotelID, maxOccupancy, basePrice, roomImage]
         );
 
         res.status(201).json({ message: 'Room added successfully' });

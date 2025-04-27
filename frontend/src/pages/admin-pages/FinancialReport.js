@@ -44,7 +44,7 @@ const FinancialReport = () => {
                 fetch(`http://localhost:3001/inventory-summary/${hotelId}?start=${start}&end=${end}`),
                 fetch(`http://localhost:3001/maintenance-summary/${hotelId}?start=${start}&end=${end}`),
                 fetch(`http://localhost:3001/salary-summary/${hotelId}`),
-                fetch(`http://localhost:3001/transaction-summary/${hotelId}?start=${start}&end=${end}`),
+                fetch(`http://localhost:3001/transaction-summary-admin/${hotelId}?start=${start}&end=${end}`),
                 fetch(`http://localhost:3001/financial-summary/${hotelId}?start=${start}&end=${end}`)
             ]);
 
@@ -67,8 +67,10 @@ const FinancialReport = () => {
             setSalaryChart(salaryData);
             setTransactionChart(transactionData);
             setSummary(summaryData);
+            console.log("Fetched transactionChart:", transactionData);
         } catch (err) {
             console.error('Data Fetch Error:', err);
+
         }
     };
 
@@ -86,12 +88,37 @@ const FinancialReport = () => {
             <div className="financial-content">
                 <div className="date-filter-bar">
                     <label>Start Month:
-                        <input type="month" value={startMonth} onChange={e => setStartMonth(e.target.value)} />
+                        <input
+                            type="month"
+                            value={startMonth}
+                            onChange={e => {
+                                const newStart = e.target.value;
+                                setStartMonth(newStart);
+                                // If endMonth exists and becomes invalid, reset it
+                                if (endMonth && endMonth < newStart) {
+                                    setEndMonth(newStart);
+                                }
+                            }}
+                        />
                     </label>
+
                     <label>End Month:
-                        <input type="month" value={endMonth} onChange={e => setEndMonth(e.target.value)} />
+                        <input
+                            type="month"
+                            value={endMonth}
+                            onChange={e => {
+                                const newEnd = e.target.value;
+                                if (startMonth && newEnd < startMonth) {
+                                    alert("❌ End Month cannot be earlier than Start Month!");
+                                    return;
+                                }
+                                setEndMonth(newEnd);
+                            }}
+                            min={startMonth || ""}
+                        />
                     </label>
                 </div>
+
 
                 <div className="summary-cards">
                     <div className="summary-card revenue-card">
@@ -109,28 +136,32 @@ const FinancialReport = () => {
                 </div>
 
                 <div className="chart-grid-2">
-                    <Chart title="Inventory Cost by Month" data={inventoryChart} xKey="InventoryMonth" yKey="TotalInventoryCost" barColor="#10b981" />
-                    <Chart title="Maintenance Cost by Month" data={maintenanceChart} xKey="MaintenanceMonth" yKey="TotalMaintenanceCost" barColor="#f97316" />
-                    <Chart title="Salary Cost by Department" data={salaryChart} xKey="DeptName" yKey="TotalDeptSalary" barColor="#6366f1" />
-                    <Chart title="Monthly Revenue" data={transactionChart} xKey="RevenueMonth" yKey="TotalRevenue" barColor="#a855f7" />
+                    <Chart title="Inventory Cost by Month" data={inventoryChart} xKey="InventoryMonth"
+                           yKey="TotalInventoryCost" barColor="#10b981"/>
+                    <Chart title="Maintenance Cost by Month" data={maintenanceChart} xKey="MaintenanceMonth"
+                           yKey="TotalMaintenanceCost" barColor="#f97316"/>
+                    <Chart title="Salary Cost by Department" data={salaryChart} xKey="DeptName" yKey="TotalDeptSalary"
+                           barColor="#6366f1"/>
+                    <Chart title="Monthly Revenue" data={transactionChart} xKey="RevenueMonth" yKey="TotalRevenue"
+                           barColor="#a855f7"/>
                 </div>
             </div>
         </div>
     );
 };
 
-const Chart = ({ title, data, xKey, yKey, barColor }) => (
+const Chart = ({title, data, xKey, yKey, barColor}) => (
     <div className="dashboard-section">
         <h3 className="section-title">{title}</h3>
         <div className="chart-container">
             <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={data}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey={xKey} />
-                    <YAxis />
-                    <Tooltip formatter={(value) => `$${parseFloat(value || 0).toFixed(2)}`} />
-                    <Legend />
-                    <Bar dataKey={yKey} fill={barColor} />
+                    <CartesianGrid strokeDasharray="3 3"/>
+                    <XAxis dataKey={xKey}/>
+                    <YAxis/>
+                    <Tooltip formatter={(value) => `$${parseFloat(value || 0).toFixed(2)}`}/>
+                    <Legend/>
+                    <Bar dataKey={yKey} fill={barColor}/>
                 </BarChart>
             </ResponsiveContainer>
         </div>
