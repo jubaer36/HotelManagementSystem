@@ -65,7 +65,6 @@ router.put("/deactivate-hotel/:id", (req, res) => {
     });
 });
 
-// ✅ Route to Update Hotel Details
 router.put("/update-hotel/:id", (req, res) => {
     const hotelId = req.params.id;
     const { Name, Description, StarRating, Location } = req.body;
