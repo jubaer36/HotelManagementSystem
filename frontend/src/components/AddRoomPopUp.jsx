@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Axios from 'axios';
-import "./Poppup.css"
+import "./Popup.css"
 const AddRoomPopup = ({ closePopup, refreshRooms }) => {
     const hotelID = localStorage.getItem('hotelID');
 
