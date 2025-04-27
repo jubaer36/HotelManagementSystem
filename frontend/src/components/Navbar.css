@@ -94,3 +94,64 @@
         border-left-width: 1px;
     }
 }
+
+.reset-password-popup {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.reset-password-content {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.reset-password-content input {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.reset-password-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.confirmm-button {
+    background-color: #4ade80;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.cancell-button {
+    background-color: #ef4444;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.confirmm-button:hover {
+    background-color: #22c55e;
+}
+
+.cancell-button:hover {
+    background-color: #dc2626;
+}
