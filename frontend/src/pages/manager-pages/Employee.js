@@ -296,7 +296,8 @@ const Employee = () => {
             hourly_pay: '',
             Role: '',
             working_status: 'Working',
-            HiredDate: new Date().toISOString().split('T')[0]
+            HiredDate: new Date().toISOString().split('T')[0],
+            Address: { city: '', state: '' }   // ✅ added Address
         });
         setFormErrors({});
     };
@@ -610,6 +611,32 @@ const Employee = () => {
                                     onChange={e => setNewEmployee({...newEmployee, HiredDate: e.target.value})}
                                 />
                             </div>
+                            <div className="input-group">
+    <label>City</label>
+    <input
+        type="text"
+        placeholder="City"
+        value={newEmployee.Address?.city || ''}
+        onChange={e => setNewEmployee({
+            ...newEmployee,
+            Address: { ...newEmployee.Address, city: e.target.value }
+        })}
+    />
+</div>
+
+<div className="input-group">
+    <label>State</label>
+    <input
+        type="text"
+        placeholder="State"
+        value={newEmployee.Address?.state || ''}
+        onChange={e => setNewEmployee({
+            ...newEmployee,
+            Address: { ...newEmployee.Address, state: e.target.value }
+        })}
+    />
+</div>
+
                         </div>
 
                         <div className="form-actions">

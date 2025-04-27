@@ -2,6 +2,11 @@
     min-height: 100vh;
     background: #f8fafc;
     padding-bottom: 2rem;
+    background-image: url('../../../images/pool4.jpg');
+    background-size: cover;         /* ✅ Fit the full screen */
+    background-position: center;    /* ✅ Center the image */
+    background-repeat: no-repeat;   /* ✅ No repeating */
+    background-attachment: fixed;   /* ✅ Optional: make it parallax fixed while scrolling */
 }
 
 .dashboard-container {

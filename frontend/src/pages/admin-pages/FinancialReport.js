@@ -5,7 +5,7 @@ import {
 } from 'recharts';
 import Navbar from '../../components/Navbar';
 import './FinancialReport.css';
-import './FincacialCard.css'
+import './FincacialCard.css';
 
 const FinancialReport = () => {
     const { hotelId } = useParams();
@@ -15,134 +15,69 @@ const FinancialReport = () => {
     const [maintenanceChart, setMaintenanceChart] = useState([]);
     const [salaryChart, setSalaryChart] = useState([]);
     const [transactionChart, setTransactionChart] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
     const [summary, setSummary] = useState({ inventory: 0, maintenance: 0, salaries: 0, revenue: 0 });
 
+    const getLastDayOfMonth = (yearMonth) => {
+        const [year, month] = yearMonth.split('-');
+        return new Date(year, month, 0).toISOString().split('T')[0];
+    };
 
     const formatCurrency = (value) => {
         const num = Number(value || 0);
         return isNaN(num) ? '$0.00' : `$${num.toFixed(2)}`;
     };
-    const fetchTotalSummary = async () => {
+
+    const fetchData = async () => {
         if (!startMonth || !endMonth) return;
+
         const start = `${startMonth}-01`;
-        const end = `${endMonth}-31`;
+        const end = getLastDayOfMonth(endMonth);
 
         try {
-            const res = await fetch(`http://localhost:3001/financial-summary/${hotelId}?start=${start}&end=${end}`);
-            if (!res.ok) throw new Error('Failed to fetch summary totals');
-            const data = await res.json();
-            setSummary(data);
+            const [
+                inventoryRes,
+                maintenanceRes,
+                salaryRes,
+                transactionRes,
+                summaryRes
+            ] = await Promise.all([
+                fetch(`http://localhost:3001/inventory-summary/${hotelId}?start=${start}&end=${end}`),
+                fetch(`http://localhost:3001/maintenance-summary/${hotelId}?start=${start}&end=${end}`),
+                fetch(`http://localhost:3001/salary-summary/${hotelId}`),
+                fetch(`http://localhost:3001/transaction-summary/${hotelId}?start=${start}&end=${end}`),
+                fetch(`http://localhost:3001/financial-summary/${hotelId}?start=${start}&end=${end}`)
+            ]);
+
+            const [
+                inventoryData,
+                maintenanceData,
+                salaryData,
+                transactionData,
+                summaryData
+            ] = await Promise.all([
+                inventoryRes.json(),
+                maintenanceRes.json(),
+                salaryRes.json(),
+                transactionRes.json(),
+                summaryRes.json()
+            ]);
+
+            setInventoryChart(inventoryData);
+            setMaintenanceChart(maintenanceData);
+            setSalaryChart(salaryData);
+            setTransactionChart(transactionData);
+            setSummary(summaryData);
         } catch (err) {
-            console.error('Total Summary Error:', err);
-        }
-    };
-
-    const formatRange = () => {
-        if (!startMonth || !endMonth) return '';
-        const options = { year: 'numeric', month: 'short' };
-        const start = new Date(`${startMonth}-01`).toLocaleDateString('en-US', options);
-        const end = new Date(`${endMonth}-01`).toLocaleDateString('en-US', options);
-        return `${start} to ${end}`;
-    };
-
-    const fetchInventorySummary = async () => {
-        if (!startMonth || !endMonth) return;
-        const start = `${startMonth}-01`;
-        const end = `${endMonth}-31`;
-
-        try {
-            const response = await fetch(`http://localhost:3001/inventory-summary/${hotelId}?start=${start}&end=${end}`);
-            if (!response.ok) throw new Error('Failed to fetch inventory summary');
-            const data = await response.json();
-
-            const formatted = data.map(row => ({
-                InventoryMonth: row.InventoryMonth ?? 'TOTAL',
-                TotalInventoryCost: row.TotalInventoryCost
-            }));
-            setInventoryChart(formatted);
-        } catch (err) {
-            console.error(err);
-        }
-    };
-
-    const fetchMaintenanceSummary = async () => {
-        if (!startMonth || !endMonth) return;
-        const start = `${startMonth}-01`;
-        const end = `${endMonth}-31`;
-
-        try {
-            const response = await fetch(`http://localhost:3001/maintenance-summary/${hotelId}?start=${start}&end=${end}`);
-            if (!response.ok) throw new Error('Failed to fetch maintenance summary');
-            const data = await response.json();
-
-            const formatted = data.map(row => ({
-                MaintenanceMonth: row.MaintenanceMonth ?? 'TOTAL',
-                TotalMaintenanceCost: row.TotalMaintenanceCost
-            }));
-            setMaintenanceChart(formatted);
-        } catch (err) {
-            console.error(err);
-        }
-    };
-
-    const fetchSalarySummary = async () => {
-        try {
-            const response = await fetch(`http://localhost:3001/salary-summary/${hotelId}`);
-            if (!response.ok) throw new Error('Failed to fetch salary summary');
-            const data = await response.json();
-
-            const formatted = data.map(row => ({
-                DeptName: row.DeptName ?? 'TOTAL',
-                TotalDeptSalary: row.TotalDeptSalary
-            }));
-            setSalaryChart(formatted);
-        } catch (err) {
-            console.error(err);
-        }
-    };
-
-    const fetchTransactionSummary = async () => {
-        if (!startMonth || !endMonth) return;
-        const start = `${startMonth}-01`;
-        const end = `${endMonth}-31`;
-
-        try {
-            const response = await fetch(`http://localhost:3001/transaction-summary/${hotelId}?start=${start}&end=${end}`);
-            if (!response.ok) throw new Error('Failed to fetch transaction revenue');
-            const data = await response.json();
-
-            const formatted = data.map(row => ({
-                RevenueMonth: row.RevenueMonth ?? 'TOTAL',
-                TotalRevenue: row.TotalRevenue
-            }));
-            setTransactionChart(formatted);
-        } catch (err) {
-            console.error(err);
+            console.error('Data Fetch Error:', err);
         }
     };
 
     useEffect(() => {
-        if (startMonth && endMonth) {
-            fetchTotalSummary();
-            fetchInventorySummary();
-            fetchMaintenanceSummary();
-            fetchSalarySummary();
-            fetchTransactionSummary();
-        }
+        fetchData();
     }, [startMonth, endMonth]);
 
-    if (loading) return <div className="financial-loading"><Navbar /><div className="loading-content">Loading...</div></div>;
-    if (error) return <div className="financial-error"><Navbar /><div className="error-content">{error}</div></div>;
-
-    const totalRevenue = transactionChart.find(row => row.RevenueMonth === 'TOTAL')?.TotalRevenue || 0;
-    const inventoryCost = inventoryChart.find(row => row.InventoryMonth === 'TOTAL')?.TotalInventoryCost || 0;
-    const maintenanceCost = maintenanceChart.find(row => row.MaintenanceMonth === 'TOTAL')?.TotalMaintenanceCost || 0;
-    const salaryCost = salaryChart.find(row => row.DeptName === 'TOTAL')?.TotalDeptSalary || 0;
-
-    const totalExpenses = inventoryCost + maintenanceCost + salaryCost;
-    const netProfit = totalRevenue - totalExpenses;
+    const totalExpenses = (Number(summary.inventory) + Number(summary.maintenance) + Number(summary.salaries));
+    const netProfit = Number(summary.revenue) - totalExpenses;
     const profitStatus = netProfit > 0 ? 'Profit' : netProfit < 0 ? 'Loss' : 'Break-even';
 
     return (
@@ -150,102 +85,56 @@ const FinancialReport = () => {
             <Navbar />
             <div className="financial-content">
                 <div className="date-filter-bar">
-                    <label>Select Start Month:
-                        <input type="month" value={startMonth} onChange={e => setStartMonth(e.target.value)}/>
+                    <label>Start Month:
+                        <input type="month" value={startMonth} onChange={e => setStartMonth(e.target.value)} />
                     </label>
-                    <label>Select End Month:
-                        <input type="month" value={endMonth} onChange={e => setEndMonth(e.target.value)}/>
+                    <label>End Month:
+                        <input type="month" value={endMonth} onChange={e => setEndMonth(e.target.value)} />
                     </label>
                 </div>
 
                 <div className="summary-cards">
                     <div className="summary-card revenue-card">
                         <h4>Total Revenue</h4>
-                        <p>{summary.revenue}</p> {/* raw number */}
+                        <p>{formatCurrency(summary.revenue)}</p>
                     </div>
                     <div className="summary-card expense-card">
                         <h4>Total Expenses</h4>
-                        <p>{Number(summary.inventory) + Number(summary.maintenance) + Number(summary.salaries)}</p>
-
+                        <p>{formatCurrency(totalExpenses)}</p>
                     </div>
-                    <div
-                        className={`summary-card ${netProfit > 0 ? 'profit-card' : netProfit < 0 ? 'loss-card' : 'breakeven-card'}`}>
+                    <div className={`summary-card ${netProfit >= 0 ? 'profit-card' : 'loss-card'}`}>
                         <h4>Net {profitStatus}</h4>
-                        <p>{Number(summary.revenue) - (Number(summary.inventory) + Number(summary.maintenance) + Number(summary.salaries))}</p>
-
+                        <p>{formatCurrency(netProfit)}</p>
                     </div>
                 </div>
 
                 <div className="chart-grid-2">
-                    <div className="dashboard-section">
-                        <h3 className="section-title">Inventory Cost by Month ({formatRange()})</h3>
-                        <div className="chart-container">
-                            <ResponsiveContainer width="100%" height={300}>
-                                <BarChart data={inventoryChart}>
-                                    <CartesianGrid strokeDasharray="3 3"/>
-                                    <XAxis dataKey="InventoryMonth"/>
-                                    <YAxis/>
-                                    <Tooltip formatter={formatCurrency}/>
-                                    <Legend/>
-                                    <Bar dataKey="TotalInventoryCost" fill="#10b981" name="Inventory Cost"/>
-                                </BarChart>
-                            </ResponsiveContainer>
-                        </div>
-                    </div>
-
-                    <div className="dashboard-section">
-                        <h3 className="section-title">Maintenance Cost by Month ({formatRange()})</h3>
-                        <div className="chart-container">
-                            <ResponsiveContainer width="100%" height={300}>
-                                <BarChart data={maintenanceChart}>
-                                    <CartesianGrid strokeDasharray="3 3"/>
-                                    <XAxis dataKey="MaintenanceMonth"/>
-                                    <YAxis/>
-                                    <Tooltip formatter={formatCurrency}/>
-                                    <Legend/>
-                                    <Bar dataKey="TotalMaintenanceCost" fill="#f97316" name="Maintenance Cost"/>
-                                </BarChart>
-                            </ResponsiveContainer>
-                        </div>
-                    </div>
-
-                    <div className="dashboard-section">
-                        <h3 className="section-title">Salary Cost by Department</h3>
-                        <div className="chart-container">
-                            <ResponsiveContainer width="100%" height={300}>
-                                <BarChart data={salaryChart}>
-                                    <CartesianGrid strokeDasharray="3 3"/>
-                                    <XAxis dataKey="DeptName"/>
-                                    <YAxis/>
-                                    <Tooltip formatter={formatCurrency}/>
-                                    <Legend/>
-                                    <Bar dataKey="TotalDeptSalary" fill="#6366f1" name="Salaries"/>
-                                </BarChart>
-                            </ResponsiveContainer>
-                        </div>
-                    </div>
-
-                    <div className="dashboard-section">
-                        <h3 className="section-title">Monthly Revenue from Transactions ({formatRange()})</h3>
-                        <div className="chart-container">
-                            <ResponsiveContainer width="100%" height={300}>
-                                <BarChart data={transactionChart}>
-                                    <CartesianGrid strokeDasharray="3 3"/>
-                                    <XAxis dataKey="RevenueMonth"
-                                           tickFormatter={(month) => month === 'TOTAL' ? 'TOTAL' : month}/>
-                                    <YAxis/>
-                                    <Tooltip formatter={formatCurrency}/>
-                                    <Legend/>
-                                    <Bar dataKey="TotalRevenue" fill="#a855f7" name="Transaction Revenue"/>
-                                </BarChart>
-                            </ResponsiveContainer>
-                        </div>
-
-                    </div>
+                    <Chart title="Inventory Cost by Month" data={inventoryChart} xKey="InventoryMonth" yKey="TotalInventoryCost" barColor="#10b981" />
+                    <Chart title="Maintenance Cost by Month" data={maintenanceChart} xKey="MaintenanceMonth" yKey="TotalMaintenanceCost" barColor="#f97316" />
+                    <Chart title="Salary Cost by Department" data={salaryChart} xKey="DeptName" yKey="TotalDeptSalary" barColor="#6366f1" />
+                    <Chart title="Monthly Revenue" data={transactionChart} xKey="RevenueMonth" yKey="TotalRevenue" barColor="#a855f7" />
                 </div>
             </div>
         </div>
     );
 };
+
+const Chart = ({ title, data, xKey, yKey, barColor }) => (
+    <div className="dashboard-section">
+        <h3 className="section-title">{title}</h3>
+        <div className="chart-container">
+            <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={data}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey={xKey} />
+                    <YAxis />
+                    <Tooltip formatter={(value) => `$${parseFloat(value || 0).toFixed(2)}`} />
+                    <Legend />
+                    <Bar dataKey={yKey} fill={barColor} />
+                </BarChart>
+            </ResponsiveContainer>
+        </div>
+    </div>
+);
 
 export default FinancialReport;

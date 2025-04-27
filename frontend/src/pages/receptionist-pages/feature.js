@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Axios from "axios";
 import "./feature.css";
 import { useLocation } from "react-router-dom";
+import Navbar from "../../components/Navbar.js";
 
 const Features = () => {
     const location = useLocation();
@@ -70,10 +71,58 @@ const Features = () => {
     }
 
     if (features.length === 0) {
-        return <p>No features available for this room and guest.</p>;
+        return(
+            <>
+            <Navbar/>
+            <div className="features-container">
+                <div className="no-features-message">
+                <h1>No Features Available</h1>
+                <p>There are no features available for this room.</p>
+                </div>
+
+                <button
+                className="new-feature-button"
+                onClick={() => setShowNewFeatureForm(true)}
+            >
+                New Feature
+            </button>
+            {showNewFeatureForm && (
+                <div className="new-feature-form">
+                    <h2>Add New Feature</h2>
+                    <label>Feature Name:</label>
+                    <input
+                        type="text"
+                        name="featureName"
+                        value={newFeature.featureName}
+                        onChange={handleNewFeatureChange}
+                    />
+                    <label>Description:</label>
+                    <textarea
+                        name="description"
+                        value={newFeature.description}
+                        onChange={handleNewFeatureChange}
+                    />
+                    <label>Additional Price:</label>
+                    <input
+                        type="number"
+                        name="additionalPrice"
+                        value={newFeature.additionalPrice}
+                        onChange={handleNewFeatureChange}
+                    />
+                    <div className="form-actions">
+                        <button onClick={handleAddNewFeature}>Add Feature</button>
+                        <button onClick={() => setShowNewFeatureForm(false)}>Cancel</button>
+                    </div>
+                </div>
+            )}
+            </div>
+            </>
+        )
     }
 
     return (
+        <>
+        <Navbar/>
         <div className="features-container">
             <h1>Room Features</h1>
             {/* <p>Features for Room ID: {roomID}</p> */}
@@ -125,6 +174,7 @@ const Features = () => {
                 </div>
             )}
         </div>
+        </>
     );
 };
 

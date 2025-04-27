@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
+import Navbar from "../../components/Navbar";
+import "./Receptionist.css"; // Import your CSS file for styling
 import Axios from "axios";
 
 
@@ -17,7 +18,9 @@ const Receptionist = () => {
   const [dob, setDob] = useState("");
   const [selectedRooms, setSelectedRooms] = useState([]); // Room IDs
   const [availableRooms, setAvailableRooms] = useState([]);
-  const [showRooms, setShowRooms] = useState(false);
+  const [showRooms, setShowRooms] = useState(true);
+  const [showGuestAndBooking, setShowGuestAndBooking] = useState(false);
+
   const [showFilterModal, setShowFilterModal] = useState(false);
 
   const [bookingDetails, setBookingDetails] = useState({
@@ -41,6 +44,25 @@ const Receptionist = () => {
     checkInDate: formatDate(today),     // ✅ today's date
     checkOutDate: formatDate(today), // ✅ tomorrow's date
   });
+  const inputStyle = {
+    width: "100%",
+    padding: "10px",
+    border: "1px solid #ccc",
+    borderRadius: "5px",
+    fontSize: "14px",
+    marginBottom: "10px",
+  };
+
+  const handleProceed = () => {
+    if (selectedRooms.length === 0) {
+      alert("Please select at least one room.");
+      return;
+    }
+    setShowRooms(false); // Hide room table
+    setShowGuestAndBooking(true);
+  };
+  
+  
 
   useEffect(() => {
     if (showRooms) {
@@ -138,6 +160,7 @@ const Receptionist = () => {
           numAdults: 1,
           numChildren: 0,
         });
+        window.location.reload();
       })
       .catch((error) => {
         console.error("Error confirming booking:", error);
@@ -146,537 +169,330 @@ const Receptionist = () => {
   };
 
   return (
-    <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
-      <div style={{ marginBottom: "20px" }}>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "15px" }}>
-          <div>
-            <label style={{ display: "block", fontWeight: "bold", marginBottom: "5px" }}>First Name:</label>
-            <input
-              type="text"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              style={{ padding: "10px", width: "200px", border: "1px solid #ccc", borderRadius: "4px" }}
-            />
-          </div>
-          <div>
-            <label style={{ display: "block", fontWeight: "bold", marginBottom: "5px" }}>Last Name:</label>
-            <input
-              type="text"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              style={{ padding: "10px", width: "200px", border: "1px solid #ccc", borderRadius: "4px" }}
-            />
-          </div>
-          <div>
-            <label style={{ display: "block", fontWeight: "bold", marginBottom: "5px" }}>Email:</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              style={{ padding: "10px", width: "250px", border: "1px solid #ccc", borderRadius: "4px" }}
-            />
-          </div>
-          <div>
-            <label style={{ display: "block", fontWeight: "bold", marginBottom: "5px" }}>Phone:</label>
-            <input
-              type="text"
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
-              style={{ padding: "10px", width: "200px", border: "1px solid #ccc", borderRadius: "4px" }}
-            />
-          </div>
-          <div>
-            <label style={{ display: "block", fontWeight: "bold", marginBottom: "5px" }}>Date of Birth:</label>
-            <input
-              type="date"
-              value={dob}
-              onChange={(e) => setDob(e.target.value)}
-              style={{ padding: "10px", width: "200px", border: "1px solid #ccc", borderRadius: "4px" }}
-            />
-          </div>
-          <div>
-            <label style={{ display: "block", fontWeight: "bold", marginBottom: "5px" }}>NID:</label>
-            <input
-              type="text"
-              value={nid}
-              onChange={(e) => setNid(e.target.value)}
-              style={{ padding: "10px", width: "200px", border: "1px solid #ccc", borderRadius: "4px" }}
-            />
-          </div>
-        </div>
-
-        <div style={{ marginTop: "20px" }}>
+    <>
+      <Navbar />
+      <div className="receptionist-container">
+  
+        <div className="button-group">
+          {!showGuestAndBooking && selectedRooms.length > 0 && (
+            <button onClick={handleProceed} className="proceed-button">
+              Proceed
+            </button>
+          )}
           <button
-            onClick={() => {
-              setShowRooms(!showRooms);
-              setShowFilterModal(false);
-            }}
-            style={{
-              padding: "10px 15px",
-              backgroundColor: showRooms ? "#f44336" : "#4CAF50",
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
-              cursor: "pointer",
-              marginRight: "10px",
-            }}
+            onClick={() => setShowFilterModal(!showFilterModal)}
+            className="search-button"
           >
-            {showRooms ? "Hide Available Rooms" : "Show Available Rooms"}
-          </button>
-          <button
-            onClick={() => {
-              setShowFilterModal(!showFilterModal);
-              setShowRooms(true);
-            }}
-            style={{
-              padding: "10px 15px",
-              backgroundColor: showFilterModal ? "#f44336" : "#2196F3",
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
-              cursor: "pointer",
-            }}
-          >
-            {showFilterModal ? "Close Search" : "Search"}
+            Search
           </button>
         </div>
-      </div>
-
-      {showRooms && (
-        <div style={{ marginTop: "20px" }}>
-          <h2>Available Rooms</h2>
-          <table style={{ width: "100%", borderCollapse: "collapse", marginTop: "10px" }}>
-            <thead>
-              <tr style={{ backgroundColor: "#f2f2f2" }}>
-                <th style={{ border: "1px solid #ccc", padding: "10px", textAlign: "left" }}>Room Number</th>
-                <th style={{ border: "1px solid #ccc", padding: "10px", textAlign: "left" }}>Class Type</th>
-                <th style={{ border: "1px solid #ccc", padding: "10px", textAlign: "left" }}>Bed Type</th>
-                <th style={{ border: "1px solid #ccc", padding: "10px", textAlign: "left" }}>Base Price</th>
-                <th style={{ border: "1px solid #ccc", padding: "10px", textAlign: "left" }}>Max Occupancy</th>
-                <th style={{ border: "1px solid #ccc", padding: "10px", textAlign: "left" }}>Select</th>
-              </tr>
-            </thead>
-            <tbody>
-              {availableRooms.map((room) => (
-                <tr
-                  key={room.RoomID}
-                  style={{
-                    backgroundColor: selectedRooms.includes(room.RoomID) ? "lightgreen" : "white",
-                  }}
-                >
-                  <td style={{ border: "1px solid #ccc", padding: "10px" }}>{room.RoomNumber}</td>
-                  <td style={{ border: "1px solid #ccc", padding: "10px" }}>{room.ClassType}</td>
-                  <td style={{ border: "1px solid #ccc", padding: "10px" }}>{room.BedType}</td>
-                  <td style={{ border: "1px solid #ccc", padding: "10px" }}>${room.BasePrice}</td>
-                  <td style={{ border: "1px solid #ccc", padding: "10px" }}>{room.MaxOccupancy}</td>
-                  <td style={{ border: "1px solid #ccc", padding: "10px" }}>
-                    <button
-                      onClick={() => handleRoomSelection(room)}
-                      style={{
-                        padding: "5px 10px",
-                        backgroundColor: selectedRooms.includes(room.RoomID) ? "green" : "#e0e0e0",
-                        color: selectedRooms.includes(room.RoomID) ? "white" : "black",
-                        border: "none",
-                        borderRadius: "4px",
-                        cursor: "pointer",
-                      }}
-                    >
-                      {selectedRooms.includes(room.RoomID) ? "Deselect" : "Select"}
-                    </button>
-                  </td>
+  
+        {showRooms && (
+          <div className="rooms-section">
+            <h2>Available Rooms</h2>
+            <table className="rooms-table">
+              <thead>
+                <tr>
+                  <th>Room Number</th>
+                  <th>Class Type</th>
+                  <th>Bed Type</th>
+                  <th>Base Price</th>
+                  <th>Max Occupancy</th>
+                  <th>Select</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      {selectedRooms.length > 0 && (
-        <div
-          style={{
-            backgroundColor: "#ffffff",
-            padding: "30px",
-            boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.2)",
-            borderRadius: "10px",
-            width: "500px",
-            maxWidth: "90%",
-            fontFamily: "'Arial', sans-serif",
-            margin: "20px auto",
-          }}
-        >
-          <h2 style={{ textAlign: "center", marginBottom: "20px" }}>Booking Details</h2>
-
-          <div style={{ marginBottom: "15px" }}>
-            <label style={{ fontSize: "14px", fontWeight: "600", marginBottom: "5px" }}>
-              Check-In Date:
-            </label>
-            <input
-              type="date"
-              name="checkInDate"
-              value={bookingDetails.checkInDate}
-              onChange={handleBookingInputChange}
-              style={{
-                width: "100%",
-                padding: "10px",
-                border: "1px solid #ccc",
-                borderRadius: "5px",
-                fontSize: "14px",
-                marginBottom: "10px",
-              }}
-            />
+              </thead>
+              <tbody>
+                {availableRooms.map((room) => (
+                  <tr
+                    key={room.RoomID}
+                    style={{
+                      backgroundColor: selectedRooms.includes(room.RoomID)
+                        ? "lightgreen"
+                        : "white",
+                    }}
+                  >
+                    <td>{room.RoomNumber}</td>
+                    <td>{room.ClassType}</td>
+                    <td>{room.BedType}</td>
+                    <td>${room.BasePrice}</td>
+                    <td>{room.MaxOccupancy}</td>
+                    <td>
+                      <button
+                        onClick={() => handleRoomSelection(room)}
+                        className={
+                          selectedRooms.includes(room.RoomID)
+                            ? "select-button-selected"
+                            : "select-button"
+                        }
+                      >
+                        {selectedRooms.includes(room.RoomID)
+                          ? "Deselect"
+                          : "Select"}
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-
-          <div style={{ marginBottom: "15px" }}>
-            <label style={{ fontSize: "14px", fontWeight: "600", marginBottom: "5px" }}>
-              Check-Out Date:
-            </label>
-            <input
-              type="date"
-              name="checkOutDate"
-              value={bookingDetails.checkOutDate}
-              onChange={handleBookingInputChange}
-              style={{
-                width: "100%",
-                padding: "10px",
-                border: "1px solid #ccc",
-                borderRadius: "5px",
-                fontSize: "14px",
-                marginBottom: "10px",
-              }}
-            />
+        )}
+  
+        {showGuestAndBooking && (
+          <div className="details-section">
+  
+            {/* Guest Details */}
+            <div className="guest-details-card">
+              <h2>Guest Details</h2>
+  
+              <div className="input-group">
+                <label>First Name:</label>
+                <input
+                  type="text"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                />
+              </div>
+  
+              <div className="input-group">
+                <label>Last Name:</label>
+                <input
+                  type="text"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                />
+              </div>
+  
+              <div className="input-group">
+                <label>Email:</label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+  
+              <div className="input-group">
+                <label>Phone:</label>
+                <input
+                  type="text"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                />
+              </div>
+  
+              <div className="input-group">
+                <label>Date of Birth:</label>
+                <input
+                  type="date"
+                  value={dob}
+                  onChange={(e) => setDob(e.target.value)}
+                />
+              </div>
+  
+              <div className="input-group">
+                <label>NID:</label>
+                <input
+                  type="text"
+                  value={nid}
+                  onChange={(e) => setNid(e.target.value)}
+                />
+              </div>
+            </div>
+  
+            {/* Booking Details */}
+            <div className="booking-details-card">
+              <h2>Booking Details</h2>
+  
+              <div className="input-group">
+                <label>Check-In Date:</label>
+                <input
+                  type="date"
+                  name="checkInDate"
+                  value={bookingDetails.checkInDate}
+                  onChange={handleBookingInputChange}
+                />
+              </div>
+  
+              <div className="input-group">
+                <label>Check-Out Date:</label>
+                <input
+                  type="date"
+                  name="checkOutDate"
+                  value={bookingDetails.checkOutDate}
+                  onChange={handleBookingInputChange}
+                />
+              </div>
+  
+              <div className="input-group">
+                <label>Number of Adults:</label>
+                <input
+                  type="number"
+                  name="numAdults"
+                  value={bookingDetails.numAdults}
+                  onChange={handleBookingInputChange}
+                />
+              </div>
+  
+              <div className="input-group">
+                <label>Number of Children:</label>
+                <input
+                  type="number"
+                  name="numChildren"
+                  value={bookingDetails.numChildren}
+                  onChange={handleBookingInputChange}
+                />
+              </div>
+  
+              <div className="input-group">
+                <label>Deposit:</label>
+                <input
+                  type="number"
+                  name="deposite"
+                  value={bookingDetails.deposite}
+                  onChange={handleBookingInputChange}
+                />
+              </div>
+  
+              <div className="confirm-cancel-buttons">
+                <button onClick={handleConfirmBooking} className="confirm-button">
+                  Confirm Booking
+                </button>
+                <button
+                  onClick={() => {
+                    setSelectedRooms([]);
+                    setShowRooms(true);
+                    setShowGuestAndBooking(false);
+                  }}
+                  className="cancel-button"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+  
           </div>
-
-          <div style={{ marginBottom: "15px" }}>
-            <label style={{ fontSize: "14px", fontWeight: "600", marginBottom: "5px" }}>
-              Number of Adults:
-            </label>
-            <input
-              type="number"
-              name="numAdults"
-              value={bookingDetails.numAdults}
-              onChange={handleBookingInputChange}
-              style={{
-                width: "100%",
-                padding: "10px",
-                border: "1px solid #ccc",
-                borderRadius: "5px",
-                fontSize: "14px",
-                marginBottom: "10px",
-              }}
-            />
+        )}
+  
+        {/* Filter Modal */}
+        {showFilterModal && (
+          <div className="filter-modal">
+            <h2>Filter Rooms</h2>
+  
+            <div className="input-group">
+              <label>Min Price:</label>
+              <input
+                type="number"
+                name="minPrice"
+                value={filters.minPrice}
+                onChange={(e) =>
+                  setFilters({ ...filters, minPrice: Number(e.target.value) })
+                }
+              />
+            </div>
+  
+            <div className="input-group">
+              <label>Max Price:</label>
+              <input
+                type="number"
+                name="maxPrice"
+                value={filters.maxPrice}
+                onChange={(e) =>
+                  setFilters({ ...filters, maxPrice: Number(e.target.value) })
+                }
+              />
+            </div>
+  
+            <div className="input-group">
+              <label>Bed Type:</label>
+              <select
+                name="bedType"
+                value={filters.bedType}
+                onChange={(e) =>
+                  setFilters({ ...filters, bedType: e.target.value })
+                }
+              >
+                <option value="Any">Any</option>
+                <option value="King">King</option>
+                <option value="Queen">Queen</option>
+                <option value="Single">Single</option>
+                <option value="Double">Double</option>
+                <option value="Twin">Twin</option>
+              </select>
+            </div>
+  
+            <div className="input-group">
+              <label>Class Type:</label>
+              <select
+                name="classType"
+                value={filters.classType}
+                onChange={(e) =>
+                  setFilters({ ...filters, classType: e.target.value })
+                }
+              >
+                <option value="Any">Any</option>
+                <option value="Standard">Standard</option>
+                <option value="Suite">Suite</option>
+                <option value="Single">Single</option>
+                <option value="Double">Double</option>
+                <option value="Family">Family</option>
+              </select>
+            </div>
+  
+            <div className="input-group">
+              <label>Max Occupancy:</label>
+              <input
+                type="number"
+                name="maxOccupancy"
+                value={filters.maxOccupancy}
+                onChange={(e) =>
+                  setFilters({ ...filters, maxOccupancy: Number(e.target.value) })
+                }
+              />
+            </div>
+  
+            <div className="input-group">
+              <label>Check-In Date:</label>
+              <input
+                type="date"
+                name="checkInDate"
+                value={filters.checkInDate}
+                onChange={(e) =>
+                  setFilters({ ...filters, checkInDate: e.target.value })
+                }
+              />
+            </div>
+  
+            <div className="input-group">
+              <label>Check-Out Date:</label>
+              <input
+                type="date"
+                name="checkOutDate"
+                value={filters.checkOutDate}
+                min={filters.checkInDate}
+                onChange={(e) =>
+                  setFilters({ ...filters, checkOutDate: e.target.value })
+                }
+              />
+            </div>
+  
+            <div className="modal-buttons">
+              <button onClick={fetchFilteredRooms} className="confirm-button">
+                Apply Filters
+              </button>
+              <button
+                onClick={() => setShowFilterModal(false)}
+                className="cancel-button"
+              >
+                Cancel
+              </button>
+            </div>
           </div>
-
-          <div style={{ marginBottom: "15px" }}>
-            <label style={{ fontSize: "14px", fontWeight: "600", marginBottom: "5px" }}>
-              Number of Children:
-            </label>
-            <input
-              type="number"
-              name="numChildren"
-              value={bookingDetails.numChildren}
-              onChange={handleBookingInputChange}
-              style={{
-                width: "100%",
-                padding: "10px",
-                border: "1px solid #ccc",
-                borderRadius: "5px",
-                fontSize: "14px",
-                marginBottom: "20px",
-              }}
-            />
-          </div>
-
-
-          <div style={{ marginBottom: "15px" }}>
-            <label style={{ fontSize: "14px", fontWeight: "600", marginBottom: "5px" }}>
-              Deposite
-            </label>
-            <input
-              type="number"
-              name="deposite"
-              value={bookingDetails.deposite}
-              onChange={handleBookingInputChange}
-              style={{
-                width: "100%",
-                padding: "10px",
-                border: "1px solid #ccc",
-                borderRadius: "5px",
-                fontSize: "14px",
-                marginBottom: "20px",
-              }}
-            />
-          </div>
-
-          <div style={{ textAlign: "center" }}>
-            <button
-              onClick={handleConfirmBooking}
-              style={{
-                backgroundColor: "#4CAF50",
-                color: "white",
-                padding: "12px 20px",
-                border: "none",
-                borderRadius: "5px",
-                cursor: "pointer",
-                fontSize: "16px",
-                width: "100%",
-              }}
-            >
-              Confirm Booking
-            </button>
-          </div>
-        </div>
-      )}
-
-
-      {showFilterModal && (
-        <div
-          style={{
-            position: "fixed",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            backgroundColor: "#ffffff",
-            padding: "30px",
-            boxShadow: "0px 0px 20px rgba(0, 0, 0, 0.3)",
-            zIndex: 1000,
-            borderRadius: "10px",
-            width: "400px",
-            maxWidth: "90%",
-            fontFamily: "'Arial', sans-serif",
-          }}
-        >
-          <h2 style={{ textAlign: "center", marginBottom: "20px" }}>Filter Rooms</h2>
-          <div style={{ marginBottom: "15px" }}>
-            <label style={{ fontSize: "14px", fontWeight: "600", marginBottom: "5px" }}>
-              Min Price:
-            </label>
-            <input
-              type="number"
-              name="minPrice"
-              value={filters.minPrice}
-              onChange={(e) =>
-                setFilters({ ...filters, minPrice: Number(e.target.value) })
-              }
-              style={{
-                width: "100%",
-                padding: "10px",
-                border: "1px solid #ccc",
-                borderRadius: "5px",
-                fontSize: "14px",
-                marginBottom: "10px",
-              }}
-            />
-          </div>
-          <div style={{ marginBottom: "15px" }}>
-            <label style={{ fontSize: "14px", fontWeight: "600", marginBottom: "5px" }}>
-              Max Price:
-            </label>
-            <input
-              type="number"
-              name="maxPrice"
-              value={filters.maxPrice}
-              onChange={(e) =>
-                setFilters({ ...filters, maxPrice: Number(e.target.value) })
-              }
-              style={{
-                width: "100%",
-                padding: "10px",
-                border: "1px solid #ccc",
-                borderRadius: "5px",
-                fontSize: "14px",
-                marginBottom: "10px",
-              }}
-            />
-          </div>
-          <div style={{ marginBottom: "15px" }}>
-            <label style={{ fontSize: "14px", fontWeight: "600", marginBottom: "5px" }}>
-              Bed Type:
-            </label>
-            <select
-              name="bedType"
-              value={filters.bedType}
-              onChange={(e) => setFilters({ ...filters, bedType: e.target.value })}
-              style={{
-                width: "100%",
-                padding: "10px",
-                border: "1px solid #ccc",
-                borderRadius: "5px",
-                fontSize: "14px",
-              }}
-            >
-              <option value="Any">Any</option>
-              <option value="King">King</option>
-              <option value="Queen">Queen</option>
-              <option value="Single">Single</option>
-              <option value="Double">Double</option>
-              <option value="Twin">Twin</option>
-            </select>
-          </div>
-          <div style={{ marginBottom: "15px" }}>
-            <label style={{ fontSize: "14px", fontWeight: "600", marginBottom: "5px" }}>
-              Class Type:
-            </label>
-            <select
-              name="classType"
-              value={filters.classType}
-              onChange={(e) =>
-                setFilters({ ...filters, classType: e.target.value })
-              }
-              style={{
-                width: "100%",
-                padding: "10px",
-                border: "1px solid #ccc",
-                borderRadius: "5px",
-                fontSize: "14px",
-              }}
-            >
-              <option value="Any">Any</option>
-              <option value="Standard">Standard</option>
-              <option value="Suite">Suite</option>
-              <option value="Single">Single</option>
-              <option value="Double">Double</option>
-              <option value="Family">Family</option>
-            </select>
-          </div>
-          <div style={{ marginBottom: "15px" }}>
-            <label style={{ fontSize: "14px", fontWeight: "600", marginBottom: "5px" }}>
-              Max Occupancy:
-            </label>
-            <input
-              type="number"
-              name="maxOccupancy"
-              value={filters.maxOccupancy}
-              onChange={(e) =>
-                setFilters({ ...filters, maxOccupancy: Number(e.target.value) })
-              }
-              style={{
-                width: "100%",
-                padding: "10px",
-                border: "1px solid #ccc",
-                borderRadius: "5px",
-                fontSize: "14px",
-              }}
-            />
-          </div>
-          <div style={{ marginBottom: "15px" }}>
-            <label style={{ fontSize: "14px", fontWeight: "600", marginBottom: "5px" }}>
-              Check-In Date:
-            </label>
-            <input
-              type="date"
-              name="checkInDate"
-              value={filters.checkInDate}
-              onChange={(e) =>
-                setFilters({ ...filters, checkInDate: e.target.value })
-              }
-              style={{
-                width: "100%",
-                padding: "10px",
-                border: "1px solid #ccc",
-                borderRadius: "5px",
-                fontSize: "14px",
-                marginBottom: "10px",
-              }}
-            />
-          </div>
-            
-          <div style={{ marginBottom: "15px" }}>
-            <label style={{ fontSize: "14px", fontWeight: "600", marginBottom: "5px" }}>
-              Check-Out Date:
-            </label>
-            <input
-              type="date"
-              name="checkOutDate"
-              min={filters.checkInDate}
-              value={filters.checkOutDate}
-              onChange={(e) =>
-                setFilters({ ...filters, checkOutDate: e.target.value })
-              }
-              style={{
-                width: "100%",
-                padding: "10px",
-                border: "1px solid #ccc",
-                borderRadius: "5px",
-                fontSize: "14px",
-              }}
-            />
-          </div>
-
-          <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px" }}>
-            <button
-              onClick={fetchFilteredRooms}
-              style={{
-                backgroundColor: "#4CAF50",
-                color: "white",
-                padding: "10px 20px",
-                border: "none",
-                borderRadius: "5px",
-                cursor: "pointer",
-                fontSize: "14px",
-              }}
-            >
-              Apply Filters
-            </button>
-            <button
-              onClick={() => setShowFilterModal(false)}
-              style={{
-                backgroundColor: "#f44336",
-                color: "white",
-                padding: "10px 20px",
-                border: "none",
-                borderRadius: "5px",
-                cursor: "pointer",
-                fontSize: "14px",
-              }}
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      )}
-
-
-      {/* <div style={{ marginTop: "20px" }}>
-        <h2>Manual Checkout</h2>
-        <button
-          onClick={() => navigate("/checkout")}
-          style={{
-            padding: "10px 15px",
-            backgroundColor: "#FF9800",
-            color: "white",
-            border: "none",
-            borderRadius: "4px",
-            cursor: "pointer",
-          }}
-        >
-          Checkout
-        </button>
-        <button
-          onClick={() => navigate("/inventory")}
-          style={{
-            padding: "10px 15px",
-          onClick={() => navigate("/real-checkout")}
-          style={{
-            padding: "10px 15px",
-            marginLeft: "5px",
-            backgroundColor: "#FF9800",
-            color: "white",
-            border: "none",
-            borderRadius: "4px",
-            cursor: "pointer",
-          }}
-        >
-          Inventory
-        </button>
-
-
+        )}
+  
       </div>
-         Real Checkout
-        </button>
-      </div> */}
-    </div>
-
+    </>
   );
+  
 };
 
 export default Receptionist;

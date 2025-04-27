@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import Axios from "axios";
 import "./RealCheckout.css"
 import BillingPopup from "../../components/BillingPopup";
+import Navbar from "../../components/Navbar.js";
+
 
 const CurrentGuests = () =>{
 
@@ -109,186 +111,140 @@ const CurrentGuests = () =>{
       };
 
 
-    if (guests.length === 0) {
-        return(
-            <div className="current-guests-container">
-            <button className="filter-guests-button" onClick={()=> setShowFilterModal(true)}>
+   
+
+    return (
+        <div className="realcheckout-container">
+          <Navbar />
+          <div className="realcheckout-content-wrapper">
+            <h1>Guests Checking Out Today</h1>
+      
+            <div className="realcheckout-header-section">
+              <button className="realcheckout-add-button" onClick={() => setShowFilterModal(true)}>
                 Filter Guests
-            </button>
-            <p>No Guests Found</p>;
-            {
-                showFilterModal && (
-                    <div className="filter-modal">
-                        <h2>Filter Guests</h2>
-                        <label>First Name:</label>
-                        <input 
-                            type="text"
-                            name="FirstName"
-                            value={(filters.FirstName)}
-                            onChange={handleFilterChange}
-                        />
-                         <label>Last Name:</label>
-                        <input 
-                            type="text"
-                            name="LastName"
-                            value={(filters.LastName)}
-                            onChange={handleFilterChange}
-                        />
-                         <label>Email:</label>
-                        <input 
-                            type="text"
-                            name="EmailAddress"
-                            value={(filters.EmailAddress)}
-                            onChange={handleFilterChange}
-                        />
-                         <label>PhoneNumber:</label>
-                        <input 
-                            type="text"
-                            name="PhoneNumber"
-                            value={(filters.PhoneNumber)}
-                            onChange={handleFilterChange}
-                        />
-                         <label>NID:</label>
-                        <input 
-                            type="text"
-                            name="NID"
-                            value={(filters.NID)}
-                            onChange={handleFilterChange}
-                        />
-                         <label>Date Of Birth:</label>
-                        <input 
-                            type="date"
-                            name="DateOfBirth"
-                            value={(filters.DateOfBirth)}
-                            onChange={handleFilterChange}
-                        />
-                        <div className="filter-acitons">
-                            <button onClick={applyFilters}>Apply</button>
-                            <button onClick={()=>setShowFilterModal(false)}>Cancel</button>
-                        </div>
-                    </div>
-                )
-            }
+              </button>
             </div>
-        ) 
-    }
-
-    return(
-        <div className="current-guests-container">
-            <button className="filter-guests-button" onClick={()=> setShowFilterModal(true)}>
-                Filter Guests
-            </button>
-
-            <div className="guest-cards">
-                {guests.map((guest, index)=>(
-                    <div className="guest-card" key={index}>
-                        <h3>
-                            {guest.FirstName} {guest.LastName}
-                        </h3>
-                        <p>
-                            <strong>Email:</strong>{guest.EmailAddress}
-                        </p>
-                        <p>
-                            <strong>Phone Number:</strong>{guest.PhoneNumber}
-                        </p>
-                        <p>
-                            <strong>NID:</strong>{guest.NID}
-                        </p>
-                        <p>
-                        <strong>Date of Birth:</strong> {new Date(guest.DateOfBirth).toISOString().split("T")[0]}                        </p>
-                        <div className="guest-actions">
-                            <button className="extend-visit-button" onClick={() => handleExtendVisit(guest)}>
-                                Extend Visit
-                            </button>
-                            <button
-                                className="billing"
-                                onClick={() => openBillingPopup(guest)}
-                                >
-                                Billing
-                            </button>
-                        </div>
-                    </div>
-                ))}
+      
+            <div className="realcheckout-table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>NID</th>
+                    <th>Date of Birth</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {guests.map((guest, index) => (
+                    <tr key={index}>
+                      <td>{guest.FirstName}</td>
+                      <td>{guest.LastName}</td>
+                      <td>{guest.EmailAddress}</td>
+                      <td>{guest.PhoneNumber}</td>
+                      <td>{guest.NID}</td>
+                      <td>{new Date(guest.DateOfBirth).toISOString().split("T")[0]}</td>
+                      <td className="realcheckout-action-buttons">
+                        <button
+                          className="realcheckout-billing-button"
+                          onClick={() => openBillingPopup(guest)}
+                        >
+                          Billing
+                        </button>
+                        {/* <button
+                          className="realcheckout-extend-button"
+                          onClick={() => handleExtendVisit(guest)}
+                        >
+                          Extend
+                        </button> */}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-
+      
             {showPopupEX && (
-                <div className="popup">
-                    <h2>
-                        Extend Visit for {selectedGuest?.FirstName} {selectedGuest?.LastName}
-                    </h2>
-                    <label>New Checkout Date:</label>
-                    <input
-                        type="date"
-                        value={newCheckoutDate}
-                        onChange={(e) => setNewCheckoutDate(e.target.value)}
-                        min={minCheckOut}
-                    />
-                    <div className="popup-actions">
-                        <button onClick={handleConfirmExtendVisit}>Confirm</button>
-                        <button onClick={() => setShowPopupEX(false)}>Cancel</button>
-                    </div>
+              <div className="realcheckout-popup">
+                <h2>
+                  Extend Visit for {selectedGuest?.FirstName} {selectedGuest?.LastName}
+                </h2>
+                <label>New Checkout Date:</label>
+                <input
+                  type="date"
+                  value={newCheckoutDate}
+                  onChange={(e) => setNewCheckoutDate(e.target.value)}
+                  min={minCheckOut}
+                />
+                <div className="realcheckout-popup-actions">
+                  <button onClick={handleConfirmExtendVisit}>Confirm</button>
+                  <button onClick={() => setShowPopupEX(false)}>Cancel</button>
                 </div>
+              </div>
             )}
-
-            {
-                showFilterModal && (
-                    <div className="filter-modal">
-                        <h2>Filter Guests</h2>
-                        <label>First Name:</label>
-                        <input 
-                            type="text"
-                            name="FirstName"
-                            value={(filters.FirstName)}
-                            onChange={handleFilterChange}
-                        />
-                         <label>Last Name:</label>
-                        <input 
-                            type="text"
-                            name="LastName"
-                            value={(filters.LastName)}
-                            onChange={handleFilterChange}
-                        />
-                         <label>Email:</label>
-                        <input 
-                            type="text"
-                            name="EmailAddress"
-                            value={(filters.EmailAddress)}
-                            onChange={handleFilterChange}
-                        />
-                         <label>PhoneNumber:</label>
-                        <input 
-                            type="text"
-                            name="PhoneNumber"
-                            value={(filters.PhoneNumber)}
-                            onChange={handleFilterChange}
-                        />
-                         <label>NID:</label>
-                        <input 
-                            type="text"
-                            name="NID"
-                            value={(filters.NID)}
-                            onChange={handleFilterChange}
-                        />
-                         <label>Date Of Birth:</label>
-                        <input 
-                            type="date"
-                            name="DateOfBirth"
-                            value={(filters.DateOfBirth)}
-                            onChange={handleFilterChange}
-                        />
-                        <div className="filter-acitons">
-                            <button onClick={applyFilters}>Apply</button>
-                            <button onClick={()=>setShowFilterModal(false)}>Cancel</button>
-                        </div>
-                    </div>
-                )
-            }
-
-        {showPopup && selectedGuest && (
-        <BillingPopup guest={selectedGuest} onClose={closeBillingPopup} />
-        )}
+      
+            {showFilterModal && (
+              <div className="realcheckout-filter-modal">
+                {/* <h3>Filter Guests</h3> */}
+                <label>First Name:</label>
+                <input
+                  type="text"
+                  name="FirstName"
+                  value={filters.FirstName}
+                  onChange={handleFilterChange}
+                />
+                <label>Last Name:</label>
+                <input
+                  type="text"
+                  name="LastName"
+                  value={filters.LastName}
+                  onChange={handleFilterChange}
+                />
+                <label>Email:</label>
+                <input
+                  type="text"
+                  name="EmailAddress"
+                  value={filters.EmailAddress}
+                  onChange={handleFilterChange}
+                />
+                <label>Phone:</label>
+                <input
+                  type="text"
+                  name="PhoneNumber"
+                  value={filters.PhoneNumber}
+                  onChange={handleFilterChange}
+                />
+                <label>NID:</label>
+                <input
+                  type="text"
+                  name="NID"
+                  value={filters.NID}
+                  onChange={handleFilterChange}
+                />
+                <label>Date Of Birth:</label>
+                <input
+                  type="date"
+                  name="DateOfBirth"
+                  value={filters.DateOfBirth}
+                  onChange={handleFilterChange}
+                />
+                <div className="realcheckout-filter-actions">
+                  <button onClick={applyFilters}>Apply</button>
+                  <button onClick={() => setShowFilterModal(false)}>Cancel</button>
+                </div>
+              </div>
+            )}
+      
+            {showPopup && selectedGuest && (
+              <BillingPopup guest={selectedGuest} onClose={closeBillingPopup} />
+            )}
+          </div>
         </div>
-    );
+      );      
+      
 };
 
 export default CurrentGuests;

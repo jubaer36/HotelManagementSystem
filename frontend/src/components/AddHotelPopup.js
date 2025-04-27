@@ -1,66 +1,68 @@
 import React, { useState } from "react";
 import Axios from "axios";
-import "./AddHotelPopup.css";
+import "./Popup.css"; // Reuse popup style
 
 const AddHotelPopup = ({ closePopup, refreshHotels }) => {
-    const [hotelData, setHotelData] = useState({
-        name: "",
-        description: "",
-        starRating: 1,
-        location: { city: "", state: "", zip: "", country: "" },
-        status: "active", // Default value
-    });
+    const [name, setName] = useState("");
+    const [description, setDescription] = useState("");
+    const [starRating, setStarRating] = useState(3);
+    const [location, setLocation] = useState({ city: "", state: "", zip: "", country: "" });
+    const [hotelImage, setHotelImage] = useState(null);
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        if (name.startsWith("location.")) {
-            const locationField = name.split(".")[1];
-            setHotelData((prevData) => ({
-                ...prevData,
-                location: { ...prevData.location, [locationField]: value },
-            }));
-        } else {
-            setHotelData({ ...hotelData, [name]: value });
-        }
+    const handleFileChange = (e) => {
+        setHotelImage(e.target.files[0]);
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        Axios.post("http://localhost:3001/add-hotel", hotelData)
-            .then(() => {
-                alert("Hotel added successfully!");
-                refreshHotels();
-                closePopup();
-            })
-            .catch((error) => {
-                console.error("Error adding hotel:", error);
-                alert("Failed to add hotel.");
-            });
+
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('description', description);
+        formData.append('starRating', starRating);
+        formData.append('location', JSON.stringify(location));
+        formData.append('status', 'active');
+        formData.append('hotelImage', hotelImage); // Image included
+
+        try {
+            await Axios.post("http://localhost:3001/add-hotel", formData);
+            alert("Hotel added successfully!");
+            closePopup();
+            refreshHotels();
+        } catch (err) {
+            console.error(err);
+            alert("Failed to add hotel.");
+        }
     };
 
     return (
         <div className="popup-overlay">
             <div className="popup-content">
                 <h2>Add New Hotel</h2>
-                <form onSubmit={handleSubmit}>
-                    <input type="text" name="name" placeholder="Hotel Name" value={hotelData.name} onChange={handleChange} required />
-                    <textarea name="description" placeholder="Description" value={hotelData.description} onChange={handleChange} required />
-                    <input type="number" name="starRating" min="1" max="5" placeholder="Star Rating" value={hotelData.starRating} onChange={handleChange} required />
-                    
-                    <h4>Location</h4>
-                    <input type="text" name="location.city" placeholder="City" value={hotelData.location.city} onChange={handleChange} required />
-                    <input type="text" name="location.state" placeholder="State" value={hotelData.location.state} onChange={handleChange} required />
-                    <input type="text" name="location.zip" placeholder="ZIP Code" value={hotelData.location.zip} onChange={handleChange} required />
-                    <input type="text" name="location.country" placeholder="Country" value={hotelData.location.country} onChange={handleChange} required />
+                <form onSubmit={handleSubmit} className="popup-form">
+                    <input type="text" placeholder="Hotel Name" value={name} onChange={(e) => setName(e.target.value)} required />
+                    <textarea placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} required />
+                    <input type="number" placeholder="Star Rating (1-5)" value={starRating} min="1" max="5" onChange={(e) => setStarRating(e.target.value)} required />
 
-                    {/* <h4>Status</h4>
-                    <select name="status" value={hotelData.status} onChange={handleChange}>
-                        <option value="active">Active</option>
-                        <option value="inactive">Inactive</option>
-                    </select> */}
+                    <input type="text" placeholder="City" value={location.city} onChange={(e) => setLocation({ ...location, city: e.target.value })} required />
+                    <input type="text" placeholder="State" value={location.state} onChange={(e) => setLocation({ ...location, state: e.target.value })} required />
+                    <input type="text" placeholder="ZIP Code" value={location.zip} onChange={(e) => setLocation({ ...location, zip: e.target.value })} required />
+                    <input type="text" placeholder="Country" value={location.country} onChange={(e) => setLocation({ ...location, country: e.target.value })} required />
 
-                    <button type="submit" className="submit-button">Add Hotel</button>
-                    <button type="button" className="cancel-button" onClick={closePopup}>Cancel</button>
+                    <input type="file" accept="image/*" onChange={handleFileChange} required />
+
+                    {hotelImage && (
+                        <img
+                            src={URL.createObjectURL(hotelImage)}
+                            alt="Preview"
+                            className="hotel-image-preview"
+                        />
+                    )}
+
+                    <div className="popup-buttons">
+                        <button type="submit" className="save-button">Add Hotel</button>
+                        <button type="button" className="cancel-button" onClick={closePopup}>Cancel</button>
+                    </div>
                 </form>
             </div>
         </div>
