@@ -1,8 +1,22 @@
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
 .current-guests-container {
     padding: 2rem;
     background-color: #f8fafc;
     min-height: 100vh;
+    
+    background-image: url('../../../images/pool_hat.jpg');
+    background-size: cover;         /* ✅ Fit the full screen */
+    background-position: center;    /* ✅ Center the image */
+    background-repeat: no-repeat;   /* ✅ No repeating */
+    background-attachment: fixed;   /* ✅ Optional: make it parallax fixed while scrolling */
 }
+
 
 .current-guests-header {
     display: flex;
@@ -31,17 +45,19 @@
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+    padding-right: 1rem; /* Optional: for scrollbar space */
 }
 
-/* New card-row layout */
+
 .guest-card-row {
     display: flex;
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.8); /* ✅ Semi-transparent white */
     border-radius: 12px;
     box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     align-items: center;
 }
+
 
 .guest-image-container {
     width: 250px;
@@ -190,4 +206,31 @@
         opacity: 1;
         transform: translateY(0);
     }
+}
+.no-guests-found {
+    margin-top: 3rem;
+    text-align: center;
+    color: #475569;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.no-guests-found h2 {
+    font-size: 2rem;
+    color: #1e293b;
+}
+
+.no-guests-found p {
+    font-size: 1rem;
+    color: #64748b;
+}
+
+/* Optional: add a nice empty illustration */
+.no-guests-image {
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+    opacity: 0.8;
 }

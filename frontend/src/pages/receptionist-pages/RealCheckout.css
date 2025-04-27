@@ -3,6 +3,11 @@
     background-color: #f8fafc;
     display: flex;
     flex-direction: column;
+    background-image: url('../../../images/pool_hat.jpg');
+    background-size: cover;         /* ✅ Fit the full screen */
+    background-position: center;    /* ✅ Center the image */
+    background-repeat: no-repeat;   /* ✅ No repeating */
+    background-attachment: fixed;   /* ✅ Optional: make it parallax fixed while scrolling */
   }
   
   .realcheckout-content-wrapper {
@@ -163,4 +168,23 @@
   .realcheckout-filter-actions button:hover {
     background-color: #2563eb;
   }
+  .realcheckout-no-guests {
+    text-align: center;
+    padding: 3rem 1rem;
+    background: #f8fafc;
+    border-radius: 12px;
+    margin-top: 2rem;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.08);
+  }
   
+  .realcheckout-no-guests h2 {
+    color: #1e293b;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .realcheckout-no-guests p {
+    color: #64748b;
+    font-size: 1rem;
+  }
+    

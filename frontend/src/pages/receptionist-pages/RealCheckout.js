@@ -111,72 +111,7 @@ const CurrentGuests = () =>{
       };
 
 
-    if (guests.length === 0) {
-        return(
-            <div className="checkout-container">
-            <Navbar/>
-            <div className="current-guests-container">
-            <button className="filter-guests-button" onClick={()=> setShowFilterModal(true)}>
-                Filter Guests
-            </button>
-            <p>No Guests Found</p>;
-            {
-                showFilterModal && (
-                    <div className="filter-modal">
-                        <h2>Filter Guests</h2>
-                        <label>First Name:</label>
-                        <input 
-                            type="text"
-                            name="FirstName"
-                            value={(filters.FirstName)}
-                            onChange={handleFilterChange}
-                        />
-                         <label>Last Name:</label>
-                        <input 
-                            type="text"
-                            name="LastName"
-                            value={(filters.LastName)}
-                            onChange={handleFilterChange}
-                        />
-                         <label>Email:</label>
-                        <input 
-                            type="text"
-                            name="EmailAddress"
-                            value={(filters.EmailAddress)}
-                            onChange={handleFilterChange}
-                        />
-                         <label>PhoneNumber:</label>
-                        <input 
-                            type="text"
-                            name="PhoneNumber"
-                            value={(filters.PhoneNumber)}
-                            onChange={handleFilterChange}
-                        />
-                         <label>NID:</label>
-                        <input 
-                            type="text"
-                            name="NID"
-                            value={(filters.NID)}
-                            onChange={handleFilterChange}
-                        />
-                         <label>Date Of Birth:</label>
-                        <input 
-                            type="date"
-                            name="DateOfBirth"
-                            value={(filters.DateOfBirth)}
-                            onChange={handleFilterChange}
-                        />
-                        <div className="filter-actions">
-                            <button onClick={applyFilters}>Apply</button>
-                            <button onClick={()=>setShowFilterModal(false)}>Cancel</button>
-                        </div>
-                    </div>
-                )
-            }
-            </div>
-            </div>
-        ) 
-    }
+   
 
     return (
         <div className="realcheckout-container">

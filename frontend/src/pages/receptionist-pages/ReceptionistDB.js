@@ -33,11 +33,16 @@ const ReceptionistDashboard = () => {
   ];
 
   return (
-    <div className="dashboard-wrapper">
+    <div className="receptionist-dashboard-wrapper">
       <Navbar />
-      <div className="dashboard-container">
-        <h1 className="dashboard-title">Receptionist Dashboard</h1>
-        <div className="grid-container">
+      <div className="receptionist-dashboard-container">
+        {/* If you want, you can add a title like Admin */}
+        {/* <header className="dashboard-header">
+            <h1 className="dashboard-title">Receptionist Dashboard</h1>
+            <div className="header-accent"></div>
+          </header> */}
+
+        <div className="receptionist-grid-container">
           {cards.map((card, index) => (
             <DashboardCard
               key={index}
