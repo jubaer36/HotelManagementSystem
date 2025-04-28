@@ -1,10 +1,6 @@
 .receptionist-dashboard-wrapper {
   min-height: 100vh;
-  background: url('../../../images/pool_hat.jpg');
-  background-size: cover;       /* 🌟 Fit nicely without stretching */
-  background-position: center;  /* 🌟 Center the background */
-  background-repeat: no-repeat; /* 🌟 Don't repeat */
-  background-attachment: fixed; /* 🌟 Optional: adds a nice parallax effect */
+
 }
 
 .receptionist-dashboard-container {

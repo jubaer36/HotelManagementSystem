@@ -102,7 +102,8 @@ router.post("/add-employee", (req, res) => {
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
     `;
 
-    db.query(query, [deptID, firstName, lastName, phone, email, hourlyPay, workingStatus, role, hiredDate, JSON.stringify(address)], (err, result) => {
+    // Make sure address is passed as an object and let the database handle the JSON formatting.
+    db.query(query, [deptID, firstName, lastName, phone, email, hourlyPay, workingStatus, role, hiredDate, address], (err, result) => {
         if (err) {
             console.error("Error adding employee:", err);
             return res.status(500).send("Error adding employee.");

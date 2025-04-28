@@ -4,11 +4,7 @@
   color: #333;
   background-color: #f5f7fa;
   min-height: 100vh;
-  background-image: url('../../../images/pool4.jpg');
-  background-size: cover;         /* ✅ Fit the full screen */
-  background-position: center;    /* ✅ Center the image */
-  background-repeat: no-repeat;   /* ✅ No repeating */
-  background-attachment: fixed;   /* ✅ Optional: make it parallax fixed while scrolling */
+
 }
 
 .inventory-container {
