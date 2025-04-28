@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './BillLedger.css';
+import Navbar from "../../components/Navbar";
 
 const MaintenanceLedgerPage = () => {
     const hotelId = localStorage.getItem("hotelID"); // Fetch hotel ID from local storage
@@ -47,6 +48,7 @@ const MaintenanceLedgerPage = () => {
 
     return (
         <div className="maintenance-ledger-page">
+            <Navbar/>
             <h2>Maintenance Ledger</h2>
             <div className="ledger-form">
                 <h3>Add New Maintenance Entry</h3>

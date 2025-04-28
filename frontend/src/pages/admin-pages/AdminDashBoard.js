@@ -12,7 +12,7 @@ const AdminDashBoard = () => {
             color: "#3B82F6",
             path: "/update-managers",
             icon: <FiUsers className="card-icon" />,
-            stat: "5 Manager Accounts"
+            // stat: "5 Manager Accounts"
         },
         {
             title: "Expense Tracking",
@@ -20,7 +20,7 @@ const AdminDashBoard = () => {
             color: "#10B981",
             path: "/all-expenses",
             icon: <FiDollarSign className="card-icon" />,
-            stat: "$12,450 Total"
+            // stat: "$12,450 Total"
         },
         {
             title: "Hotel Management",
@@ -28,7 +28,7 @@ const AdminDashBoard = () => {
             color: "#F59E0B",
             path: "/admin-hotels",
             icon: <FiHome className="card-icon" />,
-            stat: "3 Active Hotels"
+            // stat: "3 Active Hotels"
         }
     ];
 
