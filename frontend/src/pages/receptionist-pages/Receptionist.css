@@ -6,10 +6,7 @@
     
     /* 🔥 Background image added */
     min-height: 100vh;
-    background-image: url('../../../images/pool_hat.jpg'); /* 🔥 Put your image path here */
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+
     
 
   }

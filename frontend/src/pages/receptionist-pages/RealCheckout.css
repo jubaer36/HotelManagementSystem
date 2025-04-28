@@ -3,11 +3,7 @@
     background-color: #f8fafc;
     display: flex;
     flex-direction: column;
-    background-image: url('../../../images/pool_hat.jpg');
-    background-size: cover;         /* ✅ Fit the full screen */
-    background-position: center;    /* ✅ Center the image */
-    background-repeat: no-repeat;   /* ✅ No repeating */
-    background-attachment: fixed;   /* ✅ Optional: make it parallax fixed while scrolling */
+
   }
   
   .realcheckout-content-wrapper {
