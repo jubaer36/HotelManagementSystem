@@ -3,17 +3,17 @@ const router = express.Router();
 const db = require("../../dbconn.js");
 const bcrypt = require("bcryptjs"); // bcrypt for hashing passwords
 
-// Reset Password Route
+// Reset Password Route (fixed to match username-based frontend)
 router.post("/reset-password", (req, res) => {
-    const { userID, oldPassword, newPassword } = req.body;
+    const { username, oldPassword, newPassword } = req.body;
 
-    if (!userID || !oldPassword || !newPassword) {
+    if (!username || !oldPassword || !newPassword) {
         return res.status(400).json({ message: "Missing required fields." });
     }
 
-    // Step 1: Fetch the existing hashed password
-    const fetchQuery = "SELECT Password FROM Users WHERE UserID = ?";
-    db.query(fetchQuery, [userID], (err, results) => {
+    // Step 1: Fetch existing hashed password
+    const fetchQuery = "SELECT Password FROM Users WHERE Username = ?";
+    db.query(fetchQuery, [username], (err, results) => {
         if (err) {
             console.error("Database error:", err);
             return res.status(500).json({ message: "Server error." });
@@ -44,8 +44,8 @@ router.post("/reset-password", (req, res) => {
                 }
 
                 // Step 4: Update password in database
-                const updateQuery = "UPDATE Users SET Password = ? WHERE UserID = ?";
-                db.query(updateQuery, [newHashedPassword, userID], (updateErr, updateResult) => {
+                const updateQuery = "UPDATE Users SET Password = ? WHERE Username = ?";
+                db.query(updateQuery, [newHashedPassword, username], (updateErr, updateResult) => {
                     if (updateErr) {
                         console.error("Database update error:", updateErr);
                         return res.status(500).json({ message: "Server error." });

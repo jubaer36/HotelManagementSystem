@@ -2,7 +2,6 @@
     padding: 20px;
     max-width: 1200px;
     margin: 0 auto;
-
 }
 
 .controls {
@@ -32,83 +31,107 @@
     overflow-x: auto;
 }
 
-.ledger-table {
+/* ✅ Common table styles for both Transaction History & Summary */
+.ledger-table,
+.summary-table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 15px;
 }
 
 .ledger-table th,
-.ledger-table td {
+.ledger-table td,
+.summary-table th,
+.summary-table td {
     padding: 12px 15px;
     text-align: left;
     border-bottom: 1px solid #ddd;
 }
 
-.ledger-table th {
-    background-color: #f2f2f2;
+.ledger-table th,
+.summary-table th {
+    background-color: #f9fafb; /* Light and clean */
     font-weight: bold;
+    color: #374151;
+    font-size: 0.95rem;
 }
 
-.ledger-table tr:hover {
-    background-color: #f5f5f5;
+.ledger-table tr:hover,
+.summary-table tr:hover {
+    background-color: #f1f5f9;
 }
 
+/* ✅ Status badges */
 .status-badge {
     padding: 4px 8px;
     border-radius: 12px;
-    font-size: 0.8em;
-    font-weight: bold;
+    font-size: 0.75rem;
+    font-weight: 600;
 }
 
 .status-badge.pending {
-    background-color: #ff9800;
-    color: white;
+    background-color: #facc15;
+    color: #92400e;
 }
 
 .status-badge.completed {
-    background-color: #4CAF50;
-    color: white;
+    background-color: #4ade80;
+    color: #065f46;
 }
 
+/* ✅ Receive Button */
 .receive-button {
     padding: 6px 12px;
-    background-color: #2196F3;
+    background-color: #3b82f6;
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 5px;
+    font-size: 0.85rem;
     cursor: pointer;
 }
 
 .receive-button:hover {
-    background-color: #0b7dda;
+    background-color: #2563eb;
 }
 
-.no-transactions {
-    text-align: center;
-    padding: 20px;
-    color: #666;
-}
-
-.loading {
-    text-align: center;
-    padding: 20px;
-    color: #333;
-}
-
+/* ✅ Empty States */
+.no-transactions,
+.loading,
 .error {
     text-align: center;
     padding: 20px;
-    color: #d32f2f;
-    background-color: #ffebee;
-    border-radius: 4px;
+    font-size: 1rem;
 }
 
-/* Status-based row coloring */
+.error {
+    color: #dc2626;
+    background-color: #fee2e2;
+    border-radius: 6px;
+}
+
+/* ✅ Status row coloring */
 .status-pending {
-    background-color: #fff3e0;
+    background-color: #fffbeb;
 }
 
 .status-completed {
-    background-color: #e8f5e9;
+    background-color: #ecfdf5;
+}
+
+/* ✅ Summary Section Title */
+.transaction-summary-title {
+    margin-top: 40px;
+    font-size: 1.4rem;
+    color: #1e293b;
+    font-weight: 600;
+}
+
+/* ✅ Small tweaks */
+.summary-table td {
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+.summary-table td:first-child {
+    color: #374151;
 }

@@ -4,25 +4,30 @@ import Navbar from "../../components/Navbar";
 import "./Inventory.css";
 
 const Inventory = () => {
+  const hotelID = localStorage.getItem("hotelID"); // ✅ Always use hotelID from localStorage
+
   const [inventory, setInventory] = useState([]);
   const [order, setOrder] = useState({
     itemName: "",
-    quantity: "1",  // Changed to string
-    unitPrice: "0", // Changed to string
+    quantity: "1",
+    unitPrice: "0",
   });
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch inventory on component mount
   useEffect(() => {
+    if (!hotelID) {
+      alert("Hotel ID missing. Please login again.");
+      return;
+    }
     fetchInventory();
-  }, []);
+  }, [hotelID]);
 
   const fetchInventory = async () => {
     try {
       setIsLoading(true);
-      const response = await Axios.get("http://localhost:3001/inventory");
+      const response = await Axios.get(`http://localhost:3001/inventory/${hotelID}`);
       setInventory(response.data);
       setError(null);
     } catch (error) {
@@ -35,10 +40,7 @@ const Inventory = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-
-    // For quantity and unitPrice, ensure the input is a valid number
     if (name === "quantity" || name === "unitPrice") {
-      // Allow empty string or numbers with optional decimal
       if (value === "" || /^[0-9]*\.?[0-9]*$/.test(value)) {
         setOrder(prev => ({ ...prev, [name]: value }));
       }
@@ -49,8 +51,8 @@ const Inventory = () => {
 
   const orderItem = async (e) => {
     e.preventDefault();
+
     try {
-      // Convert string inputs to numbers
       const quantity = parseFloat(order.quantity) || 1;
       const unitPrice = parseFloat(order.unitPrice) || 0;
 
@@ -58,7 +60,6 @@ const Inventory = () => {
         alert("Quantity must be greater than 0");
         return;
       }
-
       if (unitPrice < 0) {
         alert("Unit price cannot be negative");
         return;
@@ -66,7 +67,7 @@ const Inventory = () => {
 
       let inventoryID;
 
-      // Check if item exists
+      // 🔎 Find if the item already exists
       const existingItem = inventory.find(
           item => item.ItemName.toLowerCase() === order.itemName.toLowerCase()
       );
@@ -74,16 +75,18 @@ const Inventory = () => {
       if (existingItem) {
         inventoryID = existingItem.InventoryID;
       } else {
-        // Add new item first
+        // Add new item if it doesn't exist
         const addResponse = await Axios.post("http://localhost:3001/add-item", {
+          hotelID,
           itemName: order.itemName,
         });
         inventoryID = addResponse.data.InventoryID;
         await fetchInventory();
       }
 
-      // Place order with converted numbers
+      // 🔥 Place the order
       await Axios.post("http://localhost:3001/order-item", {
+        hotelID,
         inventoryID,
         quantity,
         unitPrice,
@@ -98,18 +101,14 @@ const Inventory = () => {
     }
   };
 
-  // Filter inventory based on search term
   const filteredInventory = inventory.filter(item =>
       item.ItemName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const formatDate = (dateString) => {
     const options = {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+      year: 'numeric', month: 'short', day: 'numeric',
+      hour: '2-digit', minute: '2-digit'
     };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
@@ -126,7 +125,7 @@ const Inventory = () => {
                   className="refresh-btn"
                   disabled={isLoading}
               >
-                {isLoading ? 'Refreshing...' : 'Refresh Inventory'}
+                {isLoading ? "Refreshing..." : "Refresh Inventory"}
               </button>
               <div className="search-box">
                 <input
@@ -164,7 +163,7 @@ const Inventory = () => {
                       </thead>
                       <tbody>
                       {filteredInventory.length > 0 ? (
-                          filteredInventory.map((item) => (
+                          filteredInventory.map(item => (
                               <tr key={item.InventoryID}>
                                 <td className="id-cell">{item.InventoryID}</td>
                                 <td className="name-cell">{item.ItemName}</td>
@@ -177,7 +176,7 @@ const Inventory = () => {
                       ) : (
                           <tr>
                             <td colSpan="4" className="no-items">
-                              {searchTerm ? 'No matching items found' : 'No items in inventory'}
+                              {searchTerm ? "No matching items found" : "No items in inventory"}
                             </td>
                           </tr>
                       )}

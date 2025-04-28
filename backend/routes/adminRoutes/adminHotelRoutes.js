@@ -65,24 +65,48 @@ router.put("/deactivate-hotel/:id", (req, res) => {
     });
 });
 
-// ✅ Route to Update Hotel Details
-router.put("/update-hotel/:id", (req, res) => {
+
+
+// 👇 Use this router in your main router file
+router.put("/update-hotel/:id", upload.single('hotelImage'), (req, res) => {
     const hotelId = req.params.id;
     const { Name, Description, StarRating, Location } = req.body;
+    const hotelImage = req.file ? req.file.buffer : null; // 🛠️ Handle image upload
 
-    const sql = `UPDATE Hotel 
-                 SET Name = ?, Description = ?, StarRating = ?, Location = ? 
-                 WHERE HotelID = ?`;
+    if (!Name || !Description || !StarRating || !Location) {
+        return res.status(400).send("All hotel details are required");
+    }
 
-    db.query(sql, [Name, Description, StarRating, JSON.stringify(Location), hotelId], (err, result) => {
+    let sql;
+    let params;
+
+    if (hotelImage) {
+        // ✅ If image provided, update everything including the blob
+        sql = `
+            UPDATE Hotel 
+            SET Name = ?, Description = ?, StarRating = ?, Location = ?, HotelImage = ?
+            WHERE HotelID = ?
+        `;
+        params = [Name, Description, StarRating, JSON.stringify(JSON.parse(Location)), hotelImage, hotelId];
+    } else {
+        // ✅ If NO new image uploaded, just update other fields
+        sql = `
+            UPDATE Hotel 
+            SET Name = ?, Description = ?, StarRating = ?, Location = ?
+            WHERE HotelID = ?
+        `;
+        params = [Name, Description, StarRating, JSON.stringify(JSON.parse(Location)), hotelId];
+    }
+
+    db.query(sql, params, (err, result) => {
         if (err) {
             console.error("Error updating hotel:", err);
-            res.status(500).send("Error updating hotel");
-        } else {
-            res.status(200).send("Hotel updated successfully");
+            return res.status(500).send("Error updating hotel");
         }
+        res.status(200).send("Hotel updated successfully");
     });
 });
+
 
 
 

@@ -3,7 +3,7 @@
     top: 0;
     left: 0;
     width: 100vw;
-    height: 100vh;
+    height: 90vh;
     background: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
@@ -14,12 +14,13 @@
 
 .popup-container {
     background: white;
-    padding: 2rem;
+    padding: 2rem 2.5rem;
     border-radius: 12px;
     width: 90%;
-    max-width: 600px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    max-width: 500px; /* bigger width */
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
     position: relative;
+    margin: 70px 0; /* balanced margin */
 }
 
 .popup-header {
@@ -32,7 +33,7 @@
 .popup-header h2 {
     margin: 0;
     color: #1a1a1a;
-    font-size: 1.5rem;
+    font-size: 1.75rem;
 }
 
 .close-button {
@@ -50,21 +51,20 @@
 
 .form-group {
     margin-bottom: 1rem;
-    position: relative;
 }
 
 .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
-    margin-bottom: 1rem;
 }
 
 label {
     display: block;
     margin-bottom: 0.5rem;
-    font-weight: 500;
-    color: #444;
+    font-weight: 600;
+    color: #333;
+    font-size: 0.95rem;
 }
 
 .required {
@@ -74,8 +74,8 @@ label {
 
 input, select {
     width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ddd;
+    padding: 0.75rem 0.9rem;
+    border: 1px solid #ccc;
     border-radius: 6px;
     font-size: 1rem;
     transition: all 0.2s ease;
@@ -84,7 +84,7 @@ input, select {
 input:focus, select:focus {
     outline: none;
     border-color: #3B82F6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
 
 .error {
@@ -93,25 +93,22 @@ input:focus, select:focus {
 
 .error-message {
     color: #dc3545;
-    font-size: 0.875rem;
-    margin-top: 0.25rem;
-    display: block;
+    font-size: 0.85rem;
+    margin-top: 0.3rem;
 }
 
 .submit-button {
     width: 100%;
-    padding: 1rem;
+    padding: 0.9rem;
     background-color: #3B82F6;
     color: white;
     border: none;
-    border-radius: 6px;
-    font-size: 1rem;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
     cursor: pointer;
     transition: background-color 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
+    margin-top: 1.5rem;
 }
 
 .submit-button:hover {

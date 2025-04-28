@@ -1,3 +1,4 @@
+/* Popup Overlay */
 .popup-overlay {
     position: fixed;
     top: 0;
@@ -8,27 +9,107 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 9999;
 }
 
+/* Popup Content Box */
 .popup-content {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    text-align: center;
-    width: 350px;
+    background: #ffffff;
+    padding: 20px 25px;
+    border-radius: 12px;
+    width: 400px;
+    max-width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+    text-align: left;
+    scrollbar-width: thin; /* for Firefox */
 }
 
+/* Popup Title */
+.popup-content h2,
+.popup-content h3 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Form Labels */
+.popup-content label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Form Inputs */
+.popup-content input[type="text"],
+.popup-content input[type="number"],
+.popup-content input[type="file"],
+.popup-content select,
+.popup-content textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+/* Textarea Specific */
+.popup-content textarea {
+    height: 100px;
+    resize: vertical;
+}
+
+/* Buttons Container */
 .popup-buttons {
     margin-top: 15px;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
 }
 
+/* Save Button */
 .save-button {
-    background: green;
+    background-color: #28a745;
     color: white;
     border: none;
-    padding: 10px;
+    padding: 10px 15px;
+    border-radius: 6px;
     cursor: pointer;
-    border-radius: 5px;
+    font-size: 14px;
+    flex: 1;
+    margin-right: 10px;
+    transition: background-color 0.3s;
+}
+
+.save-button:hover {
+    background-color: #218838;
+}
+
+/* Cancel Button */
+.cancel-button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    flex: 1;
+    transition: background-color 0.3s;
+}
+
+.cancel-button:hover {
+    background-color: #c82333;
+}
+
+/* Make inner popup scrollable if too much content */
+.popup-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.popup-content::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 3px;
 }

@@ -91,3 +91,20 @@ END;
 //
 DELIMITER ;
 
+DELIMITER //
+
+CREATE TRIGGER after_insert_hotel_create_departments
+AFTER INSERT ON Hotel
+FOR EACH ROW
+BEGIN
+    INSERT INTO Department (HotelID, DeptName, Description) VALUES
+    (NEW.HotelID, 'Front Desk', 'Handles guest check-ins, check-outs, and inquiries.'),
+    (NEW.HotelID, 'Housekeeping', 'Ensures rooms and common areas are clean and well-maintained.'),
+    (NEW.HotelID, 'Food & Beverage', 'Manages the kitchen, room service, and dining areas.'),
+    (NEW.HotelID, 'Maintenance', 'Responsible for repairs and upkeep of the hotel infrastructure.'),
+    (NEW.HotelID, 'Security', 'Ensures the safety and security of guests and staff.');
+END//
+
+DELIMITER ;
+
+
