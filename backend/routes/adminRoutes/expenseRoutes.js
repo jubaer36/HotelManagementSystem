@@ -103,10 +103,18 @@ router.get('/transaction-summary-admin/:hotelId', async (req, res) => {
 });
 
 // Financial Summary for Totals
+// In your backend route (/salary-summary/:hotelId)
 router.get('/financial-summary/:hotelId', async (req, res) => {
     const { hotelId } = req.params;
     const { start, end } = req.query;
+
     try {
+        // Calculate number of months in the range
+        const startDate = new Date(start);
+        const endDate = new Date(end);
+        const months = (endDate.getFullYear() - startDate.getFullYear()) * 12 +
+            (endDate.getMonth() - startDate.getMonth()) + 1;
+
         const [[{ inventory }]] = await db.promise().query(
             `SELECT IFNULL(SUM(Quantity * UnitPrice), 0) AS inventory
              FROM InventoryTransactions
@@ -121,13 +129,15 @@ router.get('/financial-summary/:hotelId', async (req, res) => {
             [hotelId, start, end]
         );
 
-        const [[{ salaries }]] = await db.promise().query(
-            `SELECT IFNULL(SUM(Salary), 0) AS salaries
+        // Multiply monthly salaries by number of months
+        const [[{ monthlySalaries }]] = await db.promise().query(
+            `SELECT IFNULL(SUM(Salary), 0) AS monthlySalaries
              FROM Employee e
              JOIN Department d ON e.DeptID = d.DeptID
              WHERE d.HotelID = ?`,
             [hotelId]
         );
+        const salaries = monthlySalaries * months;
 
         const [[{ revenue }]] = await db.promise().query(
             `SELECT IFNULL(SUM(t.AmountPaid), 0) AS revenue

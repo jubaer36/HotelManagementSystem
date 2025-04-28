@@ -17,6 +17,7 @@ import Inventory from "./pages/manager-pages/Inventory.js";
 import Ledgerbook from "./pages/manager-pages/Ledgerbook";
 import Hotelist from "./pages/admin-pages/Hotelist";
 import FinancialReport from "./pages/admin-pages/FinancialReport";
+import MaintenanceLedgerPage from "./pages/manager-pages/BillLedger";
 
 const PrivateRoute = ({ element, role }) => {
   const storedRole = localStorage.getItem("role");
@@ -44,6 +45,8 @@ function App() {
         <Route path="/rooms" element={<PrivateRoute element={<ManRoom />} role="manager" />} />
         <Route path="/inventory" element={<PrivateRoute element={<Inventory />} role="manager" />} />
         <Route path="/ledgerbook" element={<PrivateRoute element={<Ledgerbook />} role="manager" />} />
+        <Route path="/billledger" element={<PrivateRoute element={<MaintenanceLedgerPage/>} role="manager" />} />
+        <Route path="/financial-report/:hotelId" element={<PrivateRoute element={<FinancialReport/>} role="manager"/>} />
         {/* Admin Pages */}
         <Route path="/admin-dashboard" element={<PrivateRoute element={<AdminDashBoard/>} role="admin"/>} />
         <Route path="/update-managers" element={<PrivateRoute element={<UpdateManager/>} role="admin"/>} />

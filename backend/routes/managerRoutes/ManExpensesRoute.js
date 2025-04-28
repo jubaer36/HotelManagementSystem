@@ -75,6 +75,50 @@ router.post("/monthly-transactions", (req, res) => {
         }
     });
 });
+// Fetch all maintenance ledger entries for a hotel
+// Add a new maintenance ledger entry
+router.post('/maintenance-ledger', (req, res) => {
+    const { hotelId, serviceType, amount, ledgerDate } = req.body;
 
+    if (!hotelId || !serviceType || !amount || !ledgerDate) {
+        return res.status(400).send("All fields are required");
+    }
+
+    const query = `
+        INSERT INTO BillMaintenanceLedger (HotelID, ServiceType, Amount, LedgerDate)
+        VALUES (?, ?, ?, ?)
+    `;
+
+    db.query(query, [hotelId, serviceType, amount, ledgerDate], (err, result) => {
+        if (err) {
+            console.error("Error adding maintenance ledger:", err);
+            return res.status(500).send("Error adding maintenance ledger");
+        }
+        res.status(201).json({ message: "Entry added successfully", LedgerID: result.insertId });
+    });
+});
+
+// Fetch all maintenance ledger entries for a hotel
+router.get('/maintenance-ledger', (req, res) => {
+    const { hotelId } = req.query;
+
+    if (!hotelId) {
+        return res.status(400).send("Hotel ID is required");
+    }
+
+    const query = `SELECT * FROM BillMaintenanceLedger WHERE HotelID = ?`;
+
+    db.query(query, [hotelId], (err, results) => {
+        if (err) {
+            console.error("Error fetching maintenance ledger:", err);
+            return res.status(500).send("Error fetching maintenance ledger");
+        }
+        res.status(200).json(results);
+    });
+});
 
 module.exports = router;
+
+
+
+

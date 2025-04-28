@@ -5,6 +5,7 @@ import Navbar from "../../components/Navbar";
 import "./ManagerDash.css"
 
 const Dashboard = () => {
+    const hotelId = localStorage.getItem("hotelID");
     const cards = [
         {
             title: "Employee Information",
@@ -18,7 +19,7 @@ const Dashboard = () => {
             title: "Expense Management",
             description: "Track $12,450 in expenses",
             color: "#10B981",
-            path: "/expenses",
+            path: `/financial-report/${hotelId}`,
             icon: <FiDollarSign className="card-icon" />,
             stat: "+15% from last month"
         },
@@ -43,6 +44,15 @@ const Dashboard = () => {
             description: "Track 1,240 items",
             color: "#8B5CF6",
             path: "/ledgerbook",
+            icon: <FiPackage className="card-icon" />,
+            stat: "32 Low stock items"
+        },
+
+        {
+            title: "Bill Maintainace",
+            description: "Track 1,240 items",
+            color: "#8B5CF6",
+            path: "/billledger",
             icon: <FiPackage className="card-icon" />,
             stat: "32 Low stock items"
         }
