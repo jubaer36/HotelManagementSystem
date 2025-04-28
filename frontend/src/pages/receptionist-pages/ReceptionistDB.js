@@ -12,7 +12,7 @@ const ReceptionistDashboard = () => {
       color: "#3B82F6",
       path: "/receptionist",
       icon: <FiBookOpen className="card-icon" />,
-      stat: "Live Bookings Available"
+      // stat: "Live Bookings Available"
     },
     {
       title: "Guest Info",
@@ -20,7 +20,7 @@ const ReceptionistDashboard = () => {
       color: "#10B981",
       path: "/checkout",
       icon: <FiUserCheck className="card-icon" />,
-      stat: "32 Guests Checked In"
+      // stat: "32 Guests Checked In"
     },
     {
       title: "Billing",
@@ -28,7 +28,7 @@ const ReceptionistDashboard = () => {
       color: "#F59E0B",
       path: "/real-checkout",
       icon: <FiFileText className="card-icon" />,
-      stat: "5 Pending Payments"
+      // stat: "5 Pending Payments"
     }
   ];
 

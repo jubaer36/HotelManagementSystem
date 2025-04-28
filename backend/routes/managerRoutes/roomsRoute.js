@@ -50,20 +50,22 @@ router.get("/get-room-classes", (req, res) => {
 
 
 // ✅ Update Room
-router.put("/update-room/:roomID", (req, res) => {
+router.put("/update-room/:roomID", upload.single("roomImage"), (req, res) => {
     const { classTypeID, basePrice, maxOccupancy } = req.body;
     const roomID = req.params.roomID;
+    const roomImage = req.file ? req.file.buffer : null; // Get image from request (if present)
 
+    // SQL query to update room details
     const sql = `
         UPDATE available_rooms
-        SET RoomClassID = ?, BasePrice = ?, MaxOccupancy = ?
+        SET RoomClassID = ?, BasePrice = ?, MaxOccupancy = ?, RoomImage = ?
         WHERE RoomID = ?
     `;
 
-    db.query(sql, [classTypeID, basePrice, maxOccupancy, roomID], (err, result) => {
+    db.query(sql, [classTypeID, basePrice, maxOccupancy, roomImage, roomID], (err, result) => {
         if (err) {
             console.error("Error updating room:", err);
-            res.status(500).send("Error updating room details");
+            return res.status(500).send("Error updating room details");
         } else {
             res.status(200).send("Room updated successfully");
         }
