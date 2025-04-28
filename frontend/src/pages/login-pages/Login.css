@@ -3,7 +3,7 @@ html, body {
     margin: 0;
     padding: 0;
     height: 100%;
-    overflow: hidden; /* Prevent any scrolling */
+    overflow: hidden; /* Prevent scrolling */
     font-family: Arial, sans-serif;
     background-color: #f7f7f7;
 }
@@ -20,9 +20,9 @@ html, body {
 }
 
 .login-box {
-    position: absolute; /* <--- Important */
-    left: 35px;  /* Move 80px from left */
-    bottom: 40px; /* Move 100px up from bottom */
+    position: absolute;
+    left: 35px;
+    bottom: 40px;
     background: rgba(255, 255, 255, 0.1);
     padding: 2rem;
     border-radius: 10px;
@@ -32,7 +32,6 @@ html, body {
     text-align: center;
     backdrop-filter: blur(8px);
 }
-
 
 /* Heading styles */
 .login-heading {
@@ -54,7 +53,7 @@ html, body {
 
 /* Input focus effect */
 .login-input:focus {
-    border-color: #3182ce; /* Blue border when focused */
+    border-color: #3182ce;
     outline: none;
 }
 
@@ -77,8 +76,77 @@ html, body {
     background-color: #2b6cb0;
 }
 
-/* Error message style (optional if you have error messages) */
+/* Error message */
 .error {
     color: red;
     margin-top: 1rem;
+}
+
+/* Success message */
+.success {
+    color: green;
+    margin-top: 1rem;
+}
+
+/* Reset password link */
+.reset-password-text {
+    color: #3182ce;
+    margin-top: 1rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    text-decoration: underline;
+}
+
+/* Popup background and centering */
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Perfect centering */
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+    z-index: 1000;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    backdrop-filter: blur(8px);
+}
+
+/* Popup form */
+.popup-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+/* Popup input fields */
+.popup-form input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+/* Popup form buttons */
+.popup-form button {
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Close button */
+.close-button {
+    background-color: #e53e3e;
+    color: white;
+    margin-top: 0.5rem;
+    transition: background-color 0.3s ease;
+}
+
+.close-button:hover {
+    background-color: #c53030;
 }

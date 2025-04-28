@@ -86,7 +86,7 @@ const Navbar = () => {
                     </div>
                 </div>
                 <div className="nav-links">
-                    <button onClick={() => setShowResetPopup(true)}>Reset Password</button>
+                    {/* <button onClick={() => setShowResetPopup(true)}>Reset Password</button> */}
                     <button onClick={handleLogout}>Logout</button>
                 </div>
             </div>
