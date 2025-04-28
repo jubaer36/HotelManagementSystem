@@ -6,9 +6,14 @@ import {
 import Navbar from '../../components/Navbar';
 import './FinancialReport.css';
 import './FincacialCard.css';
+import {Navigate} from "react-router-dom";
 
 const FinancialReport = () => {
+
     const { hotelId } = useParams();
+
+
+
     const [startMonth, setStartMonth] = useState('');
     const [endMonth, setEndMonth] = useState('');
     const [inventoryChart, setInventoryChart] = useState([]);
@@ -16,6 +21,10 @@ const FinancialReport = () => {
     const [salaryChart, setSalaryChart] = useState([]);
     const [transactionChart, setTransactionChart] = useState([]);
     const [summary, setSummary] = useState({ inventory: 0, maintenance: 0, salaries: 0, revenue: 0 });
+    
+
+
+
 
     const getLastDayOfMonth = (yearMonth) => {
         const [year, month] = yearMonth.split('-');
@@ -74,9 +83,13 @@ const FinancialReport = () => {
         }
     };
 
+
     useEffect(() => {
+
         fetchData();
     }, [startMonth, endMonth]);
+
+
 
     const totalExpenses = (Number(summary.inventory) + Number(summary.maintenance) + Number(summary.salaries));
     const netProfit = Number(summary.revenue) - totalExpenses;

@@ -41,7 +41,7 @@ function App() {
         {/* Manager Pages */}
         <Route path="/manager-dashboard" element={<PrivateRoute element={<ManDash />} role="manager" />} />
         <Route path="/employee-info" element={<PrivateRoute element={<Employee />} role="manager" />} />
-        <Route path="/expenses" element={<PrivateRoute element={<Manexpenses />} role="manager" />} />
+        {/*<Route path="/expenses" element={<PrivateRoute element={<Manexpenses />} role="manager" />} />*/}
         <Route path="/rooms" element={<PrivateRoute element={<ManRoom />} role="manager" />} />
         <Route path="/inventory" element={<PrivateRoute element={<Inventory />} role="manager" />} />
         <Route path="/ledgerbook" element={<PrivateRoute element={<Ledgerbook />} role="manager" />} />
