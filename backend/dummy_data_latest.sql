@@ -333,3 +333,194 @@ VALUES
 ('manager1', '$2b$10$q9Oa2VY17WMwMkFjtej8ve7Ur/bgOpoLelpY2t5IG9z3KQ6CRICl2', 1, 'manager'),
 ('admin1', '$2b$10$q9Oa2VY17WMwMkFjtej8ve7Ur/bgOpoLelpY2t5IG9z3KQ6CRICl2', 1, 'admin');
 
+
+-- Inserting transactions for 2025 from January to November with a revenue total of over $5,000 per month
+INSERT INTO Transactions (BookingID, AmountPaid, PaymentDate)
+VALUES
+-- January
+(3, 1000.00, '2025-01-01 10:00:00'),
+(3, 1200.00, '2025-01-10 15:00:00'),
+(3, 1500.00, '2025-01-15 18:30:00'),
+(3, 1000.00, '2025-01-20 09:30:00'),
+(3, 800.00, '2025-01-25 14:15:00'),
+
+-- February
+(3, 1100.00, '2025-02-02 16:20:00'),
+(3, 1200.00, '2025-02-05 11:30:00'),
+(3, 1500.00, '2025-02-10 13:25:00'),
+(3, 1300.00, '2025-02-15 12:00:00'),
+(3, 1200.00, '2025-02-22 20:30:00'),
+
+-- March
+(3, 1600.00, '2025-03-03 09:00:00'),
+(3, 1800.00, '2025-03-05 10:20:00'),
+(3, 1200.00, '2025-03-08 14:25:00'),
+(3, 1000.00, '2025-03-12 12:00:00'),
+(3, 1300.00, '2025-03-17 16:30:00'),
+
+-- April
+(3, 1500.00, '2025-04-03 10:00:00'),
+(3, 1100.00, '2025-04-05 13:40:00'),
+(3, 1800.00, '2025-04-08 14:00:00'),
+(3, 1300.00, '2025-04-12 17:25:00'),
+(3, 1200.00, '2025-04-20 18:00:00'),
+
+-- May
+(3, 1300.00, '2025-05-02 11:00:00'),
+(3, 1500.00, '2025-05-06 12:00:00'),
+(3, 1400.00, '2025-05-10 15:30:00'),
+(3, 1500.00, '2025-05-14 16:30:00'),
+(3, 1300.00, '2025-05-18 17:00:00'),
+
+-- June
+(3, 1800.00, '2025-06-01 09:45:00'),
+(3, 1500.00, '2025-06-05 11:30:00'),
+(3, 1300.00, '2025-06-10 14:00:00'),
+(3, 1000.00, '2025-06-14 16:10:00'),
+(3, 1500.00, '2025-06-20 18:30:00'),
+
+-- July
+(3, 1600.00, '2025-07-02 13:00:00'),
+(3, 1100.00, '2025-07-06 14:10:00'),
+(3, 1500.00, '2025-07-09 12:15:00'),
+(3, 1200.00, '2025-07-12 16:25:00'),
+(3, 1400.00, '2025-07-16 19:00:00'),
+
+-- August
+(3, 1300.00, '2025-08-02 10:15:00'),
+(3, 1500.00, '2025-08-05 15:00:00'),
+(3, 1600.00, '2025-08-08 14:30:00'),
+(3, 1700.00, '2025-08-12 13:20:00'),
+(3, 1500.00, '2025-08-17 18:00:00'),
+
+-- September
+(3, 1800.00, '2025-09-02 11:25:00'),
+(3, 1700.00, '2025-09-04 15:30:00'),
+(3, 1300.00, '2025-09-07 10:00:00'),
+(3, 1500.00, '2025-09-10 13:30:00'),
+(3, 1600.00, '2025-09-14 14:00:00'),
+
+-- October
+(3, 1500.00, '2025-10-01 10:10:00'),
+(3, 1300.00, '2025-10-05 13:15:00'),
+(3, 1600.00, '2025-10-09 14:20:00'),
+(3, 1400.00, '2025-10-13 17:30:00'),
+(3, 1300.00, '2025-10-17 16:45:00'),
+
+-- November
+(3, 1500.00, '2025-11-01 12:00:00'),
+(3, 1400.00, '2025-11-05 14:15:00'),
+(3, 1300.00, '2025-11-09 16:20:00'),
+(3, 1600.00, '2025-11-13 17:00:00'),
+(3, 1500.00, '2025-11-17 19:25:00');
+
+
+-- inventory
+
+
+-- Insert sample inventory items for a hotel (assuming HotelID = 1)
+INSERT INTO Inventory (HotelID, ItemName, Quantity) VALUES
+                                                        (1, 'Towels', 200),
+                                                        (1, 'Bed Sheets', 150),
+                                                        (1, 'Pillows', 100),
+                                                        (1, 'Toilet Paper', 300),
+                                                        (1, 'Shampoo', 200),
+                                                        (1, 'Conditioner', 200),
+                                                        (1, 'Soap Bars', 500),
+                                                        (1, 'Coffee Packets', 1000),
+                                                        (1, 'Tea Bags', 800),
+                                                        (1, 'Sugar Packets', 1200),
+                                                        (1, 'Creamer', 800),
+                                                        (1, 'Plastic Cups', 1000),
+                                                        (1, 'Glassware', 500),
+                                                        (1, 'Dish Soap', 50),
+                                                        (1, 'Laundry Detergent', 40),
+                                                        (1, 'Bleach', 30),
+                                                        (1, 'Trash Bags', 200),
+                                                        (1, 'Light Bulbs', 100),
+                                                        (1, 'Batteries', 200),
+                                                        (1, 'First Aid Kits', 20);
+
+-- January 2025 transactions (Total: $1025.50)
+INSERT INTO InventoryTransactions (InventoryID, HotelID, TransactionType, Quantity, UnitPrice, TransactionDate, Status, ReceiveDate)
+VALUES
+    (1, 1, 'Order', 50, 2.50, '2025-01-05 10:00:00', 'Completed', '2025-01-07 14:00:00'),
+    (2, 1, 'Order', 30, 5.00, '2025-01-10 10:15:00', 'Completed', '2025-01-12 11:00:00'),
+    (3, 1, 'Order', 20, 8.00, '2025-01-15 09:30:00', 'Completed', '2025-01-17 10:00:00'),
+    (4, 1, 'Order', 100, 0.50, '2025-01-20 11:00:00', 'Completed', '2025-01-22 09:00:00'),
+    (5, 1, 'Order', 50, 1.20, '2025-01-25 14:00:00', 'Completed', '2025-01-27 16:00:00'),
+    (6, 1, 'Order', 50, 1.20, '2025-01-28 10:00:00', 'Completed', '2025-01-30 10:00:00'),
+    (7, 1, 'Order', 200, 0.75, '2025-01-30 15:00:00', 'Completed', '2025-02-01 11:00:00');
+
+-- February 2025 transactions (Total: $995.00)
+INSERT INTO InventoryTransactions (InventoryID, HotelID, TransactionType, Quantity, UnitPrice, TransactionDate, Status, ReceiveDate)
+VALUES
+    (8, 1, 'Order', 300, 0.30, '2025-02-03 09:00:00', 'Completed', '2025-02-05 10:00:00'),
+    (9, 1, 'Order', 200, 0.25, '2025-02-08 11:00:00', 'Completed', '2025-02-10 14:00:00'),
+    (10, 1, 'Order', 150, 0.20, '2025-02-12 14:00:00', 'Completed', '2025-02-14 16:00:00'),
+    (11, 1, 'Order', 500, 0.10, '2025-02-16 10:00:00', 'Completed', '2025-02-18 09:00:00'),
+    (12, 1, 'Order', 100, 1.50, '2025-02-20 13:00:00', 'Completed', '2025-02-22 15:00:00'),
+    (13, 1, 'Order', 50, 2.00, '2025-02-24 16:00:00', 'Completed', '2025-02-26 11:00:00'),
+    (14, 1, 'Order', 25, 4.00, '2025-02-27 09:00:00', 'Completed', '2025-03-01 10:00:00');
+
+-- March 2025 transactions (Total: $1010.00)
+INSERT INTO InventoryTransactions (InventoryID, HotelID, TransactionType, Quantity, UnitPrice, TransactionDate, Status, ReceiveDate)
+VALUES
+    (15, 1, 'Order', 20, 5.00, '2025-03-05 10:00:00', 'Completed', '2025-03-07 14:00:00'),
+    (16, 1, 'Order', 30, 3.50, '2025-03-10 11:00:00', 'Completed', '2025-03-12 16:00:00'),
+    (17, 1, 'Order', 40, 2.50, '2025-03-15 09:00:00', 'Completed', '2025-03-17 10:00:00'),
+    (18, 1, 'Order', 100, 1.00, '2025-03-20 14:00:00', 'Completed', '2025-03-22 15:00:00'),
+    (19, 1, 'Order', 200, 0.75, '2025-03-25 16:00:00', 'Completed', '2025-03-27 11:00:00'),
+    (20, 1, 'Order', 50, 2.20, '2025-03-28 10:00:00', 'Completed', '2025-03-30 09:00:00');
+
+-- April 2025 transactions (Total: $980.50)
+INSERT INTO InventoryTransactions (InventoryID, HotelID, TransactionType, Quantity, UnitPrice, TransactionDate, Status, ReceiveDate)
+VALUES
+    (1, 1, 'Order', 40, 2.50, '2025-04-03 09:00:00', 'Completed', '2025-04-05 10:00:00'),
+    (2, 1, 'Order', 25, 5.00, '2025-04-08 11:00:00', 'Completed', '2025-04-10 14:00:00'),
+    (3, 1, 'Order', 15, 8.00, '2025-04-12 14:00:00', 'Completed', '2025-04-14 16:00:00'),
+    (4, 1, 'Order', 80, 0.50, '2025-04-16 10:00:00', 'Completed', '2025-04-18 09:00:00'),
+    (5, 1, 'Order', 40, 1.20, '2025-04-20 13:00:00', 'Completed', '2025-04-22 15:00:00'),
+    (6, 1, 'Order', 40, 1.20, '2025-04-24 16:00:00', 'Completed', '2025-04-26 11:00:00'),
+    (7, 1, 'Order', 150, 0.75, '2025-04-28 09:00:00', 'Completed', '2025-04-30 10:00:00');
+
+-- maintainanceledger
+
+-- January 2025 maintenance bills (~$800)
+-- January 2025 maintenance bills (~$800)
+INSERT INTO BillMaintenanceLedger (HotelID, ServiceType, Amount, LedgerDate)
+VALUES
+    (1, 'HVAC Maintenance', 125.50, '2025-01-05'),
+    (1, 'Plumbing Repair', 85.25, '2025-01-12'),
+    (1, 'Emergency Electrical Maintenance', 220.00, '2025-01-15'),
+    (1, 'Painting Touch-up', 65.75, '2025-01-18'),
+    (1, 'Landscaping Services', 150.00, '2025-01-22'),
+    (1, 'Appliance Repair', 153.50, '2025-01-28');
+
+-- February 2025 maintenance bills (~$800)
+INSERT INTO BillMaintenanceLedger (HotelID, ServiceType, Amount, LedgerDate)
+VALUES
+    (1, 'General Maintenance', 95.00, '2025-02-03'),
+    (1, 'HVAC System Check', 175.25, '2025-02-08'),
+    (1, 'Plumbing Maintenance', 210.50, '2025-02-14'),
+    (1, 'Electrical Inspection', 115.75, '2025-02-19'),
+    (1, 'Carpentry Work', 203.50, '2025-02-25');
+
+-- March 2025 maintenance bills (~$800)
+INSERT INTO BillMaintenanceLedger (HotelID, ServiceType, Amount, LedgerDate)
+VALUES
+    (1, 'HVAC Maintenance', 145.00, '2025-03-04'),
+    (1, 'Emergency Plumbing Repair', 85.25, '2025-03-10'),
+    (1, 'Electrical Maintenance', 195.50, '2025-03-15'),
+    (1, 'Painting Services', 125.75, '2025-03-20'),
+    (1, 'Landscaping Maintenance', 248.50, '2025-03-25');
+
+-- April 2025 maintenance bills (~$800)
+INSERT INTO BillMaintenanceLedger (HotelID, ServiceType, Amount, LedgerDate)
+VALUES
+    (1, 'HVAC Seasonal Maintenance', 180.00, '2025-04-02'),
+    (1, 'Plumbing Inspection', 95.25, '2025-04-09'),
+    (1, 'Electrical System Upgrade', 220.50, '2025-04-16'),
+    (1, 'General Maintenance', 135.75, '2025-04-22'),
+    (1, 'Appliance Maintenance', 168.50, '2025-04-28');
+
