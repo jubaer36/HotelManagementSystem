@@ -118,7 +118,7 @@ router.post("/filter-managers", (req, res) => {
                D.DeptName, E.Email, E.Phone, E.hourly_pay, E.HiredDate
         FROM Employee E
         JOIN Department D ON E.DeptID = D.DeptID
-        WHERE E.Role = 'Manager' AND E.FirstName <> 'System'
+        WHERE E.Role = 'Manager' AND E.FirstName <> 'System' AND working_status = 'Working'
     `;
     const params = [];
 

@@ -147,7 +147,7 @@ const UpdateManager = () => {
                     <tr>
                         <th>Full Name</th>
                         <th>Department</th>
-                        <th>Salary</th>
+                        <th>Hourly Salary</th>
                         <th>Email</th>
                         <th>Phone</th>
                         <th>Hired Date</th>
@@ -183,6 +183,13 @@ const UpdateManager = () => {
                                         onChange={(e) =>
                                             handleEditChange(employee.EmpID, "hourly_pay", e.target.value)
                                         }
+                                        style={{
+                                            width: "70px", // Adjust width
+                                            height: "40px", // Adjust height
+                                            fontSize: "18px", // Adjust font size for better readability
+                                            padding: "8px", // Add padding for inner space
+                                            borderRadius: "5px", // Optional: round the corners
+                                        }}
                                     />
                                 ) : (
                                     `$${Number(employee.hourly_pay || 0).toFixed(2)}`
